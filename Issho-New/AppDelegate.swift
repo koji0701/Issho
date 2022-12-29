@@ -8,7 +8,7 @@
 import UIKit
 import CoreData
 
-//MARK: General Mark, I deleted a lot of the default methods that are new bc of the udemy tutorial (apparently it does like different types of interruptions phone calls etc.) if that is a problem paste them in later
+//MARK: General mark, I deleted a lot of the default methods that are new bc of the udemy tutorial (apparently it does like different types of interruptions phone calls etc.) if that is a problem paste them in later
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -34,12 +34,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let container = NSPersistentContainer(name: "ToDoEntryData")
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
-
+                
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
         })
         return container
     }()
+    
+    
+
+    
+
     
     // MARK: - Core Data Saving support
     

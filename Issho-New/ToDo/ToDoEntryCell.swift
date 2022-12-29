@@ -32,6 +32,10 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
     
     @IBOutlet weak var regularView: UIStackView!
     
+    @IBOutlet weak var dateTextField: UITextField!
+    
+    
+    
     
     var toDoEntryDelegate: ToDoEntryDelegate!
     
@@ -72,9 +76,9 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
         //addButton.setImage(UIImage(named: "plus.circle"), for: .normal)
         
         
-        
-        
     }
+    
+    
 
     override func setSelected(_ selected: Bool, animated: Bool) {//code for selected/deselected
         super.setSelected(selected, animated: animated)
@@ -106,16 +110,7 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
         print("text View did finish editing")
     }
     
-    func textViewDidChange(_ textView: UITextView) {
-            
-            let textViewSize = textView.sizeThatFits(CGSize(width: textView.frame.size.width, height: CGFloat.greatestFiniteMagnitude))
-            textViewWrapper.frame = CGRect(x: textViewWrapper.frame.origin.x, y: textViewWrapper.frame.origin.y, width: textViewWrapper.frame.size.width, height: textViewSize.height)
-        
-        regularView.frame = CGRect(x: regularView.frame.origin.x, y: regularView.frame.origin.y, width: regularView.frame.size.width, height: (regularView.frame.height-56-33)+textViewSize.height)//56 is for constraints, 33 is the original textView size
-        
-            print("text view size height is \(textViewSize.height)")
-            print("textViewWrapper frame height is \(textViewWrapper.frame.height)")//MARK: CONTINUE HERE. EITHER KEEP TROUBLESHOOTING THIS OR JUST MOVE ON TBH ITS NOT WORTH IT YET. DO SECTIONS NEXT
-        }
+    
    
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
@@ -131,6 +126,14 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
             return true
         }
     
+    //date text field
+    //MARK: USE THE SAVEINFO TO CONTEXT FEATURE FOR THE TEXTFIELD
+    
+    @IBAction func dateTextFieldFinishedEditing(_ sender: Any) {
+        
+        self.toDoEntryDelegate?.saveInfoToContext(in: self)
+        
+    }
     
 }
 

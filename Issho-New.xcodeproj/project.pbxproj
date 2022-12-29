@@ -56,6 +56,7 @@
 		E52FBCC4292F18D40053208C /* Issho-NewUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Issho-NewUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E52FBCC8292F18D40053208C /* Issho_NewUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Issho_NewUITests.swift; sourceTree = "<group>"; };
 		E52FBCCA292F18D40053208C /* Issho_NewUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Issho_NewUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		
 		E58DED3F292F196E00F1EF0C /* ToDoEntryCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ToDoEntryCell.xib; sourceTree = "<group>"; };
 		E58DED41292F198400F1EF0C /* ToDoEntryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToDoEntryCell.swift; sourceTree = "<group>"; };
 		E58DED45292F19A300F1EF0C /* ToDoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToDoViewController.swift; sourceTree = "<group>"; };
@@ -659,6 +660,7 @@
 		E5A5166A2958D329002BC2B3 /* ToDoEntryData.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				
 				E5A5166B2958D329002BC2B3 /* ToDoEntryData.xcdatamodel */,
 			);
 			currentVersion = E5A5166B2958D329002BC2B3 /* ToDoEntryData.xcdatamodel */;

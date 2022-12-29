@@ -8,7 +8,7 @@
 import UIKit
 import CoreData
 
-class ToDoViewController: UIViewController {
+class ToDoViewController: UIViewController{
 
     
     //var entries = ToDoEntry.toDoEntryList.sorted(byKeyPath: NSDate, ascending: true)
@@ -18,7 +18,7 @@ class ToDoViewController: UIViewController {
 
     //coredata stuff for the tableview sections by date
     //MARK: question: should this be included in the loaditems() function?
-    /**private lazy var fetchedResultsController: NSFetchedResultsController<ToDoEntry> = {
+    private lazy var fetchedResultsController: NSFetchedResultsController<ToDoEntry> = {
             let fetchRequest: NSFetchRequest<ToDoEntry> = ToDoEntry.fetchRequest()
             fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
 
@@ -28,7 +28,7 @@ class ToDoViewController: UIViewController {
                                                                       cacheName: nil)
             fetchedResultsController.delegate = self
             return fetchedResultsController
-        }()**/
+        }()
     @IBOutlet weak var ToDoTableView: UITableView!
     
     
@@ -39,6 +39,7 @@ class ToDoViewController: UIViewController {
         
         ToDoTableView.dataSource = self
         ToDoTableView.register(UINib(nibName: Constants.ToDo.nibName, bundle: nil), forCellReuseIdentifier: Constants.ToDo.reuseIdentifier)
+        
         loadItems()
         
 
@@ -49,31 +50,39 @@ class ToDoViewController: UIViewController {
 extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate, NSFetchedResultsControllerDelegate {
     
     
-    /**
+    
     //sections stuff
     func numberOfSections(in tableView: UITableView) -> Int {
         
         //MARK: create sections by date
-        print(fetchedResultsController.sections?.count)
-        return fetchedResultsController.sections?.count ?? 1
+        
+        if ((fetchedResultsController.sections?.count) != nil) {
+            print("using sections")
+            return fetchedResultsController.sections!.count
+        }
+        
+        return 1
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         guard let sections = fetchedResultsController.sections else {
+            print("nil sections")
             return nil
         }
+        print("got a section")
         let sectionInfo = sections[section]
-        let date = sectionInfo.name
-        print(sectionInfo.name)
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMM dd, yyyy"
-        //return dateFormatter.string(from: date)
-        return ""
-    }**/
+        dateFormatter.dateFormat = "mm/dd"
+        let date = dateFormatter.date(from: sectionInfo.name)
+        //MARK: change here for title for header
+        
+        return dateFormatter.string(from: date ?? Date())
+        
+    }
     
     
     //table view methods
-    //MARK: may need to update tableview methods with the reload data thing once coredata is involved
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         
@@ -128,7 +137,7 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate, NSFetche
         let currentCell = cell as! ToDoEntryCell
         entries[indexPath.row].text = currentCell.textView.text!
         currentCell.toDoEntry = entries[indexPath.row]
-        
+        //MARK: idk if this is needed anymore because of the savecontext protocol
         
         //creating the new cell
 
@@ -184,7 +193,26 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate, NSFetche
         let currentCell = cell as! ToDoEntryCell
         
         entries[indexPath.row].text = currentCell.textView.text!//update with more info later on such as date etc.
+        
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "mm/dd"
+          // the string to be converted
+        print("entry \(indexPath.row) has the text \(currentCell.dateTextField.text!)")
+        print("date variable is \(dateFormatter.date(from: currentCell.dateTextField.text!))")
+        if let date = dateFormatter.date(from: currentCell.dateTextField.text!) {
+            entries[indexPath.row].date = date
+            
+        }
+        else {
+            entries[indexPath.row].date = Date()//MARK: this is temporary as case for no text in date textfield. change this to match the current section
+        }
+        
+        print("entry \(indexPath.row) has the date \(entries[indexPath.row].date)")
+        
+        
         self.saveItems()
+       
     }
     
     
@@ -198,11 +226,11 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate, NSFetche
         newEntry.time = 0.0
     }
     
-    func initializeToDoEntry(newEntry: ToDoEntry, text: String?, isChecked: Bool?, isCurrentTask: Bool?, date: Date?, time: Double?) {//to initialize default new one
-        newEntry.text = text ?? ""
-        newEntry.isChecked = isChecked ?? false
-        newEntry.isCurrentTask = isCurrentTask ?? false
-        newEntry.date = date ?? Date()//TEMPORARY FIX THIS
+    func initializeToDoEntry(newEntry: ToDoEntry, text: String = "", isChecked: Bool = false, isCurrentTask: Bool = false, date: Date = Date(), time: Double?) {//to initialize default new one
+        newEntry.text = text
+        newEntry.isChecked = isChecked
+        newEntry.isCurrentTask = isCurrentTask
+        newEntry.date = date //TEMPORARY FIX THIS
         newEntry.time = time ?? 0.0
     }
     
@@ -217,14 +245,13 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate, NSFetche
         }
         
     }
-    
+
     func loadItems() {
         let request: NSFetchRequest<ToDoEntry> = ToDoEntry.fetchRequest()
         do {
             entries = try context.fetch(request)
-        }
-        catch {
-            print("error fetching data from context \(error)")
+        } catch {
+            print("error fetching data from context: \(error)")
         }
     }
     
