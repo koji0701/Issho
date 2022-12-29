@@ -26,14 +26,6 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
     var toDoEntryDelegate: ToDoEntryDelegate!
     
     var toDoEntry: ToDoEntry? {
@@ -66,6 +58,9 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
         addButton.isEnabled = false
         
         
+        let toolbar = ToDoEntryToolbar()
+        toolbar.sizeToFit()
+        textView.inputAccessoryView = toolbar
         
         
         
