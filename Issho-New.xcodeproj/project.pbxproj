@@ -26,6 +26,7 @@
 		E58DED56292F26D900F1EF0C /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58DED55292F26D900F1EF0C /* User.swift */; };
 		E5A5166C2958D329002BC2B3 /* ToDoEntryData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E5A5166A2958D329002BC2B3 /* ToDoEntryData.xcdatamodeld */; };
 		E5A8B1D3295E2BC900D5E684 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E5A8B1D2295E2BC900D5E684 /* IQKeyboardManagerSwift */; };
+		E5A8B1D5295E4EFC00D5E684 /* ToDoTextViewToolbar.xib in Resources */ = {isa = PBXBuildFile; fileRef = E5A8B1D4295E4EFC00D5E684 /* ToDoTextViewToolbar.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +69,7 @@
 		E58DED51292F1AD000F1EF0C /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		E58DED55292F26D900F1EF0C /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		E5A5166B2958D329002BC2B3 /* ToDoEntryData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ToDoEntryData.xcdatamodel; sourceTree = "<group>"; };
+		E5A8B1D4295E4EFC00D5E684 /* ToDoTextViewToolbar.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ToDoTextViewToolbar.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -175,6 +177,7 @@
 			children = (
 				E58DED3F292F196E00F1EF0C /* ToDoEntryCell.xib */,
 				E58DED41292F198400F1EF0C /* ToDoEntryCell.swift */,
+				E5A8B1D4295E4EFC00D5E684 /* ToDoTextViewToolbar.xib */,
 				E58DED45292F19A300F1EF0C /* ToDoViewController.swift */,
 			);
 			path = ToDo;
@@ -293,6 +296,7 @@
 				E52FBCB4292F18D40053208C /* LaunchScreen.storyboard in Resources */,
 				E58DED52292F1AD000F1EF0C /* Main.storyboard in Resources */,
 				E52FBCB1292F18D40053208C /* Assets.xcassets in Resources */,
+				E5A8B1D5295E4EFC00D5E684 /* ToDoTextViewToolbar.xib in Resources */,
 				E58DED40292F196E00F1EF0C /* ToDoEntryCell.xib in Resources */,
 				E58DED4B292F19B200F1EF0C /* SMPostCell.xib in Resources */,
 			);

@@ -103,6 +103,19 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate, NSFetche
         cell.toDoEntry = entries[indexPath.row]
         cell.toDoEntryDelegate = self
         
+        // set the closure
+        weak var tv = tableView
+        cell.textViewCallBack = { [weak self] str in
+            guard let self = self, let tv = tv else { return }
+            print("called back", str)
+            // update our data with the edited string
+            self.entries[indexPath.row].text = str
+            // we don't need to do anything else here
+            // this will force the table to recalculate row heights
+            tv.performBatchUpdates(nil)
+        }
+
+        
         return cell
         
     }
@@ -195,21 +208,7 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate, NSFetche
         entries[indexPath.row].text = currentCell.textView.text!//update with more info later on such as date etc.
         
         
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "mm/dd"
-          // the string to be converted
-        print("entry \(indexPath.row) has the text \(currentCell.dateTextField.text!)")
-        print("date variable is \(dateFormatter.date(from: currentCell.dateTextField.text!))")
-        if let date = dateFormatter.date(from: currentCell.dateTextField.text!) {
-            entries[indexPath.row].date = date
-            
-        }
-        else {
-            entries[indexPath.row].date = Date()//MARK: this is temporary as case for no text in date textfield. change this to match the current section
-        }
-        
-        print("entry \(indexPath.row) has the date \(entries[indexPath.row].date)")
-        
+        //MARK: date stuff potentially here
         
         self.saveItems()
        

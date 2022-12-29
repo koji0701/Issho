@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import IQKeyboardManagerSwift
 
 protocol ToDoEntryDelegate {
     func checkBoxPressed(in cell: UITableViewCell)
@@ -24,15 +25,11 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
     @IBOutlet weak var addButton: UIButton!
     
     
-    @IBOutlet weak var selectedView: UIView!
     
     
-    @IBOutlet weak var textViewWrapper: UIView!
     
     
-    @IBOutlet weak var regularView: UIStackView!
     
-    @IBOutlet weak var dateTextField: UITextField!
     
     
     
@@ -47,7 +44,7 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
     }
     
     
-    
+    var textViewCallBack: ((String) -> ())?
     
     
     override func awakeFromNib() {
@@ -61,8 +58,6 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
         textView.textContainer.widthTracksTextView = true
         textView.textContainer.size = textView.frame.size
         
-        selectedView.isHidden = false
-        
         
         //MARK: temporary
         addButton.isHidden = true
@@ -70,14 +65,11 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
         checkboxButton.isEnabled = true
         addButton.isEnabled = false
         
-        //button images
-        //circle.inset.filled,circle
-        //checkboxButton.setImage(UIImage(named: "circle"), for: .normal)
-        //addButton.setImage(UIImage(named: "plus.circle"), for: .normal)
+        
+        
         
         
     }
-    
     
 
     override func setSelected(_ selected: Bool, animated: Bool) {//code for selected/deselected
@@ -104,14 +96,26 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
         
     }
     
-    func textViewDidEndEditing(_ textView: UITextView) {
-        textView.resignFirstResponder()
-        self.toDoEntryDelegate?.saveInfoToContext(in: self)
-        print("text View did finish editing")
+    func textViewDidBeginEditing(_ textView: UITextView) {//MARK: toolbar
+        
     }
     
     
-   
+    func textViewDidEndEditing(_ textView: UITextView) {
+        textView.resignFirstResponder()
+        
+    }//MARK: IQKEYBOARDMANAGER CAN BE USED INSTEAD I THINK COME BACK TO THIS
+    
+    
+    func textViewDidChange(_ textView: UITextView) {
+        
+        let str = textView.text ?? ""
+        textViewCallBack?(str)
+    }
+    //toolbar manipulation for date
+    @objc func dateButtonClicked() {
+        print("date button clicked")
+    }
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
             if text == "\n" {
@@ -125,15 +129,6 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
             }
             return true
         }
-    
-    //date text field
-    //MARK: USE THE SAVEINFO TO CONTEXT FEATURE FOR THE TEXTFIELD
-    
-    @IBAction func dateTextFieldFinishedEditing(_ sender: Any) {
-        
-        self.toDoEntryDelegate?.saveInfoToContext(in: self)
-        
-    }
     
 }
 
