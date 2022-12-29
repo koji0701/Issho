@@ -7,6 +7,7 @@
 
 import UIKit
 import CoreData
+import IQKeyboardManagerSwift
 
 //MARK: General mark, I deleted a lot of the default methods that are new bc of the udemy tutorial (apparently it does like different types of interruptions phone calls etc.) if that is a problem paste them in later
 
@@ -18,6 +19,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.shouldResignOnTouchOutside = true
+        IQKeyboardManager.shared.reloadLayoutIfNeeded()
         return true
     }
 

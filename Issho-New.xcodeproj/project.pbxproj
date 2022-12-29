@@ -25,6 +25,7 @@
 		E58DED52292F1AD000F1EF0C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E58DED51292F1AD000F1EF0C /* Main.storyboard */; };
 		E58DED56292F26D900F1EF0C /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58DED55292F26D900F1EF0C /* User.swift */; };
 		E5A5166C2958D329002BC2B3 /* ToDoEntryData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E5A5166A2958D329002BC2B3 /* ToDoEntryData.xcdatamodeld */; };
+		E5A8B1D3295E2BC900D5E684 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E5A8B1D2295E2BC900D5E684 /* IQKeyboardManagerSwift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,7 +57,6 @@
 		E52FBCC4292F18D40053208C /* Issho-NewUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Issho-NewUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E52FBCC8292F18D40053208C /* Issho_NewUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Issho_NewUITests.swift; sourceTree = "<group>"; };
 		E52FBCCA292F18D40053208C /* Issho_NewUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Issho_NewUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		
 		E58DED3F292F196E00F1EF0C /* ToDoEntryCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ToDoEntryCell.xib; sourceTree = "<group>"; };
 		E58DED41292F198400F1EF0C /* ToDoEntryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToDoEntryCell.swift; sourceTree = "<group>"; };
 		E58DED45292F19A300F1EF0C /* ToDoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToDoViewController.swift; sourceTree = "<group>"; };
@@ -75,6 +75,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5A8B1D3295E2BC900D5E684 /* IQKeyboardManagerSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -195,6 +196,9 @@
 			dependencies = (
 			);
 			name = "Issho-New";
+			packageProductDependencies = (
+				E5A8B1D2295E2BC900D5E684 /* IQKeyboardManagerSwift */,
+			);
 			productName = "Issho-New";
 			productReference = E52FBCA4292F18D30053208C /* Issho-New.app */;
 			productType = "com.apple.product-type.application";
@@ -267,6 +271,9 @@
 				Base,
 			);
 			mainGroup = E52FBC9B292F18D30053208C;
+			packageReferences = (
+				E5A8B1D1295E2BC900D5E684 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
+			);
 			productRefGroup = E52FBCA5292F18D30053208C /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -656,11 +663,29 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		E5A8B1D1295E2BC900D5E684 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.5.10;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E5A8B1D2295E2BC900D5E684 /* IQKeyboardManagerSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E5A8B1D1295E2BC900D5E684 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
+			productName = IQKeyboardManagerSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
+
 /* Begin XCVersionGroup section */
 		E5A5166A2958D329002BC2B3 /* ToDoEntryData.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				
 				E5A5166B2958D329002BC2B3 /* ToDoEntryData.xcdatamodel */,
 			);
 			currentVersion = E5A5166B2958D329002BC2B3 /* ToDoEntryData.xcdatamodel */;
