@@ -13,14 +13,57 @@ class ToDoViewController: UIViewController{
     
     //var entries = ToDoEntry.toDoEntryList.sorted(byKeyPath: NSDate, ascending: true)
     //all wrong here
-    var entries = [ToDoEntry]()
+    var entries = [ToDoEntry]() {
+        didSet {
+            
+            uniqueDates = {
+                print("unique dates set")
+                let calendar = Calendar.current
+                var dateComponents = entries.map { calendar.dateComponents([.day, .month, .year], from: $0.date ?? Date()) }
+                dateComponents.append(calendar.dateComponents([.day, .month, .year], from: Date()))
+                let rV = Set(dateComponents).sorted {
+                  if $0.year != $1.year {
+                    return $0.year! < $1.year!
+                  } else if $0.month != $1.month {
+                    return $0.month! < $1.month!
+                  } else {
+                    return $0.day! < $1.day!
+                  }
+                }
+                return rV
+
+            }()
+        }
+    }
+    
+    var uniqueDates: [DateComponents] = [] //MARK: THIS IS WRONG. STARTOFDAY IS PROBABLY WRONG ALSO ADD THE TODAY THING DIRECTLY HERE
+    
+    
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext //context globally for this
+    
+    
 
     //coredata stuff for the tableview sections by date
     //MARK: question: should this be included in the loaditems() function?
-    private lazy var fetchedResultsController: NSFetchedResultsController<ToDoEntry> = {
+    /**lazy var fetchedResultsController: NSFetchedResultsController<ToDoEntry> = {
             let fetchRequest: NSFetchRequest<ToDoEntry> = ToDoEntry.fetchRequest()
-            fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+            
+            fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true, comparator: { (d1, d2) -> ComparisonResult in
+                let calendar = Calendar.current
+                let date1 = d1 as! Date
+                let date2 = d2 as! Date
+                
+                if (calendar.isDate(date1, equalTo: date2, toGranularity: .day)) {
+                    return .orderedSame
+                }
+                else if (date1 > date2) {
+                    return .orderedDescending
+                }
+                return .orderedAscending
+                
+            })]
+    
+        
 
             let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
                                                                       managedObjectContext: self.context,
@@ -28,7 +71,9 @@ class ToDoViewController: UIViewController{
                                                                       cacheName: nil)
             fetchedResultsController.delegate = self
             return fetchedResultsController
-        }()
+        }()**/
+    
+    
     @IBOutlet weak var ToDoTableView: UITableView!
     
     
@@ -42,59 +87,89 @@ class ToDoViewController: UIViewController{
         
         loadItems()
         
-
+        
+            
     }
 }
 
 
-extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate, NSFetchedResultsControllerDelegate {
-    
-    
+extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
     
     //sections stuff
     func numberOfSections(in tableView: UITableView) -> Int {
         
         //MARK: create sections by date
-        
-        if ((fetchedResultsController.sections?.count) != nil) {
-            print("using sections")
-            return fetchedResultsController.sections!.count
-        }
-        
-        return 1
+        print("unique dates count ", uniqueDates.count)
+        //return uniqueDates.count
+        return uniqueDates.count
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        guard let sections = fetchedResultsController.sections else {
-            print("nil sections")
-            return nil
+        
+        
+        let calendar = Calendar.current
+        let sectionInfo = uniqueDates[section]
+        let date = calendar.date(from: sectionInfo)!
+        let dayOfWeek = calendar.dateComponents([.weekday], from: date).weekday
+        
+        if (calendar.isDate(Date(), equalTo: date, toGranularity: .day)) {
+            print("date is today")
+            return "TODAY"
         }
-        print("got a section")
-        let sectionInfo = sections[section]
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "mm/dd"
-        let date = dateFormatter.date(from: sectionInfo.name)
+        
+        var sectionTitle = ""
+        switch dayOfWeek {
+        case 1:
+            sectionTitle += "Sunday"
+        case 2:
+            sectionTitle += "Monday"
+        case 3:
+            sectionTitle += "Tuesday"
+        case 4:
+            sectionTitle += "Wednesday"
+        case 5:
+            sectionTitle += "Thursday"
+        case 6:
+            sectionTitle += "Friday"
+        case 7:
+            sectionTitle += "Saturday"
+        default:
+            fatalError("ERROR IN TO DO TABLEVIEW FOR SECTION HEADEER BECAUSE DAY OF THE WEEK ISN'T VALID")
+        }
+        sectionTitle += " \(sectionInfo.month!)/\(sectionInfo.day!)"
+        
+       
         //MARK: change here for title for header
         
-        return dateFormatter.string(from: date ?? Date())
-        
+        //return dateFormatter.string(from: sectionInfo )
+        return sectionTitle
     }
     
     
     //table view methods
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        
-        if (entries.count == 0) {//intial entry always
-             let newToDoEntry = ToDoEntry(context: self.context)
-             initializeToDoEntry(newEntry: newToDoEntry)
-             
-             entries.append(newToDoEntry)
-             self.saveItems()
+        if (entries.count == 0) {
+            let newToDoEntry = ToDoEntry(context: self.context)
+            initializeToDoEntry(newEntry: newToDoEntry)
+
+            entries.append(newToDoEntry)
+            self.saveItems()
         }
-        return entries.count
+
+        // Retrieve the entries for the specified section
+        let sectionDateComponents = uniqueDates[section]
         
+        let sectionEntries = entries.filter {
+            let calendar = Calendar.current
+            let entryDateComponents = calendar.dateComponents([.day, .month, .year], from: $0.date!)
+            print("section entries", sectionEntries)
+            return entryDateComponents == sectionDateComponents
+        }
+
+        // Return the number of entries in the section
+        print("section entries count", sectionEntries.count)
+        return sectionEntries.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -107,31 +182,29 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate, NSFetche
         weak var tv = tableView
         cell.textViewCallBack = { [weak self] str in
             guard let self = self, let tv = tv else { return }
-            print("called back", str)
+            
             // update our data with the edited string
             self.entries[indexPath.row].text = str
             // we don't need to do anything else here
             // this will force the table to recalculate row heights
-            tv.performBatchUpdates(nil)
+            tv.performBatchUpdates(nil)//MARK: THIS IS REALLY EXPENSIVE. FIX THIS BY GOING TO THE TEXTVIEWDIDCHANGE IN THE TODOENTRYCELL AND HAVING THIS ONE ONLY BE CALLED EVERY CERTAIN AMT OF CHARACTERS OR FIND A DIFFERENT WAY TO ONLY RECALC HEIGHTS
+            
         }
-
+        
         
         return cell
         
     }
     
-    //MARK: did select row at functions
-    /** temporarily removing the part about is selected
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //entries[indexPath.row].isSelected = true
-        //MARK: call selected functions in the entries instead
-    }
     
-    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        //entries[indexPath.row].isSelected = false
-    }**/
     
     //create new todoentry cell
+    /**MARK PRIME: CONTINUE HERE. I THINK I NEED TO REDO THE CREATE NEW TO DO ENTRY CELL SO THAT IT DOESN'T CREATE THE CELL HERE BUT JUST PUTS THE INFO THEN DOES SELF.SAVEITEMS TO RELOAD THE TABLEVIEW. MODIFY THE TODOENTRYCELL SWIFT FILE TO ACCOUNT FOR THIS. ALSO, FIGURE OUT HOW TO DO THE RESIGN FIRST RESPONDER ONCE THIS METHOD IS PUT IN PLACE (IQKEYBOARD MANAGER CAN HELP?)
+    
+    
+    ONCE THIS IS DONE, FIGURE OUT HOW TO MANAGE THE ENTRIES ARRAY BECAUSE OF THE NEW SECTIONS/DATES THING. MY BEST IDEA SO FAR IS TO HAVE EVERYTHING IN THE ENTRIES ARRAY ALREADY BE IN ORDER (I CAN SORT IT BY DATE IN THE DIDSET I ALREADY HAVE). KEEP IN MIND ADDING/DELETION/MAKING NEW SECTIONS **/
+    
+    
     
     func createNewToDoEntryCell(in cell: UITableViewCell) -> ToDoEntryCell {
         
@@ -145,12 +218,9 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate, NSFetche
         //preparing the previous cell
         //entries[indexPath.row].isLastCell = false
         
-        //MARK: call function to signify that previous cell is now no longer the last cell
+        //MARK: REMOVED: SOME CODE THAT SAID TO UPDATE THE TODOENTRY TEXT CURRENTCELL OR SMTH. REDUNDANT, SO REMOVED
+    
         
-        let currentCell = cell as! ToDoEntryCell
-        entries[indexPath.row].text = currentCell.textView.text!
-        currentCell.toDoEntry = entries[indexPath.row]
-        //MARK: idk if this is needed anymore because of the savecontext protocol
         
         //creating the new cell
 
@@ -159,8 +229,12 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate, NSFetche
         
         
         let newToDoEntry = ToDoEntry(context: self.context)
+        let dateComponents = uniqueDates[nextIndexPath.section]
         
-        initializeToDoEntry(newEntry: newToDoEntry)
+        
+        let calendar = Calendar.current
+        let date = calendar.date(from: dateComponents)!
+        initializeToDoEntry(newEntry: newToDoEntry, date: date)
         
         entries.insert(newToDoEntry, at: nextIndexPath.row)
         self.saveItems()
@@ -208,8 +282,8 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate, NSFetche
         entries[indexPath.row].text = currentCell.textView.text!//update with more info later on such as date etc.
         
         
-        //MARK: date stuff potentially here
         
+        //MARK: IDK IF I NEED THIS SECTION ANYMORE BC IM ALREADY UPDATING
         self.saveItems()
        
     }
@@ -217,20 +291,14 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate, NSFetche
     
     
     //functions to easily initialize to do entry
-    func initializeToDoEntry(newEntry: ToDoEntry) {
-        newEntry.text = ""
-        newEntry.isChecked = false
-        newEntry.isCurrentTask = false
-        newEntry.date = Date()//TEMPORARY FIX THIS
-        newEntry.time = 0.0
-    }
     
-    func initializeToDoEntry(newEntry: ToDoEntry, text: String = "", isChecked: Bool = false, isCurrentTask: Bool = false, date: Date = Date(), time: Double?) {//to initialize default new one
+    
+    func initializeToDoEntry(newEntry: ToDoEntry, text: String = "", isChecked: Bool = false, isCurrentTask: Bool = false, date: Date = Date(), time: Double = 0.0) {//to initialize default new one
         newEntry.text = text
         newEntry.isChecked = isChecked
         newEntry.isCurrentTask = isCurrentTask
         newEntry.date = date //TEMPORARY FIX THIS
-        newEntry.time = time ?? 0.0
+        newEntry.time = time
     }
     
     //MARK: Model manipulation methods for coredata
@@ -242,6 +310,7 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate, NSFetche
         catch {
             print("error saving context \(error)")
         }
+        ToDoTableView.reloadData()
         
     }
 

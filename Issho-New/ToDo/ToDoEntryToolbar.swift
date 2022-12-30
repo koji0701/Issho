@@ -4,7 +4,10 @@ import UIKit
 class ToDoEntryToolbar: UIToolbar {
     
     let dateButton: UIBarButtonItem = {
-        let button = UIBarButtonItem(title: "Date", style: .plain, target: self, action: #selector(dateButtonTapped))
+        
+        let image = UIImage(named: "date")
+        let button = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(dateButtonTapped))
+        
         return button
     }()
     
@@ -15,7 +18,7 @@ class ToDoEntryToolbar: UIToolbar {
     convenience init() {
         self.init(frame: .zero)
         self.setItems([dateButton], animated: false)
-        print("convenience init working")
+        
     }
     
     override init(frame: CGRect) {

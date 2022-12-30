@@ -57,7 +57,7 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
         checkboxButton.isEnabled = true
         addButton.isEnabled = false
         
-        
+        //toolbar
         let toolbar = ToDoEntryToolbar()
         toolbar.sizeToFit()
         textView.inputAccessoryView = toolbar
@@ -91,9 +91,7 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
         
     }
     
-    func textViewDidBeginEditing(_ textView: UITextView) {//MARK: toolbar
-        
-    }
+    
     
     
     func textViewDidEndEditing(_ textView: UITextView) {
@@ -107,10 +105,7 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
         let str = textView.text ?? ""
         textViewCallBack?(str)
     }
-    //toolbar manipulation for date
-    @objc func dateButtonClicked() {
-        print("date button clicked")
-    }
+    
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
             if text == "\n" {
