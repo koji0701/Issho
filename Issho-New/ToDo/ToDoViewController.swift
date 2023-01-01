@@ -207,14 +207,22 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
                 let destinationIndex = self.returnPositionForThisIndexPath(indexPath: IndexPath(row: tv.numberOfRows(inSection: destinationSection), section: destinationSection), insideThisTable: tv)//total destination index
                 
                 let oldPlaceForEntry = self.entries.remove(at: Int(cell.toDoEntry!.order))//remove in entries array at old index
-                print("destination index is \(destinationIndex)")
                 self.entries.insert(oldPlaceForEntry, at: destinationIndex-1)//put removed one into the new spot
                 self.resetOrder()//resets the order of the entries to correspond with the new location for the entries array
                 self.saveItems()//save items to context and reload the tableview
             }
             else {//if the newdate is creating a new section in the uniquedates array
-                self.updateUniqueDates()//create the unique date in the array
+                print("new date needs to make a new section")
                 
+                self.updateUniqueDates()//create the unique date in the array
+                let destinationSection = self.uniqueDates.firstIndex(of: newDateAsComponents)
+                let destinationIndex = self.returnPositionForThisIndexPath(indexPath: IndexPath(row: 0, section: destinationSection!), insideThisTable: tv)//total destination index
+                print("cell order is ", cell.toDoEntry!.order)
+                print("cell destination is ", destinationIndex-1)
+                let oldPlaceForEntry = self.entries.remove(at: Int(cell.toDoEntry!.order))//remove in entries array at old index
+                self.entries.insert(oldPlaceForEntry, at: destinationIndex-1)//put removed one into the new spot
+                self.resetOrder()//resets the order of the entries to correspond with the new location for the entries array
+                self.saveItems()//save items to context and reload the tableview
                 
             }
             
