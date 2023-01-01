@@ -3,6 +3,9 @@ import UIKit
 
 class ToDoEntryToolbar: UIToolbar {
     
+    var dateSelectedCallBack: ((Date) -> ())?
+    
+    
     let dateButton: UIBarButtonItem = {
         
         let image = UIImage(named: "date")
@@ -13,7 +16,11 @@ class ToDoEntryToolbar: UIToolbar {
     
     @objc func dateButtonTapped() {
         print("date button tapped")
+        let calendar = Calendar.current
+        let tomorrow = calendar.date(byAdding: .day, value: 1, to: Date())
+        dateSelectedCallBack?(tomorrow!)
     }
+
     
     convenience init() {
         self.init(frame: .zero)

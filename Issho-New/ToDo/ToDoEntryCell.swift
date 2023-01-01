@@ -9,9 +9,8 @@ import UIKit
 import IQKeyboardManagerSwift
 
 protocol ToDoEntryDelegate {
-    func checkBoxPressed(in cell: UITableViewCell)
-    func createNewToDoEntryCell(in cell: UITableViewCell) -> ToDoEntryCell
-    func saveInfoToContext(in cell: UITableViewCell)
+    func checkBoxPressed(in cell: ToDoEntryCell)
+    func createNewToDoEntryCell(in cell: ToDoEntryCell) -> ToDoEntryCell
 }
 
 
@@ -24,6 +23,7 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
     
     @IBOutlet weak var addButton: UIButton!
     
+    @IBOutlet weak var temporaryOrder: UILabel!
     
     
     var toDoEntryDelegate: ToDoEntryDelegate!
@@ -32,9 +32,13 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
         didSet {
             
             textView.text = toDoEntry?.text
-        }//not sure if i need this whole toDoEntry thing anymore because i edit it in here then ill send it back to be saved in the context. coredata can handle the permanent saving of the edits over here i dont need to load it back
+            let temp = toDoEntry?.order
+            
+            temporaryOrder.text = String(temp!)
+        }
     }
     
+    let toolbar = ToDoEntryToolbar()
     
     var textViewCallBack: ((String) -> ())?
     
@@ -58,13 +62,14 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
         addButton.isEnabled = false
         
         //toolbar
-        let toolbar = ToDoEntryToolbar()
+        
         toolbar.sizeToFit()
         textView.inputAccessoryView = toolbar
         
         
         
     }
+    
     
 
     override func setSelected(_ selected: Bool, animated: Bool) {//code for selected/deselected
