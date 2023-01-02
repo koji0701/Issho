@@ -6,34 +6,27 @@ class ToDoEntryToolbar: UIToolbar {
     var dateSelectedCallBack: ((Date) -> ())?
     
     
-    let dateButton: UIBarButtonItem = {
+    let datePicker = UIDatePicker()
         
-        let image = UIImage(named: "date")
-        let button = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(dateButtonTapped))
-        
-        return button
-    }()
-    
-    @objc func dateButtonTapped() {
-        print("date button tapped")
-        let calendar = Calendar.current
-        let tomorrow = calendar.date(byAdding: .day, value: 1, to: Date())
-        dateSelectedCallBack?(tomorrow!)
-    }
-
-    
     convenience init() {
         self.init(frame: .zero)
-        self.setItems([dateButton], animated: false)
-        
+        datePicker.preferredDatePickerStyle = .compact
+        datePicker.addTarget(self, action: #selector(dateChanged), for: .valueChanged)
+        let datePickerItem = UIBarButtonItem(customView: datePicker)
+        self.setItems([datePickerItem], animated: true)
+    }
+    
+    @objc func dateChanged() {
+        dateSelectedCallBack?(datePicker.date)
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
     }
-    
+        
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
 }
 
