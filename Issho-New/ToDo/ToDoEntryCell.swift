@@ -10,7 +10,7 @@ import IQKeyboardManagerSwift
 
 protocol ToDoEntryDelegate {
     func checkBoxPressed(in cell: ToDoEntryCell)
-    func createNewToDoEntryCell(in cell: ToDoEntryCell) -> ToDoEntryCell
+    func createNewToDoEntryCell(in cell: ToDoEntryCell, makeFirstResponder: Bool)
 }
 
 
@@ -38,10 +38,34 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
         }
     }
     
-    let toolbar = ToDoEntryToolbar()
+    
+    var isPlaceholder: Bool? {
+        didSet {
+            if (isPlaceholder == true) {
+                
+                addButton.isHidden = false
+                checkboxButton.isHidden = true
+                checkboxButton.isEnabled = false
+                addButton.isEnabled = true
+            }
+            else {
+                
+                addButton.isHidden = true
+                checkboxButton.isHidden = false
+                checkboxButton.isEnabled = true
+                addButton.isEnabled = false
+                
+                if (textView.isFirstResponder == false && textView.text == "") {
+                    self.toDoEntryDelegate?.checkBoxPressed(in: self)//delete if its not first responder and not last cell and blank
+                }
+            }
+        }
+    }
+    
+    
     
     var textViewCallBack: ((String) -> ())?
-    
+    let toolbar = ToDoEntryToolbar()
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -55,31 +79,15 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
         textView.textContainer.size = textView.frame.size
         
         
-        //MARK: temporary
-        addButton.isHidden = true
-        checkboxButton.isHidden = false
-        checkboxButton.isEnabled = true
-        addButton.isEnabled = false
-        
         //toolbar
-        
         toolbar.sizeToFit()
         textView.inputAccessoryView = toolbar
         
         
-        
     }
     
+
     
-
-    override func setSelected(_ selected: Bool, animated: Bool) {//code for selected/deselected
-        super.setSelected(selected, animated: animated)
-        
-
-        // Update the selectedView's isHidden property based on the selected state of the cell
-        //selectedView.isHidden = !selected
-    }
-
     
     
     
@@ -88,21 +96,52 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
     }
     
     @IBAction func addPressed(_ sender: Any) {
-        let nextCell = self.toDoEntryDelegate?.createNewToDoEntryCell(in: self)
-        
-        if let nextTV = nextCell!.textView {
-            nextTV.becomeFirstResponder()
-        }
+        textView.becomeFirstResponder()//text view typing
+        //checkbox phase
+        addButton.isHidden = true
+        checkboxButton.isHidden = false
+        checkboxButton.isEnabled = true
+        addButton.isEnabled = false
         
     }
     
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        //set to the checkbox phase if its the last cell
+        textView.becomeFirstResponder()
+        if (isPlaceholder!) {
+            addButton.isHidden = true
+            checkboxButton.isHidden = false
+            checkboxButton.isEnabled = true
+            addButton.isEnabled = false
+        }
+    }
     
-    
+    private var resignedOnEnter = false
     
     func textViewDidEndEditing(_ textView: UITextView) {
         textView.resignFirstResponder()
         
-    }//MARK: IQKEYBOARDMANAGER CAN BE USED INSTEAD I THINK COME BACK TO THIS
+        if (textView.text == "") {//if textview is still blank after done editing
+            if (isPlaceholder!) {//if its the last cell, go back to the "add" phase
+                addButton.isHidden = false
+                checkboxButton.isHidden = true
+                checkboxButton.isEnabled = false
+                addButton.isEnabled = true
+            }
+            else {
+                self.toDoEntryDelegate?.checkBoxPressed(in: self)//delete the cell if its still blank after editing
+            }
+        }
+        else {
+            if (resignedOnEnter) {
+                
+                self.toDoEntryDelegate?.createNewToDoEntryCell(in: self, makeFirstResponder: true)
+                resignedOnEnter = false
+            }
+            
+        }
+        
+    }
     
     
     func textViewDidChange(_ textView: UITextView) {
@@ -113,17 +152,19 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
     
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        
             if text == "\n" {
-                // call the desired function here
-                let nextCell = self.toDoEntryDelegate?.createNewToDoEntryCell(in: self)
-                textView.resignFirstResponder()
-                if let nextTV = nextCell!.textView {
-                    nextTV.becomeFirstResponder()
+                
+                if (textView.text != "") {
+                    resignedOnEnter = true
                 }
+                textView.resignFirstResponder()
                 return false
             }
             return true
+        
         }
+    
     
 }
 

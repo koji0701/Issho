@@ -10,11 +10,6 @@ import CoreData
 
 class ToDoViewController: UIViewController{
 
-    
-    
-    
-    let defaults = UserDefaults.standard
- 
     var entries = [ToDoEntry]()
     
     
@@ -59,31 +54,12 @@ class ToDoViewController: UIViewController{
         
         ToDoTableView.register(UINib(nibName: Constants.ToDo.nibName, bundle: nil), forCellReuseIdentifier: Constants.ToDo.reuseIdentifier)
 
-        
+        ToDoTableView.separatorStyle = .none
+
         
         
         loadItems()
-        //handle first launch
-        /**if (defaults.bool(forKey: "firstTimeLaunching")) {
-            print("not first launch")
-        }
-        else {
-            
-            print("first time launching")
-            defaults.set(true, forKey: "firstTimeLaunching")
-            let newToDoEntry = ToDoEntry(context: self.context)
-            initializeToDoEntry(newEntry: newToDoEntry, order: 0)
-            
-            entries.append(newToDoEntry)
-            
-            self.saveItems()
-            
-        }**/
         
-        
-        /**let calendar = Calendar.current
-        let tomorrow = calendar.date(byAdding: .day, value: 1, to: Date())
-        entries[2].date = tomorrow**/
         updateUniqueDates()
         
             
@@ -163,8 +139,9 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
         }
         if (sectionEntries.count == 0) {//only case for this is if the date is today i think
             let index = returnPositionForThisIndexPath(indexPath: IndexPath(row: 0, section: section), insideThisTable: ToDoTableView)
-            let newToDoEntry = ToDoEntry(context: context)
+            let newToDoEntry = ToDoEntry(context: self.context)
             initializeToDoEntry(newEntry: newToDoEntry, order: 0)
+            print("index: ",index)
             entries.insert(newToDoEntry, at: index)
             resetOrder()
             saveItems()
@@ -183,9 +160,14 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
         
         
         cell.toDoEntry = entries[totalIndexRow]
-        
         cell.toDoEntryDelegate = self
-        
+        cell.isPlaceholder = false
+        if (ToDoTableView.numberOfRows(inSection: indexPath.section) - 1 == 0) {//if its the only cell in the section
+            if (cell.textView.text == "") {//if the text is blank, meaning it must be today
+                cell.isPlaceholder = true
+            }
+            
+        }
         // set the closure
         weak var tv = tableView
         cell.textViewCallBack = { [weak self] str in
@@ -203,6 +185,7 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
         }
         cell.toolbar.dateSelectedCallBack = { [weak self] newDate in
             guard let self = self, let tv = tv else { return }
+            
             
             self.entries[Int(cell.toDoEntry!.order)].date = newDate
             let calendar = Calendar.current
@@ -233,10 +216,8 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
                 self.updateUniqueDates()//create the unique date in the array
                 let destinationSection = self.uniqueDates.firstIndex(of: newDateAsComponents)
                 let destinationIndex = self.returnPositionForThisIndexPath(indexPath: IndexPath(row: 0, section: destinationSection!), insideThisTable: tv)//total destination index
-                print("destination index (without subtracting) is \(destinationIndex)")
                 let oldPlaceForEntry = self.entries.remove(at: Int(cell.toDoEntry!.order))//remove in entries array at old index
-                print("desetination index", destinationIndex)
-                print("entries count (without subtracting)", self.entries.count)
+
                 if (destinationIndex == self.entries.count+1) {//if it'll go out of bounds after removing the old place for entry;+1 is a shortcut
                     self.entries.append(oldPlaceForEntry)
                 }
@@ -247,9 +228,6 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
                 self.saveItems()//save items to context and reload the tableview
                 
             }
-            
-            
-            
             
         }
         
@@ -269,16 +247,18 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
 
     
     
-    func createNewToDoEntryCell(in cell: ToDoEntryCell) -> ToDoEntryCell {
+    func createNewToDoEntryCell(in cell: ToDoEntryCell, makeFirstResponder: Bool){
+        
+        
         
         guard let indexPath = ToDoTableView.indexPath(for: cell) else {
             print("error in the createNewToDoEntryCell func in the ToDoViewController")
-            return cell
+            return
         }
         
         guard let order = cell.toDoEntry?.order else {
             print("couldn't find order in the createNewToDoEntryCell func in the ToDoViewController")
-            return cell
+            return
         }
         
         let nextIndexPath = IndexPath(row: indexPath.row+1, section: indexPath.section)
@@ -309,10 +289,17 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
         
         guard let nextCell = ToDoTableView.cellForRow(at: nextIndexPath) as? ToDoEntryCell else {
             print("error in the creating a new todoentry creating the next cell cellforrow")
-            return cell
+            return
         }
+        if (makeFirstResponder) {
+            nextCell.textView.becomeFirstResponder()
+        }
+        else {
+            nextCell.textView.resignFirstResponder()
+        }
+         
         
-        return nextCell
+       
         
     }
     
@@ -323,15 +310,7 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
                 return
             }
         
-        guard let order = cell.toDoEntry?.order else {
-            print("could not find order in checkboxpressed func")
-            return
-        }
-        guard let date = cell.toDoEntry?.date else {
-            print("could not find date in checkboxpressed func")
-            return
-        }
-        let calendar = Calendar.current
+        
         
         
         let totalIndexRow = returnPositionForThisIndexPath(indexPath: indexPath, insideThisTable: ToDoTableView)
