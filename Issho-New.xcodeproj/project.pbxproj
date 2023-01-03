@@ -14,6 +14,8 @@
 		E52FBCBF292F18D40053208C /* Issho_NewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FBCBE292F18D40053208C /* Issho_NewTests.swift */; };
 		E52FBCC9292F18D40053208C /* Issho_NewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FBCC8292F18D40053208C /* Issho_NewUITests.swift */; };
 		E52FBCCB292F18D40053208C /* Issho_NewUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FBCCA292F18D40053208C /* Issho_NewUITestsLaunchTests.swift */; };
+		E539DD172963B3970034E1E5 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E539DD162963B3970034E1E5 /* SignupViewController.swift */; };
+		E53AED922963B801000AF59D /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53AED912963B801000AF59D /* LoginViewController.swift */; };
 		E58DED40292F196E00F1EF0C /* ToDoEntryCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E58DED3F292F196E00F1EF0C /* ToDoEntryCell.xib */; };
 		E58DED42292F198400F1EF0C /* ToDoEntryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58DED41292F198400F1EF0C /* ToDoEntryCell.swift */; };
 		E58DED46292F19A300F1EF0C /* ToDoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58DED45292F19A300F1EF0C /* ToDoViewController.swift */; };
@@ -58,6 +60,8 @@
 		E52FBCC4292F18D40053208C /* Issho-NewUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Issho-NewUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E52FBCC8292F18D40053208C /* Issho_NewUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Issho_NewUITests.swift; sourceTree = "<group>"; };
 		E52FBCCA292F18D40053208C /* Issho_NewUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Issho_NewUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		E539DD162963B3970034E1E5 /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
+		E53AED912963B801000AF59D /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		E58DED3F292F196E00F1EF0C /* ToDoEntryCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ToDoEntryCell.xib; sourceTree = "<group>"; };
 		E58DED41292F198400F1EF0C /* ToDoEntryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToDoEntryCell.swift; sourceTree = "<group>"; };
 		E58DED45292F19A300F1EF0C /* ToDoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToDoViewController.swift; sourceTree = "<group>"; };
@@ -136,6 +140,8 @@
 				E58DED4F292F19FF00F1EF0C /* Constants.swift */,
 				E52FBCB0292F18D40053208C /* Assets.xcassets */,
 				E58DED51292F1AD000F1EF0C /* Main.storyboard */,
+				E539DD162963B3970034E1E5 /* SignupViewController.swift */,
+				E53AED912963B801000AF59D /* LoginViewController.swift */,
 				E58DED54292F265800F1EF0C /* ToDo */,
 				E58DED53292F263000F1EF0C /* SM */,
 				E52FBCB5292F18D40053208C /* Info.plist */,
@@ -328,10 +334,12 @@
 				E58DED42292F198400F1EF0C /* ToDoEntryCell.swift in Sources */,
 				E58DED50292F19FF00F1EF0C /* Constants.swift in Sources */,
 				E5A5166C2958D329002BC2B3 /* ToDoEntryData.xcdatamodeld in Sources */,
+				E539DD172963B3970034E1E5 /* SignupViewController.swift in Sources */,
 				E5A8B1D7295E535C00D5E684 /* ToDoEntryToolbar.swift in Sources */,
 				E58DED4C292F19B200F1EF0C /* SMPostCell.swift in Sources */,
 				E52FBCAA292F18D30053208C /* SceneDelegate.swift in Sources */,
 				E58DED46292F19A300F1EF0C /* ToDoViewController.swift in Sources */,
+				E53AED922963B801000AF59D /* LoginViewController.swift in Sources */,
 				E58DED56292F26D900F1EF0C /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

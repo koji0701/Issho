@@ -21,7 +21,11 @@ struct Constants {
         static let reuseIdentifier = "SMReusablePostCell"
     }
     
-    
+    struct Segues {
+        static let signupToLogin = "SignupToLogin"
+        static let loginToTabBar = "LoginToTabBar"
+        static let signupToTabBar = "SignupToTabBar"
+    }
     
     
 }
