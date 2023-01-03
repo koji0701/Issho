@@ -188,53 +188,13 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
             
         }
         cell.toolbar.dateSelectedCallBack = { [weak self] newDate in
-            guard let self = self, let tv = tv else { return }
+            guard let self = self else { return }
             
-            
-            self.entries[Int(cell.toDoEntry!.order)].date = newDate
-            let calendar = Calendar.current
-            let newDateAsComponents = calendar.dateComponents([.day, .month, .year], from: newDate)
-            
-            if let destinationSection = self.uniqueDates.firstIndex(of: newDateAsComponents) {//if the newdate is already in the uniquedates array, take note of this destination section
-                
-                
-                let destinationIndex = self.returnPositionForThisIndexPath(indexPath: IndexPath(row: tv.numberOfRows(inSection: destinationSection), section: destinationSection), insideThisTable: tv)//total destination index
-                
-                let oldPlaceForEntry = self.entries.remove(at: Int(cell.toDoEntry!.order))//remove in entries array at old index
-                
-                if (destinationIndex == self.entries.count+1) {//if it'll go out of bounds after removing the old place for entry;+1 is a shortcut
-                    print("using append for destinationindex")
-                    self.entries.append(oldPlaceForEntry)
-                }
-                else {
-                    self.entries.insert(oldPlaceForEntry, at: destinationIndex)//put removed one into the new spot
-                }
-
-                self.resetOrder()//resets the order of the entries to correspond with the new location for the entries array
-                self.updateUniqueDates()
-                self.saveItems()//save items to context and reload the tableview
-            }
-            else {//if the newdate is creating a new section in the uniquedates array
-                print("new date needs to make a new section")
-                
-                self.updateUniqueDates()//create the unique date in the array
-                let destinationSection = self.uniqueDates.firstIndex(of: newDateAsComponents)
-                
-                tv.insertSections(IndexSet(integer: destinationSection!), with: .none)//MARK: CONTINUE HERE. I AM GETTING AN ERROR FROM THE MAKING A NEW SECTION BECAUSE OF THE WAY THE SECTIONS ARE CALCULATED. IF I PUT AN ENTRY EARLIER TO MAKE A NEW SECTION, THE COUNTING GETS OFF BECAUSE OF THE DESTINATION INDEX AND THE SECTION DOESNT EXIST YET. FIND A WAY TO DEAL WITH THIS
-                
-                let destinationIndex = self.returnPositionForThisIndexPath(indexPath: IndexPath(row: 0, section: destinationSection!), insideThisTable: tv)//total destination index
-                let oldPlaceForEntry = self.entries.remove(at: Int(cell.toDoEntry!.order))//remove in entries array at old index
-
-                if (destinationIndex == self.entries.count+1) {//if it'll go out of bounds after removing the old place for entry;+1 is a shortcut
-                    self.entries.append(oldPlaceForEntry)
-                }
-                else {
-                    self.entries.insert(oldPlaceForEntry, at: destinationIndex)//put removed one into the new spot
-                }
-                self.resetOrder()//resets the order of the entries to correspond with the new location for the entries array
-                self.saveItems()//save items to context and reload the tableview
-                
-            }
+            self.entries[Int(cell.toDoEntry!.order)].date = newDate//set new date
+            self.orderEntries()
+            self.resetOrder()
+            self.updateUniqueDates()
+            self.saveItems()
             
         }
         
@@ -243,6 +203,18 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
         
     }
     
+    private func orderEntries() {
+        let calendar = Calendar.current
+        self.entries.sort {
+            if (calendar.isDate($0.date!, equalTo: $1.date!, toGranularity: .day)) {//if same day
+                return $0.order < $1.order
+            }
+            else {//if different days
+                
+                return $0.date! < $1.date!
+            }
+        }
+    }
     
     
     private func resetOrder() {
@@ -333,16 +305,8 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
             
         }
         
-        
-        /**if (entries.count - 1 >= order ) {
-            
-            for i in (Int(order))...(entries.count - 1) {
-                entries[i].order = entries[i].order - 1
-            }
-        }**/
+        orderEntries()
         resetOrder()
-            
-        
         self.saveItems()
 
         
@@ -363,26 +327,7 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
 
         return rowCount
     }
-    
-    //rearranging
-    //MARK: UNUSED
-    func moveItem(start: Int, end: Int) {
-        
-        
-        if (start > end) {
-            entries[start].order = entries[end].order - 1
-            for i in end...(entries.count-1) {
-                entries[i].order = entries[i].order + 1
-            }
-        }
-        if (start < end) {
-            entries[start].order = entries[end].order + 1
-            for i in 0...end-1 {
-                entries[i].order = entries[i].order - 1
-            }
-        }
-        
-    }
+
     
     
     
@@ -405,7 +350,6 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
         
         do {
             
-            entries = entries.sorted { $0.order < $1.order }//sort the entries by order
             try context.save()
         }
         catch {
