@@ -10,6 +10,7 @@ import UIKit
 
 class SignupViewController: UIViewController {
     
+    @IBOutlet weak var emailTextField: UITextField!
     
     @IBAction func signupButtonClicked(_ sender: Any) {
         performSegue(withIdentifier: Constants.Segues.signupToTabBar, sender: self)
@@ -17,5 +18,11 @@ class SignupViewController: UIViewController {
     
     @IBAction func loginSwitchButtonPressed(_ sender: Any) {
         performSegue(withIdentifier: Constants.Segues.signupToLogin, sender: self)
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        emailTextField.borderStyle = .bezel
+        emailTextField.text = "Email"
     }
 }

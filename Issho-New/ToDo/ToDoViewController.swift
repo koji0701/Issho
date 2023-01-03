@@ -163,8 +163,12 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
         cell.toDoEntryDelegate = self
         cell.isPlaceholder = false
         if (ToDoTableView.numberOfRows(inSection: indexPath.section) - 1 == 0) {//if its the only cell in the section
-            if (cell.textView.text == "") {//if the text is blank, meaning it must be today
-                cell.isPlaceholder = true
+            if (cell.textView.text == "") {//if the text is blank
+                let calendar = Calendar.current
+                if (calendar.isDateInToday(cell.toDoEntry!.date!)) {//if its today
+                    cell.isPlaceholder = true
+                }
+                
             }
             
         }
@@ -192,14 +196,14 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
             let newDateAsComponents = calendar.dateComponents([.day, .month, .year], from: newDate)
             
             if let destinationSection = self.uniqueDates.firstIndex(of: newDateAsComponents) {//if the newdate is already in the uniquedates array, take note of this destination section
-                print("new date is already in the uniquedates, no need to make a new section")
+                
                 
                 let destinationIndex = self.returnPositionForThisIndexPath(indexPath: IndexPath(row: tv.numberOfRows(inSection: destinationSection), section: destinationSection), insideThisTable: tv)//total destination index
                 
                 let oldPlaceForEntry = self.entries.remove(at: Int(cell.toDoEntry!.order))//remove in entries array at old index
-                print("desetination index", destinationIndex)
-                print("entries count (without subtracting)", self.entries.count)
+                
                 if (destinationIndex == self.entries.count+1) {//if it'll go out of bounds after removing the old place for entry;+1 is a shortcut
+                    print("using append for destinationindex")
                     self.entries.append(oldPlaceForEntry)
                 }
                 else {
@@ -215,6 +219,9 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
                 
                 self.updateUniqueDates()//create the unique date in the array
                 let destinationSection = self.uniqueDates.firstIndex(of: newDateAsComponents)
+                
+                tv.insertSections(IndexSet(integer: destinationSection!), with: .none)//MARK: CONTINUE HERE. I AM GETTING AN ERROR FROM THE MAKING A NEW SECTION BECAUSE OF THE WAY THE SECTIONS ARE CALCULATED. IF I PUT AN ENTRY EARLIER TO MAKE A NEW SECTION, THE COUNTING GETS OFF BECAUSE OF THE DESTINATION INDEX AND THE SECTION DOESNT EXIST YET. FIND A WAY TO DEAL WITH THIS
+                
                 let destinationIndex = self.returnPositionForThisIndexPath(indexPath: IndexPath(row: 0, section: destinationSection!), insideThisTable: tv)//total destination index
                 let oldPlaceForEntry = self.entries.remove(at: Int(cell.toDoEntry!.order))//remove in entries array at old index
 
@@ -314,8 +321,18 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
         
         
         let totalIndexRow = returnPositionForThisIndexPath(indexPath: indexPath, insideThisTable: ToDoTableView)
-        context.delete(entries[totalIndexRow])
-        entries.remove(at: totalIndexRow)
+        if totalIndexRow < entries.count {
+            
+            context.delete(entries[totalIndexRow])
+            entries.remove(at: totalIndexRow)
+            
+            
+        }
+        else {
+            print("error in checkbox pressed, most likely due to the double deletion case where the blank cell and the checkbox of a different cell are both pressed")
+            
+        }
+        
         
         /**if (entries.count - 1 >= order ) {
             

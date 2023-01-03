@@ -82,7 +82,7 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
         //toolbar
         toolbar.sizeToFit()
         textView.inputAccessoryView = toolbar
-        
+        IQKeyboardManager.shared.keyboardDistanceFromTextField = toolbar.frame.height
         
     }
     
@@ -161,6 +161,14 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
                 textView.resignFirstResponder()
                 return false
             }
+        
+            if (textView.text == "") {
+                if (text.isBackspace) {
+                    print("delete key pressed")
+                    textView.resignFirstResponder()
+                    return false
+                }
+            }
             return true
         
         }
@@ -168,5 +176,10 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
     
 }
 
-
+extension String {//for backspace
+  var isBackspace: Bool {
+    let char = self.cString(using: String.Encoding.utf8)!
+    return strcmp(char, "\\b") == -92
+  }
+}
 
