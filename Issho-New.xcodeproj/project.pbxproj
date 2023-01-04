@@ -19,6 +19,7 @@
 		E58245C3296622EF0093E0D5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E58245C2296622EF0093E0D5 /* GoogleService-Info.plist */; };
 		E58245C62966238D0093E0D5 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = E58245C52966238D0093E0D5 /* FirebaseAuth */; };
 		E58245C82966238D0093E0D5 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = E58245C72966238D0093E0D5 /* FirebaseFirestore */; };
+		E58245CA296633BB0093E0D5 /* Welcome.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E58245C9296633BB0093E0D5 /* Welcome.storyboard */; };
 		E58DED40292F196E00F1EF0C /* ToDoEntryCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E58DED3F292F196E00F1EF0C /* ToDoEntryCell.xib */; };
 		E58DED42292F198400F1EF0C /* ToDoEntryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58DED41292F198400F1EF0C /* ToDoEntryCell.swift */; };
 		E58DED46292F19A300F1EF0C /* ToDoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58DED45292F19A300F1EF0C /* ToDoViewController.swift */; };
@@ -66,6 +67,7 @@
 		E539DD162963B3970034E1E5 /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		E53AED912963B801000AF59D /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		E58245C2296622EF0093E0D5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		E58245C9296633BB0093E0D5 /* Welcome.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Welcome.storyboard; sourceTree = "<group>"; };
 		E58DED3F292F196E00F1EF0C /* ToDoEntryCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ToDoEntryCell.xib; sourceTree = "<group>"; };
 		E58DED41292F198400F1EF0C /* ToDoEntryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToDoEntryCell.swift; sourceTree = "<group>"; };
 		E58DED45292F19A300F1EF0C /* ToDoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToDoViewController.swift; sourceTree = "<group>"; };
@@ -140,6 +142,7 @@
 		E52FBCA6292F18D30053208C /* Issho-New */ = {
 			isa = PBXGroup;
 			children = (
+				E58245CB296634930093E0D5 /* Welcome */,
 				E521803A29415A7400925BAC /* Model */,
 				E52FBCA7292F18D30053208C /* AppDelegate.swift */,
 				E52FBCA9292F18D30053208C /* SceneDelegate.swift */,
@@ -147,8 +150,6 @@
 				E52FBCB0292F18D40053208C /* Assets.xcassets */,
 				E58245C2296622EF0093E0D5 /* GoogleService-Info.plist */,
 				E58DED51292F1AD000F1EF0C /* Main.storyboard */,
-				E539DD162963B3970034E1E5 /* SignupViewController.swift */,
-				E53AED912963B801000AF59D /* LoginViewController.swift */,
 				E58DED54292F265800F1EF0C /* ToDo */,
 				E58DED53292F263000F1EF0C /* SM */,
 				E52FBCB5292F18D40053208C /* Info.plist */,
@@ -172,6 +173,16 @@
 				E52FBCCA292F18D40053208C /* Issho_NewUITestsLaunchTests.swift */,
 			);
 			path = "Issho-NewUITests";
+			sourceTree = "<group>";
+		};
+		E58245CB296634930093E0D5 /* Welcome */ = {
+			isa = PBXGroup;
+			children = (
+				E58245C9296633BB0093E0D5 /* Welcome.storyboard */,
+				E539DD162963B3970034E1E5 /* SignupViewController.swift */,
+				E53AED912963B801000AF59D /* LoginViewController.swift */,
+			);
+			path = Welcome;
 			sourceTree = "<group>";
 		};
 		E58DED53292F263000F1EF0C /* SM */ = {
@@ -315,6 +326,7 @@
 				E58DED40292F196E00F1EF0C /* ToDoEntryCell.xib in Resources */,
 				E58DED4B292F19B200F1EF0C /* SMPostCell.xib in Resources */,
 				E58245C3296622EF0093E0D5 /* GoogleService-Info.plist in Resources */,
+				E58245CA296633BB0093E0D5 /* Welcome.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

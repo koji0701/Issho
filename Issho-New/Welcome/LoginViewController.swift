@@ -25,10 +25,7 @@ class LoginViewController: UIViewController {
                     print(e.localizedDescription)
                 }
                 else {
-                    if let initialViewController = strongSelf.storyboard!.instantiateInitialViewController() {
-                        strongSelf.view.window?.rootViewController = initialViewController
-                        strongSelf.view.window?.makeKeyAndVisible()
-                    }
+                    strongSelf.performSegue(withIdentifier: Constants.Segues.loginToTabBar, sender: strongSelf)
                 }
             }
                 

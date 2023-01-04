@@ -27,5 +27,9 @@ struct Constants {
         static let signupToTabBar = "SignupToTabBar"
     }
     
+    struct UserDefaults {
+        static let currentUser = "currentUser"
+    }
+    
     
 }

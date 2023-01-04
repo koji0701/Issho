@@ -25,8 +25,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         IQKeyboardManager.shared.enableAutoToolbar = false
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.shouldResignOnTouchOutside = true
+        
+        
+        
         return true
     }
+    
+    
 
 
     func applicationWillTerminate(_ application: UIApplication) {
@@ -71,3 +76,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 }
+/**
+extension AppDelegate {
+    
+    func configureInitialRootViewController(for window: UIWindow?) {
+            let uid = UserDefaults.standard.bool(forKey: "uid")
+            let initialViewController: UIViewController
+            
+            
+
+            window?.rootViewController = initialViewController
+            window?.makeKeyAndVisible()
+        }
+    
+    /**
+     if isLoggedIn {
+         print("user is logged in")
+         
+     } else {
+         print("user is not logged in")
+         navigationController?.pushViewController(SignupViewController, animated: false)
+     }*/
+}
+**/

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct User {
+class User: Codable {
     let uid: String
     let username: String
     var friendsCount: Int
@@ -24,4 +24,17 @@ struct User {
         isActive = dictionary["isActive"] as? Bool ?? false
         streak = dictionary["streak"] as? Int ?? 0
     }
+    
+    /**static func setCurrent(_ user: User, writeToUserDefaults: Bool = false) {
+        // 2
+        if writeToUserDefaults {
+            // 3
+            if let data = try? JSONEncoder().encode(user) {
+                // 4
+                UserDefaults.standard.set(data, forKey: Constants.UserDefaults.currentUser)
+            }
+        }
+
+        _current = user
+    }**/
 }
