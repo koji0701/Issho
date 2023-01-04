@@ -24,8 +24,9 @@ class SignupViewController: UIViewController {
         if let email = emailTextField.text, let password = passwordTextField.text {
             Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
                 if let e = error {
-                    print(e)
+                    print(e.localizedDescription)
                 }
+                
                 else {
                     self.performSegue(withIdentifier: Constants.Segues.signupToTabBar, sender: self)
                 }
