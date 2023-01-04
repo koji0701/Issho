@@ -191,6 +191,7 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
             guard let self = self else { return }
             
             self.entries[Int(cell.toDoEntry!.order)].date = newDate//set new date
+            self.entries[Int(cell.toDoEntry!.order)].order = Int16(self.entries.count) //set order to max so that it'll go to the back of each section 
             self.orderEntries()
             self.resetOrder()
             self.updateUniqueDates()

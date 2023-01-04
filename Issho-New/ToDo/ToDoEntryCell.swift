@@ -23,7 +23,6 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
     
     @IBOutlet weak var addButton: UIButton!
     
-    @IBOutlet weak var temporaryOrder: UILabel!
     
     
     var toDoEntryDelegate: ToDoEntryDelegate!
@@ -32,9 +31,6 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
         didSet {
             
             textView.text = toDoEntry?.text
-            let temp = toDoEntry?.order
-            
-            temporaryOrder.text = String(temp!)
         }
     }
     

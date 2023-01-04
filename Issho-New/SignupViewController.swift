@@ -7,13 +7,32 @@
 
 import Foundation
 import UIKit
+//import FirebaseCore
+import FirebaseAuth
 
 class SignupViewController: UIViewController {
     
+    
+    
     @IBOutlet weak var emailTextField: UITextField!
     
+    @IBOutlet weak var passwordTextField: UITextField!
+    
     @IBAction func signupButtonClicked(_ sender: Any) {
-        performSegue(withIdentifier: Constants.Segues.signupToTabBar, sender: self)
+        
+        
+        if let email = emailTextField.text, let password = passwordTextField.text {
+            Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
+                if let e = error {
+                    print(e)
+                }
+                else {
+                    self.performSegue(withIdentifier: Constants.Segues.signupToTabBar, sender: self)
+                }
+            }
+        }
+        
+        
     }
     
     @IBAction func loginSwitchButtonPressed(_ sender: Any) {

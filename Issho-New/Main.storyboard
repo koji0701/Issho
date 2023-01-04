@@ -17,10 +17,16 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" allowsSelectionDuringEditing="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="7np-CV-0J4" userLabel="ToDoTableView">
-                                <rect key="frame" x="0.0" y="147" width="414" height="664"/>
+                                <rect key="frame" x="0.0" y="211" width="414" height="602"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xr6-8b-Z4q">
+                                <rect key="frame" x="215" y="105" width="120" height="85"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -177,7 +183,8 @@
                     </view>
                     <navigationItem key="navigationItem" id="k5c-eG-ush"/>
                     <connections>
-                        <outlet property="emailTextField" destination="5a9-fw-Iw6" id="1ry-JG-qI4"/>
+                        <outlet property="emailTextField" destination="5a9-fw-Iw6" id="stP-d8-djm"/>
+                        <outlet property="passwordTextField" destination="Qcp-js-1F4" id="PEa-Ck-xff"/>
                         <segue destination="TcV-JI-ykS" kind="show" identifier="SignupToLogin" id="M83-ON-7VF"/>
                         <segue destination="Py6-mE-eXZ" kind="presentation" identifier="SignupToTabBar" modalPresentationStyle="fullScreen" id="D3w-Ic-cpJ"/>
                     </connections>
