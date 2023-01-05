@@ -26,10 +26,13 @@ class LoginViewController: UIViewController {
                 }
                 else {
                     strongSelf.performSegue(withIdentifier: Constants.Segues.loginToTabBar, sender: strongSelf)
+                    
+                    
                 }
             }
-                
-                
+            
+            
+            
         }
     }
         

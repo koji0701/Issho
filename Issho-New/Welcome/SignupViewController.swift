@@ -28,6 +28,7 @@ class SignupViewController: UIViewController {
                 
                 else {
                     self.performSegue(withIdentifier: Constants.Segues.signupToTabBar, sender: self)
+                    
                 }
             }
         }
