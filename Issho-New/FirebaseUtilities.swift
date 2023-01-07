@@ -1,0 +1,42 @@
+//
+//  FirebaseUtilities.swift
+//  Issho-New
+//
+//  Created by Koji Wong on 1/6/23.
+//
+
+import Foundation
+import FirebaseFirestore
+
+fileprivate let db = Firestore.firestore()
+
+extension Firestore {
+    
+    static func updateUserInfo(uid: String, field: String, value: Any) {
+        db.collection(Constants.FBase.collectionName).document(uid).updateData([
+            field: value
+        ]) { err in
+            if let err = err {
+                print("Error updating document: \(err)")
+            }
+        }
+    }
+    
+    static func initializeUser(uid: String, username: String) {
+        
+        
+        db.collection(Constants.FBase.collectionName).document(uid).setData([
+            "username": username,
+            "likesCount": 0,
+            "streak": 0,
+            "progress": 0,
+            "isWorking": false,
+            "lastUpdated": 0,
+            "friends": [String](),
+            "likes": [String](),
+            
+        ])
+
+    }
+    
+}

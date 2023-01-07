@@ -12,7 +12,7 @@ class SMPostCell: UITableViewCell {
 
     @IBOutlet weak var profilePicView: UIImageView!
     @IBOutlet weak var percent: UILabel!
-    @IBOutlet weak var progressBar: NSLayoutConstraint!
+    
     @IBOutlet weak var name: UILabel!
     @IBOutlet weak var streak: UILabel!
     

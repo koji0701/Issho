@@ -7,13 +7,23 @@
 
 import UIKit
 import CoreData
+import FirebaseFirestore
+import FirebaseAuth
+
 
 class ToDoViewController: UIViewController{
+    
+    
 
     var entries = [ToDoEntry]()
     
     var progress: Float = 0.0
     
+    
+    
+    
+    private var updateTimer: Timer?
+
     private func updateProgress() {
         let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
         let fetchRequest: NSFetchRequest<ToDoEntry> = ToDoEntry.fetchRequest()
@@ -31,8 +41,21 @@ class ToDoViewController: UIViewController{
         percentageLabel.text = String(format: "%.1f%%", progress * 100)
         progressBar.progress = progress
         
+        // invalidate the timer if it's already running
+        updateTimer?.invalidate()
         
+        // start a new timer
+        updateTimer = Timer.scheduledTimer(withTimeInterval: 60.0, repeats: false) { [weak self] _ in
+            // this block of code will be executed 1 minute after `updateProgress` was last called
+            guard let uid = Auth.auth().currentUser?.uid else {
+                print("could not find uid for currentuser in the todoviewcontroller")
+                return
+            }
+            Firestore.updateUserInfo(uid: uid, field: "progress", value: self?.progress)
+            Firestore.updateUserInfo(uid: uid, field: "lastUpdated", value: FieldValue.serverTimestamp())
+        }
     }
+
     
     var uniqueDates: [DateComponents] = []
     
@@ -42,7 +65,7 @@ class ToDoViewController: UIViewController{
             let calendar = Calendar.current
             
             let filteredEntries: [ToDoEntry] = {
-                if (Constants.ToDo.showCheckedEntries) {
+                if (Constants.ToDo.showCheckedEntries == true) {
                     return entries
                 }
                 else {
@@ -88,10 +111,10 @@ class ToDoViewController: UIViewController{
     
     
     
-    @objc func newDayUpdates() {
+    private func newDayUpdates() {
         let fetchRequest: NSFetchRequest<ToDoEntry> = ToDoEntry.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "isChecked == true AND date < %@", NSDate())
-        
+        print("new day update")
         do {
             let toDelete = try context.fetch(fetchRequest)
             for entry in toDelete {
@@ -109,23 +132,33 @@ class ToDoViewController: UIViewController{
         saveItems()
         ToDoTableView.reloadData()
         
+        guard let uid = Auth.auth().currentUser?.uid else {
+            print("could not find uid for currentuser in the todoviewcontroller")
+            return
+        }
+        Firestore.updateUserInfo(uid: uid, field: "likes", value: [String]())
+        Firestore.updateUserInfo(uid: uid, field: "likesCount", value: 0)
+        updateProgress()
+        
+        //for streak
+        let calendar = Calendar.current
+        let twoDaysAgo = calendar.date(byAdding: .day, value: -2, to: Date())!
+        
+        if (entries[0].date! <= twoDaysAgo) {//if the first entry's date is less than or equal to two days ago from the start of the new day
+            Firestore.updateUserInfo(uid: uid, field: "streak", value: 0)
+        }
+        else {
+            Firestore.updateUserInfo(uid: uid, field: "streak", value: FieldValue.increment(1.0))//increment if everything looks good
+        }
+        
     }
-    
-    
-    
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-        //new day stuff
-        let calendar = Calendar.current
-        let midnight = calendar.startOfDay(for: Date())
-
-        let timer = Timer(fireAt: midnight, interval: 86400, target: self, selector: #selector(newDayUpdates), userInfo: nil, repeats: true)
-
-        RunLoop.current.add(timer, forMode: .common)
+       
         
         ToDoTableView.dataSource = self
         
@@ -143,7 +176,13 @@ class ToDoViewController: UIViewController{
         //header
         streakLabel.text = "0🔥"
         likesLabel.text = "0👏"
-        
+        //new day stuff
+        Task {
+            for await _ in NotificationCenter.default.notifications(named: .NSCalendarDayChanged) {
+                print("day did change")
+                newDayUpdates()
+            }
+        }
         
     }
     
@@ -162,7 +201,6 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
         //MARK: create sections by date
         
         //return uniqueDates.count'
-        print("number of sections returns ",uniqueDates.count)
         return uniqueDates.count
     }
     
@@ -226,14 +264,12 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
             let index = returnPositionForThisIndexPath(indexPath: IndexPath(row: 0, section: section), insideThisTable: ToDoTableView)
             let newToDoEntry = ToDoEntry(context: self.context)
             initializeToDoEntry(newEntry: newToDoEntry, order: 0)
-            print("index: ",index)
             entries.insert(newToDoEntry, at: index)
             resetOrder()
             saveItems()
             return 1
         }
         
-        print("in section \(uniqueDates[section]), there are \(sectionEntries.count)")
         // Return the number of entries in the section
         return sectionEntries.count
     }
@@ -398,7 +434,7 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
             }
         }
         else {
-            if (Constants.ToDo.showCheckedEntries) {
+            if (Constants.ToDo.showCheckedEntries == true) {
                 entries[totalIndexRow].isChecked.toggle()
             }
             else {
@@ -466,10 +502,11 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
 
     func loadItems() {
         let request: NSFetchRequest<ToDoEntry> = ToDoEntry.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(key: "order", ascending: true)]
+        
         if (Constants.ToDo.showCheckedEntries == false) {
             request.predicate = NSPredicate(format: "isChecked == false", NSDate())
         }
+        request.sortDescriptors = [NSSortDescriptor(key: "order", ascending: true)]
         do {
             entries = try context.fetch(request)
         } catch {

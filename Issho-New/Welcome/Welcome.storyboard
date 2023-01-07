@@ -43,11 +43,24 @@
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8M0-3a-VhW" userLabel="UsernameView">
+                                <rect key="frame" x="87" y="431" width="168" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="vQQ-fl-yl5" userLabel="UsernameTextField">
+                                        <rect key="frame" x="0.0" y="0.0" width="168" height="34"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xIE-TA-7sP" userLabel="PasswordView">
                                 <rect key="frame" x="0.0" y="484" width="414" height="94"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="sgr-Dc-DM6" userLabel="PasswordTextField">
+                                    <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="sgr-Dc-DM6" userLabel="PasswordTextField">
                                         <rect key="frame" x="88" y="30" width="234" height="34"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -104,6 +117,7 @@
                     <connections>
                         <outlet property="emailTextField" destination="lhC-zC-XbZ" id="U6K-Fh-XB7"/>
                         <outlet property="passwordTextField" destination="sgr-Dc-DM6" id="grO-fW-RJu"/>
+                        <outlet property="usernameTextField" destination="vQQ-fl-yl5" id="xCY-ug-7bC"/>
                         <segue destination="H0E-2Q-UJf" kind="show" identifier="SignupToLogin" id="VnT-Ev-3J5"/>
                         <segue destination="uGV-Rc-FZj" kind="presentation" identifier="SignupToTabBar" modalPresentationStyle="fullScreen" id="bbm-SZ-m8m"/>
                     </connections>
@@ -211,7 +225,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="o6A-UI-EQ7"/>
+        <segue reference="bbm-SZ-m8m"/>
     </inferredMetricsTieBreakers>
     <resources>
         <systemColor name="systemBackgroundColor">
