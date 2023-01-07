@@ -22,6 +22,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
+        let db = Firestore.firestore()
+        print(db)
         IQKeyboardManager.shared.enableAutoToolbar = false
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.shouldResignOnTouchOutside = true
@@ -75,26 +77,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 }
-/**
-extension AppDelegate {
-    
-    func configureInitialRootViewController(for window: UIWindow?) {
-            let uid = UserDefaults.standard.bool(forKey: "uid")
-            let initialViewController: UIViewController
-            
-            
 
-            window?.rootViewController = initialViewController
-            window?.makeKeyAndVisible()
-        }
-    
-    /**
-     if isLoggedIn {
-         print("user is logged in")
-         
-     } else {
-         print("user is not logged in")
-         navigationController?.pushViewController(SignupViewController, animated: false)
-     }*/
-}
-**/

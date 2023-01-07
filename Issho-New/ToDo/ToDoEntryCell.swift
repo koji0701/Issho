@@ -9,7 +9,7 @@ import UIKit
 import IQKeyboardManagerSwift
 
 protocol ToDoEntryDelegate {
-    func checkBoxPressed(in cell: ToDoEntryCell)
+    func checkBoxPressed(in cell: ToDoEntryCell, deletion: Bool)
     func createNewToDoEntryCell(in cell: ToDoEntryCell, makeFirstResponder: Bool)
 }
 
@@ -31,6 +31,13 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
         didSet {
             
             textView.text = toDoEntry?.text
+            if (toDoEntry?.isChecked == true) {
+                checkboxButton.setImage(UIImage(systemName: "checkmark.circle.fill"), for: .normal)
+                print("ischecked is true")
+            }
+            else {
+                checkboxButton.setImage(UIImage(systemName: "circle"), for: .normal)
+            }
         }
     }
     
@@ -52,7 +59,7 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
                 addButton.isEnabled = false
                 
                 if (textView.isFirstResponder == false && textView.text == "") {
-                    self.toDoEntryDelegate?.checkBoxPressed(in: self)//delete if its not first responder and not last cell and blank
+                    self.toDoEntryDelegate?.checkBoxPressed(in: self, deletion: true)//delete if its not first responder and not last cell and blank
                 }
             }
         }
@@ -88,7 +95,7 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
     
     
     @IBAction func checkboxPressed(_ sender: Any) {
-        self.toDoEntryDelegate?.checkBoxPressed(in: self)
+        self.toDoEntryDelegate?.checkBoxPressed(in: self, deletion: false)
     }
     
     @IBAction func addPressed(_ sender: Any) {
@@ -125,7 +132,7 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
                 addButton.isEnabled = true
             }
             else {
-                self.toDoEntryDelegate?.checkBoxPressed(in: self)//delete the cell if its still blank after editing
+                self.toDoEntryDelegate?.checkBoxPressed(in: self, deletion: true)//delete the cell if its still blank after editing
             }
         }
         else {

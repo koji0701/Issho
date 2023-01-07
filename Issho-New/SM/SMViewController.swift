@@ -6,12 +6,16 @@
 //
 
 import UIKit
+import FirebaseFirestore
 
 class SMViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
     var posts: [String] = ["", "", "", ""]//change this later
+    
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -31,7 +31,7 @@
                                         </constraints>
                                         <color key="tintColor" systemColor="labelColor"/>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="tinted" image="circle" catalog="system" cornerStyle="large">
+                                        <buttonConfiguration key="configuration" style="tinted" image="check" cornerStyle="large">
                                             <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage" weight="heavy"/>
                                             <color key="baseBackgroundColor" systemColor="systemBackgroundColor"/>
                                         </buttonConfiguration>
@@ -114,7 +114,7 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="circle" catalog="system" width="128" height="121"/>
+        <image name="check" width="128" height="128"/>
         <image name="plus.circle" catalog="system" width="128" height="121"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

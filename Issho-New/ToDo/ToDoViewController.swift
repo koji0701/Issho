@@ -12,14 +12,45 @@ class ToDoViewController: UIViewController{
 
     var entries = [ToDoEntry]()
     
+    var progress: Float = 0.0
     
-    var uniqueDates: [DateComponents] = [] //MARK: THIS IS WRONG. STARTOFDAY IS PROBABLY WRONG ALSO ADD THE TODAY THING DIRECTLY HERE
+    private func updateProgress() {
+        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
+        let fetchRequest: NSFetchRequest<ToDoEntry> = ToDoEntry.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "date <= %@", tomorrow as NSDate)
+
+        do {
+            let checkedEntries = try context.fetch(fetchRequest)
+                                            .filter { $0.isChecked == true }
+            let totalEntries = try context.fetch(fetchRequest)
+            self.progress = Float(checkedEntries.count) / Float(totalEntries.count)
+        } catch {
+            progress = 0.0
+            print("error in updateProgress")
+        }
+        percentageLabel.text = String(format: "%.1f%%", progress * 100)
+        progressBar.progress = progress
+        
+        
+    }
+    
+    var uniqueDates: [DateComponents] = []
     
     private func updateUniqueDates() {
         
         uniqueDates = {
             let calendar = Calendar.current
-            var dateComponents = entries.map { calendar.dateComponents([.day, .month, .year], from: $0.date!) }
+            
+            let filteredEntries: [ToDoEntry] = {
+                if (Constants.ToDo.showCheckedEntries) {
+                    return entries
+                }
+                else {
+                    return entries.filter { $0.isChecked == false }
+                }
+            }()
+            
+            var dateComponents = filteredEntries.map { calendar.dateComponents([.day, .month, .year], from: $0.date!) }
             dateComponents.append(calendar.dateComponents([.day, .month, .year], from: Date()))
             let rV = Set(dateComponents).sorted {
               if $0.year != $1.year {
@@ -35,13 +66,52 @@ class ToDoViewController: UIViewController{
         }()
     }
     
-
-    
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext //context globally for this
     
     
     @IBOutlet weak var ToDoTableView: UITableView!
+    
+    //header outlets
+    @IBAction func settingsButtonClicked(_ sender: Any) {
+        
+    }
+    
+    @IBOutlet weak var streakLabel: UILabel!
+    
+    
+    @IBOutlet weak var likesLabel: UILabel!
+    
+    @IBOutlet weak var progressBar: UIProgressView!
+    
+    @IBOutlet weak var percentageLabel: UILabel!
+    
+    
+    
+    @objc func newDayUpdates() {
+        let fetchRequest: NSFetchRequest<ToDoEntry> = ToDoEntry.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "isChecked == true AND date < %@", NSDate())
+        
+        do {
+            let toDelete = try context.fetch(fetchRequest)
+            for entry in toDelete {
+                context.delete(entry)
+            }
+            try context.save()
+        }
+        catch {
+            print("error in newDayUpdate todoviewcontroller")
+        }
+        loadItems()
+        updateUniqueDates()
+        orderEntries()
+        resetOrder()
+        saveItems()
+        ToDoTableView.reloadData()
+        
+    }
+    
+    
     
     
     override func viewDidLoad() {
@@ -49,25 +119,40 @@ class ToDoViewController: UIViewController{
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
+        //new day stuff
+        let calendar = Calendar.current
+        let midnight = calendar.startOfDay(for: Date())
+
+        let timer = Timer(fireAt: midnight, interval: 86400, target: self, selector: #selector(newDayUpdates), userInfo: nil, repeats: true)
+
+        RunLoop.current.add(timer, forMode: .common)
+        
         ToDoTableView.dataSource = self
         
-        
+        navigationController?.navigationBar.isHidden = true
         ToDoTableView.register(UINib(nibName: Constants.ToDo.nibName, bundle: nil), forCellReuseIdentifier: Constants.ToDo.reuseIdentifier)
 
         ToDoTableView.separatorStyle = .none
-
         
         
         loadItems()
         
         updateUniqueDates()
+        updateProgress()
         
-            
+        //header
+        streakLabel.text = "0🔥"
+        likesLabel.text = "0👏"
+        
+        
     }
+    
+    
 }
 
 
 extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
+    
     
     
     
@@ -208,7 +293,14 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
         let calendar = Calendar.current
         self.entries.sort {
             if (calendar.isDate($0.date!, equalTo: $1.date!, toGranularity: .day)) {//if same day
-                return $0.order < $1.order
+                
+                if ($0.isChecked == $1.isChecked) {
+                    return $0.order < $1.order
+                }
+                else {
+                    return $1.isChecked
+                }
+                
             }
             else {//if different days
                 
@@ -285,32 +377,42 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
     
     
     //deletion of todo cell
-    func checkBoxPressed(in cell: ToDoEntryCell) {
+    func checkBoxPressed(in cell: ToDoEntryCell, deletion: Bool) {
         guard let indexPath = ToDoTableView.indexPath(for: cell) else {
                 return
             }
         
         
-        
-        
         let totalIndexRow = returnPositionForThisIndexPath(indexPath: indexPath, insideThisTable: ToDoTableView)
-        if totalIndexRow < entries.count {
-            
-            context.delete(entries[totalIndexRow])
-            entries.remove(at: totalIndexRow)
-            
-            
+        
+        if (deletion) {
+            if totalIndexRow < entries.count {
+                
+                context.delete(entries[totalIndexRow])
+                entries.remove(at: totalIndexRow)
+                
+            }
+            else {
+                print("error in checkbox pressed, most likely due to the double deletion case where the blank cell and the checkbox of a different cell are both pressed")
+                
+            }
         }
         else {
-            print("error in checkbox pressed, most likely due to the double deletion case where the blank cell and the checkbox of a different cell are both pressed")
+            if (Constants.ToDo.showCheckedEntries) {
+                entries[totalIndexRow].isChecked.toggle()
+            }
+            else {
+                //in the context, change attribute isChecked to false for this object
+                entries[totalIndexRow].isChecked = false
+                context.refresh(entries[totalIndexRow], mergeChanges: true)
+                entries.remove(at: totalIndexRow)
+            }
+            
             
         }
-        
         orderEntries()
         resetOrder()
         self.saveItems()
-
-        
     }
     
     //for total indexpath
@@ -357,6 +459,7 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
             print("error saving context \(error)")
         }
         updateUniqueDates()
+        updateProgress()
         ToDoTableView.reloadData()
     }
     
@@ -364,6 +467,9 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
     func loadItems() {
         let request: NSFetchRequest<ToDoEntry> = ToDoEntry.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(key: "order", ascending: true)]
+        if (Constants.ToDo.showCheckedEntries == false) {
+            request.predicate = NSPredicate(format: "isChecked == false", NSDate())
+        }
         do {
             entries = try context.fetch(request)
         } catch {
@@ -371,10 +477,5 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
         }
     }
     
-    
-
 }
-
-
-
 
