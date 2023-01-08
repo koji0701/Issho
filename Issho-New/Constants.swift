@@ -15,7 +15,7 @@ struct Constants {
         static let reuseIdentifier = "ToDoReusableEntryCell"
         
         //settings
-        static var showCheckedEntries = true
+        static var showCheckedEntries = false
     }
     
     struct SM {

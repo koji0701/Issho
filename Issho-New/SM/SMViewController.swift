@@ -35,7 +35,7 @@ class SMViewController: UIViewController {
                         let data = doc.data()
                         
                         
-                        if let likesCount = data["likesCount"] as? Int, let streak = data["streak"] as? Int, let isWorking = data["isWorking"] as? Bool, let lastUpdated = data["lastUpdated"] as? Timestamp, let username = data["username"] as? String, let progress = data["progress"] as? Int, let likes = data["likes"] as? [String]{
+                        if let likesCount = data["likesCount"] as? Int, let streak = data["streak"] as? Int, let isWorking = data["isWorking"] as? Bool, let lastUpdated = data["lastUpdated"] as? Timestamp, let username = data["username"] as? String, let progress = data["progress"] as? Float, let likes = data["likes"] as? [String]{
                             print("got past the if let conditions")
                             let isLiked = likes.contains(uid)//if likes contains uid, true its been liked
                             let dict: [String: Any] = ["likesCount": likesCount, "streak": streak, "isWorking": isWorking, "lastUpdated": lastUpdated.dateValue(), "username": username, "progress": progress, "isLiked": isLiked]
@@ -100,7 +100,10 @@ extension SMViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.SM.reuseIdentifier, for: indexPath) as! SMPostCell
-        
+        cell.username.text = posts[indexPath.row].username
+        cell.streak.text = String(posts[indexPath.row].streak) + "🔥"
+        cell.likes.text = String(posts[indexPath.row].likesCount) + "👏"
+        cell.progressBar.progress = posts[indexPath.row].progress
         return cell
     }
     

@@ -24,7 +24,9 @@ class ToDoViewController: UIViewController{
     
     private var updateTimer: Timer?
 
-    private func updateProgress() {
+    private var placeholderFlagForProgress = false
+    private func updateProgress(shouldBeLastUpdated: Bool) {//MARK: CONTINUE POLACEHOLDERFLAG
+        
         let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
         let fetchRequest: NSFetchRequest<ToDoEntry> = ToDoEntry.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "date <= %@", tomorrow as NSDate)
@@ -32,8 +34,16 @@ class ToDoViewController: UIViewController{
         do {
             let checkedEntries = try context.fetch(fetchRequest)
                                             .filter { $0.isChecked == true }
-            let totalEntries = try context.fetch(fetchRequest)
+            let totalEntries = try context.fetch(fetchRequest).filter {$0.isPlaceholder == false}
+            //account for the isPlaceholder cell
+            
             self.progress = Float(checkedEntries.count) / Float(totalEntries.count)
+            print("placeholder flag")
+            if (self.progress.isNaN == true) {
+                self.progress = 1.0//if not a number set to 1.0
+                print("not a number")
+            }
+
         } catch {
             progress = 0.0
             print("error in updateProgress")
@@ -51,8 +61,12 @@ class ToDoViewController: UIViewController{
                 print("could not find uid for currentuser in the todoviewcontroller")
                 return
             }
-            Firestore.updateUserInfo(uid: uid, field: "progress", value: self?.progress)
-            Firestore.updateUserInfo(uid: uid, field: "lastUpdated", value: FieldValue.serverTimestamp())
+            Firestore.updateUserInfo(uid: uid, field: "progress", value: self?.progress ?? 0.0)
+            if (shouldBeLastUpdated == true) {
+                Firestore.updateUserInfo(uid: uid, field: "lastUpdated", value: FieldValue.serverTimestamp())
+                Firestore.updateUserInfo(uid: uid, field: "likes", value: [String]())//clear likes and open for new post
+            }
+            
         }
     }
 
@@ -126,11 +140,9 @@ class ToDoViewController: UIViewController{
             print("error in newDayUpdate todoviewcontroller")
         }
         loadItems()
-        updateUniqueDates()
+        
         orderEntries()
-        resetOrder()
-        saveItems()
-        ToDoTableView.reloadData()
+        
         
         guard let uid = Auth.auth().currentUser?.uid else {
             print("could not find uid for currentuser in the todoviewcontroller")
@@ -138,7 +150,7 @@ class ToDoViewController: UIViewController{
         }
         Firestore.updateUserInfo(uid: uid, field: "likes", value: [String]())
         Firestore.updateUserInfo(uid: uid, field: "likesCount", value: 0)
-        updateProgress()
+        updateProgress(shouldBeLastUpdated: false)
         
         //for streak
         let calendar = Calendar.current
@@ -171,11 +183,12 @@ class ToDoViewController: UIViewController{
         loadItems()
         
         updateUniqueDates()
-        updateProgress()
+        updateProgress(shouldBeLastUpdated: false)
         
         //header
         streakLabel.text = "0🔥"
         likesLabel.text = "0👏"
+        
         //new day stuff
         Task {
             for await _ in NotificationCenter.default.notifications(named: .NSCalendarDayChanged) {
@@ -201,6 +214,7 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
         //MARK: create sections by date
         
         //return uniqueDates.count'
+        print("number of sections is running", uniqueDates.count)
         return uniqueDates.count
     }
     
@@ -209,11 +223,17 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
         
         let calendar = Calendar.current
         let sectionInfo = uniqueDates[section]
-        let date = calendar.date(from: sectionInfo)!
+        print("section", section)
+        print("sectionInfo", sectionInfo)
+        guard let date = calendar.date(from: sectionInfo) else {
+            print("date could not be found in titleforheaderinsection")
+            return ""
+        }
+        print("found date")
         let dayOfWeek = calendar.dateComponents([.weekday], from: date).weekday
         
         if (calendar.isDate(Date(), equalTo: date, toGranularity: .day)) {
-            
+            print("returning today")
             return "TODAY"
         }
         
@@ -238,7 +258,7 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
         }
         sectionTitle += " \(sectionInfo.month!)/\(sectionInfo.day!)"
         
-       
+        
         //MARK: change here for title for header
         
         //return dateFormatter.string(from: sectionInfo )
@@ -250,29 +270,38 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-
+        print("number of rows in section running")
+        print("entries.count", entries.count)
         // Retrieve the entries for the specified section
         let sectionDateComponents = uniqueDates[section]
-        
+        let calendar = Calendar.current
         let sectionEntries = entries.filter {
-            let calendar = Calendar.current
+            
             let entryDateComponents = calendar.dateComponents([.day, .month, .year], from: $0.date!)
             
             return entryDateComponents == sectionDateComponents
         }
-        if (sectionEntries.count == 0) {//only case for this is if the date is today i think
-            let index = returnPositionForThisIndexPath(indexPath: IndexPath(row: 0, section: section), insideThisTable: ToDoTableView)
+        
+        if (sectionDateComponents != calendar.dateComponents([.day, .month, .year], from: Date())) {
+            // Return the number of entries in the section
+            return sectionEntries.count
+        }
+        
+        if (sectionEntries.count == 0) {
+            print("section entries count 0")
+            let index = returnPositionForThisIndexPath(indexPath: IndexPath(row: sectionEntries.count, section: section), insideThisTable: ToDoTableView)
             let newToDoEntry = ToDoEntry(context: self.context)
-            initializeToDoEntry(newEntry: newToDoEntry, order: 0)
+            initializeToDoEntry(newEntry: newToDoEntry, order: 0, isPlaceholder: true)
             entries.insert(newToDoEntry, at: index)
             resetOrder()
             saveItems()
-            return 1
+            return sectionEntries.count
         }
         
-        // Return the number of entries in the section
-        return sectionEntries.count
+        return sectionEntries.count//safety
     }
+        
+    
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
@@ -282,17 +311,11 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
         
         cell.toDoEntry = entries[totalIndexRow]
         cell.toDoEntryDelegate = self
-        cell.isPlaceholder = false
-        if (ToDoTableView.numberOfRows(inSection: indexPath.section) - 1 == 0) {//if its the only cell in the section
-            if (cell.textView.text == "") {//if the text is blank
-                let calendar = Calendar.current
-                if (calendar.isDateInToday(cell.toDoEntry!.date!)) {//if its today
-                    cell.isPlaceholder = true
-                }
-                
-            }
+        
+        placeholderFlagForProgress = false
+        
             
-        }
+        
         // set the closure
         weak var tv = tableView
         cell.textViewCallBack = { [weak self] str in
@@ -312,11 +335,14 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
             guard let self = self else { return }
             
             self.entries[Int(cell.toDoEntry!.order)].date = newDate//set new date
-            self.entries[Int(cell.toDoEntry!.order)].order = Int16(self.entries.count) //set order to max so that it'll go to the back of each section 
-            self.orderEntries()
-            self.resetOrder()
-            self.updateUniqueDates()
-            self.saveItems()
+            if (cell.toDoEntry?.isPlaceholder == true) {
+                self.entries[Int(cell.toDoEntry!.order)].isPlaceholder = false
+            }
+            self.entries[Int(cell.toDoEntry!.order)].order = Int16(self.entries.count) //set order to max so that it'll go to the back of each section
+            self.orderEntries()//MARK: CONTINUE HERE
+            
+            self.updateProgress(shouldBeLastUpdated: false)
+            
             
         }
         
@@ -325,10 +351,15 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
         
     }
     
-    private func orderEntries() {
+    func orderEntries() {
         let calendar = Calendar.current
+        self.entries.removeAll(where: {$0.text == "" && $0.isPlaceholder == false})//removes all unnecessary ones
+        
         self.entries.sort {
             if (calendar.isDate($0.date!, equalTo: $1.date!, toGranularity: .day)) {//if same day
+                if ($0.isPlaceholder == true) {//if its the placeholder
+                    return Constants.ToDo.showCheckedEntries //if show checked entries is true, then returning true -> placeholder goes to top
+                }
                 
                 if ($0.isChecked == $1.isChecked) {
                     return $0.order < $1.order
@@ -336,13 +367,34 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
                 else {
                     return $1.isChecked
                 }
-                
             }
             else {//if different days
                 
                 return $0.date! < $1.date!
             }
         }
+        let placeholder = self.entries.filter({$0.isPlaceholder == true})
+        if (placeholder.count == 0)  {//if there's no placeholders
+            let newToDoEntry = ToDoEntry(context: self.context)
+            initializeToDoEntry(newEntry: newToDoEntry, order: 0, isPlaceholder: true)
+            if (Constants.ToDo.showCheckedEntries == true) {
+                //insert at top of today's section
+                if let index = entries.firstIndex(where: {calendar.isDate($0.date!, equalTo: Date(), toGranularity: .day)}) {//case where there is 0 index in today is already handled by the tableview sections stuff
+                    entries.insert(newToDoEntry, at: index)
+                }
+                
+            }
+            else {
+                //insert at bottom of today's section
+                if let index = entries.lastIndex(where: {calendar.isDate($0.date!, equalTo: Date(), toGranularity: .day)}) {
+                    entries.insert(newToDoEntry, at: index + 1)
+                    print("inserting new to do entry at index \(index + 1)")
+                }
+            }
+        }
+        resetOrder()//i always run this
+        saveItems()//i always run this
+        
     }
     
     
@@ -369,6 +421,11 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
             return
         }
         
+        guard let isPlaceholder = cell.toDoEntry?.isPlaceholder else {
+            print("couldn't find isplaceholder in createnewtodoentrycell func in todoviewcontroller")
+            return
+        }
+        
         let nextIndexPath = IndexPath(row: indexPath.row+1, section: indexPath.section)
         
         
@@ -379,21 +436,37 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
         
         let calendar = Calendar.current
         let date = calendar.date(from: dateComponents)!
-        initializeToDoEntry(newEntry: newToDoEntry, date: date, order: order + 1)
-        entries.insert(newToDoEntry, at: Int(order+1))
-        //context.insert(newToDoEntry)
-        /**
-        if (entries.count-1 >= order + 2) {
-            for i in (Int(order)+2)...(entries.count-1) {
-                entries[i].order = entries[i].order + 1
+        
+        /**if (calendar.isDateInToday(date)) {//if date is in today
+            if (cell.isPlaceholder == true) {
+                placeholderFlagForProgress = false//MARK: turn off the flag if there is currently a placeholder in today
             }
         }**/
+        
+        if (isPlaceholder == true) {
+            let totalIndexPath = returnPositionForThisIndexPath(indexPath: indexPath, insideThisTable: ToDoTableView)
+            entries[totalIndexPath].isPlaceholder = false
+            if (Constants.ToDo.showCheckedEntries == true) {
+                initializeToDoEntry(newEntry: newToDoEntry, date: date, order: order - 1, isPlaceholder: true)
+                entries.insert(newToDoEntry, at: Int(order))//insert it above the current if showcheckedentries is true
+            }
+            
+            else {
+                initializeToDoEntry(newEntry: newToDoEntry, date: date, order: order + 1, isPlaceholder: false)
+                entries.insert(newToDoEntry, at: Int(order+1))//insert below if not showing the checked entries
+            }
+        }
+        else {
+            initializeToDoEntry(newEntry: newToDoEntry, date: date, order: order + 1, isPlaceholder: false)
+            entries.insert(newToDoEntry, at: Int(order+1))//insert below if not showing the checked entries//insert below if placeholder isn't true
+        }
+        
+        
         resetOrder()
         
+        updateProgress(shouldBeLastUpdated: false)//no celebrating creating new ones
         
         self.saveItems()
-        
-        
         
         guard let nextCell = ToDoTableView.cellForRow(at: nextIndexPath) as? ToDoEntryCell else {
             print("error in the creating a new todoentry creating the next cell cellforrow")
@@ -404,11 +477,8 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
         }
         else {
             nextCell.textView.resignFirstResponder()
+            
         }
-         
-        
-       
-        
     }
     
     
@@ -422,6 +492,7 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
         let totalIndexRow = returnPositionForThisIndexPath(indexPath: indexPath, insideThisTable: ToDoTableView)
         
         if (deletion) {
+            
             if totalIndexRow < entries.count {
                 
                 context.delete(entries[totalIndexRow])
@@ -430,25 +501,32 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
             }
             else {
                 print("error in checkbox pressed, most likely due to the double deletion case where the blank cell and the checkbox of a different cell are both pressed")
-                
             }
         }
         else {
+            entries[totalIndexRow].isPlaceholder = false//assure that the placeholder is false
             if (Constants.ToDo.showCheckedEntries == true) {
+                print("about to toggle")
                 entries[totalIndexRow].isChecked.toggle()
             }
             else {
-                //in the context, change attribute isChecked to false for this object
-                entries[totalIndexRow].isChecked = false
-                context.refresh(entries[totalIndexRow], mergeChanges: true)
+                //in the context, change attribute isChecked to true for this object
+                entries[totalIndexRow].isChecked = true
                 entries.remove(at: totalIndexRow)
             }
             
             
         }
+        
         orderEntries()
-        resetOrder()
-        self.saveItems()
+        
+        updateProgress(shouldBeLastUpdated: !deletion)//if deletion true, then don't be last updated since its just deleting one
+        
+    }
+    
+    //command order entries
+    func commandOrderEntries() {
+        orderEntries()
     }
     
     //for total indexpath
@@ -474,13 +552,14 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
     //functions to easily initialize to do entry
     
     
-    func initializeToDoEntry(newEntry: ToDoEntry, text: String = "", isChecked: Bool = false, isCurrentTask: Bool = false, date: Date = Date(), time: Double = 0.0, order: Int16) {//to initialize default new one
+    func initializeToDoEntry(newEntry: ToDoEntry, text: String = "", isChecked: Bool = false, isCurrentTask: Bool = false, date: Date = Date(), time: Double = 0.0, order: Int16, isPlaceholder: Bool = false) {//to initialize default new one
         newEntry.text = text
         newEntry.isChecked = isChecked
         newEntry.isCurrentTask = isCurrentTask
         newEntry.date = date
         newEntry.time = time
         newEntry.order = order
+        newEntry.isPlaceholder = isPlaceholder
     }
     
     //MARK: Model manipulation methods for coredata
@@ -495,20 +574,22 @@ extension ToDoViewController: UITableViewDataSource, ToDoEntryDelegate {
             print("error saving context \(error)")
         }
         updateUniqueDates()
-        updateProgress()
+        //updateProgress()
         ToDoTableView.reloadData()
+        print(entries)
     }
     
 
     func loadItems() {
         let request: NSFetchRequest<ToDoEntry> = ToDoEntry.fetchRequest()
-        
-        if (Constants.ToDo.showCheckedEntries == false) {
-            request.predicate = NSPredicate(format: "isChecked == false", NSDate())
-        }
         request.sortDescriptors = [NSSortDescriptor(key: "order", ascending: true)]
+        if (Constants.ToDo.showCheckedEntries == false) {
+            print("showchecked entries false")
+            request.predicate = NSPredicate(format: "isChecked == false")
+        }
         do {
             entries = try context.fetch(request)
+            
         } catch {
             print("error fetching data from context: \(error)")
         }

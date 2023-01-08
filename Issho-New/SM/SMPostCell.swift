@@ -11,9 +11,11 @@ class SMPostCell: UITableViewCell {
 
 
     @IBOutlet weak var profilePicView: UIImageView!
-    @IBOutlet weak var percent: UILabel!
     
-    @IBOutlet weak var name: UILabel!
+    @IBOutlet weak var progressBar: UIProgressView!
+    
+    @IBOutlet weak var likes: UILabel!
+    @IBOutlet weak var username: UILabel!
     @IBOutlet weak var streak: UILabel!
     
     override func awakeFromNib() {
@@ -30,5 +32,7 @@ class SMPostCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
+    
+    
     
 }

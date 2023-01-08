@@ -11,6 +11,7 @@ import IQKeyboardManagerSwift
 protocol ToDoEntryDelegate {
     func checkBoxPressed(in cell: ToDoEntryCell, deletion: Bool)
     func createNewToDoEntryCell(in cell: ToDoEntryCell, makeFirstResponder: Bool)
+    func commandOrderEntries()
 }
 
 
@@ -38,13 +39,8 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
             else {
                 checkboxButton.setImage(UIImage(systemName: "circle"), for: .normal)
             }
-        }
-    }
-    
-    
-    var isPlaceholder: Bool? {
-        didSet {
-            if (isPlaceholder == true) {
+            print(toDoEntry?.isPlaceholder)
+            if (toDoEntry?.isPlaceholder == true) {
                 
                 addButton.isHidden = false
                 checkboxButton.isHidden = true
@@ -52,18 +48,16 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
                 addButton.isEnabled = true
             }
             else {
-                
                 addButton.isHidden = true
                 checkboxButton.isHidden = false
                 checkboxButton.isEnabled = true
                 addButton.isEnabled = false
-                
-                if (textView.isFirstResponder == false && textView.text == "") {
-                    self.toDoEntryDelegate?.checkBoxPressed(in: self, deletion: true)//delete if its not first responder and not last cell and blank
-                }
             }
         }
     }
+    
+    
+    
     
     
     
@@ -89,7 +83,7 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
         
     }
     
-
+    
     
     
     
@@ -111,7 +105,7 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
     func textViewDidBeginEditing(_ textView: UITextView) {
         //set to the checkbox phase if its the last cell
         textView.becomeFirstResponder()
-        if (isPlaceholder!) {
+        if (toDoEntry?.isPlaceholder == true) {
             addButton.isHidden = true
             checkboxButton.isHidden = false
             checkboxButton.isEnabled = true
@@ -122,24 +116,49 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
     private var resignedOnEnter = false
     
     func textViewDidEndEditing(_ textView: UITextView) {
-        textView.resignFirstResponder()
+        
         
         if (textView.text == "") {//if textview is still blank after done editing
-            if (isPlaceholder!) {//if its the last cell, go back to the "add" phase
+            
+            if (toDoEntry?.isPlaceholder == true) {//if its the placeholder cell, go back to the "add" phase
                 addButton.isHidden = false
                 checkboxButton.isHidden = true
                 checkboxButton.isEnabled = false
                 addButton.isEnabled = true
+                resignedOnBackspace = false
             }
             else {
+                if (resignedOnBackspace) {//MARK: NOT WORKING
+                    print("resigned on backspace")
+                    /**if (IQKeyboardManager.shared.canGoPrevious) {
+                        print("can go previous")
+                        IQKeyboardManager.shared.goPrevious()
+                    }**/
+                    IQKeyboardManager.shared.goPrevious()
+                    resignedOnBackspace = false
+                }
+                
                 self.toDoEntryDelegate?.checkBoxPressed(in: self, deletion: true)//delete the cell if its still blank after editing
             }
         }
         else {
             if (resignedOnEnter) {
-                
-                self.toDoEntryDelegate?.createNewToDoEntryCell(in: self, makeFirstResponder: true)
-                resignedOnEnter = false
+                if (toDoEntry?.isPlaceholder == false) {
+                    self.toDoEntryDelegate?.createNewToDoEntryCell(in: self, makeFirstResponder: true)
+                    resignedOnEnter = false
+                }
+                else if (Constants.ToDo.showCheckedEntries == false) {
+                    self.toDoEntryDelegate?.createNewToDoEntryCell(in: self, makeFirstResponder: true)
+                    resignedOnEnter = false
+                }
+                else if (Constants.ToDo.showCheckedEntries == true) {
+                    self.toDoEntryDelegate?.createNewToDoEntryCell(in: self, makeFirstResponder: true)
+                    IQKeyboardManager.shared.goPrevious()
+                    resignedOnEnter = false
+                }
+            }
+            else {
+                toDoEntryDelegate?.commandOrderEntries()//if theres stuff in there still, but i gesture tap off then re order entries. 
             }
             
         }
@@ -153,6 +172,7 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
         textViewCallBack?(str)
     }
     
+    private var resignedOnBackspace = false
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         
@@ -167,7 +187,7 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
         
             if (textView.text == "") {
                 if (text.isBackspace) {
-                    print("delete key pressed")
+                    resignedOnBackspace = true
                     textView.resignFirstResponder()
                     return false
                 }
