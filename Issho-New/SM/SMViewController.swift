@@ -74,7 +74,10 @@ class SMViewController: UIViewController {
     private func updateLikeInFirestore(post: Post) {
         
        
-            guard let uid = Auth.auth().currentUser?.uid else {return}
+            guard let uid = Auth.auth().currentUser?.uid else {
+                print("could not find current user in updatelikeinfirestore")
+                return
+            }
             let postUID = post.uid
             Firestore.updateUserInfo(uid: postUID, field: "likesCount", value: FieldValue.increment(1.0))
             db.collection(Constants.FBase.collectionName).document(postUID).updateData([
@@ -86,6 +89,7 @@ class SMViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        navigationController?.navigationBar.isHidden = true
         fetchPosts()
         tableView.dataSource = self
         tableView.register(UINib(nibName: Constants.SM.nibName, bundle: nil), forCellReuseIdentifier: Constants.SM.reuseIdentifier)
@@ -100,11 +104,29 @@ extension SMViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.SM.reuseIdentifier, for: indexPath) as! SMPostCell
+        
+        cell.postDelegate = self
+        
         cell.username.text = posts[indexPath.row].username
         cell.streak.text = String(posts[indexPath.row].streak) + "🔥"
         cell.likes.text = String(posts[indexPath.row].likesCount) + "👏"
         cell.progressBar.progress = posts[indexPath.row].progress
         return cell
+    }
+    
+    
+}
+
+extension SMViewController: PostDelegate {
+    func likedPost(in cell: SMPostCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else {
+            print("could not find cell in postdelegate likedpost")
+            return
+            
+        }
+        let post = posts[indexPath.row]
+        updateLikeInFirestore(post: post)
+        
     }
     
     

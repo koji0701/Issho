@@ -12,6 +12,9 @@ protocol ToDoEntryDelegate {
     func checkBoxPressed(in cell: ToDoEntryCell, deletion: Bool)
     func createNewToDoEntryCell(in cell: ToDoEntryCell, makeFirstResponder: Bool)
     func commandOrderEntries()
+    //toolbar stuff
+    func updateDate(in cell: ToDoEntryCell, newDate: Date)
+    func updateToolbarAttributesExceptDate(in cell: ToDoEntryCell, isCurrentTask: Bool)
 }
 
 
@@ -32,6 +35,7 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
         didSet {
             
             textView.text = toDoEntry?.text
+            
             if (toDoEntry?.isChecked == true) {
                 checkboxButton.setImage(UIImage(systemName: "checkmark.circle.fill"), for: .normal)
                 print("ischecked is true")
@@ -39,7 +43,6 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
             else {
                 checkboxButton.setImage(UIImage(systemName: "circle"), for: .normal)
             }
-            print(toDoEntry?.isPlaceholder)
             if (toDoEntry?.isPlaceholder == true) {
                 
                 addButton.isHidden = false
@@ -62,7 +65,47 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
     
     
     var textViewCallBack: ((String) -> ())?
-    let toolbar = ToDoEntryToolbar()
+    var toolbar: ToDoEntryToolbar! {
+        didSet {
+            print("toolbar set")
+            //toolbar
+            toolbar.sizeToFit()
+            textView.inputAccessoryView = toolbar
+            IQKeyboardManager.shared.keyboardDistanceFromTextField = toolbar.frame.height
+            
+            toolbar.dateSelectedCallBack = { [weak self] date in
+                    guard let self = self else { return }
+                self.toDoEntry?.date = date
+                self.toDoEntryDelegate?.updateDate(in: self, newDate: date)
+            }
+            toolbar.currentTaskCallBack = { [weak self] isCurrentTask in
+                guard let self = self else { return }
+                self.toDoEntryDelegate?.updateToolbarAttributesExceptDate(in: self, isCurrentTask: isCurrentTask)
+                self.styleTextView(isCurrent: isCurrentTask)
+                //self.toDoEntry?.isCurrentTask = isCurrentTask//rely on the didset to call the styling method
+            }
+        }
+    }
+    
+    func styleTextView(isCurrent: Bool) {//also put fonts and color here
+        if (isCurrent) {
+            //let imageAttachment = NSTextAttachment()
+            //imageAttachment.image = UIImage(systemName: "bolt.fill")?.withTintColor(.systemYellow)
+            let fullString = NSMutableAttributedString(string:  textView.text)
+            
+            //fullString.insert(NSAttributedString(attachment: imageAttachment), at: 0)
+            if (textView.text.prefix(1) != "⚡️") {
+                print("no lightning, set the lightning")
+                fullString.insert(NSAttributedString("⚡️"), at: 0)
+            }
+            textView.attributedText = fullString
+        }
+        else {
+            textView.text = String(textView.text.dropFirst())
+            textView.attributedText = NSMutableAttributedString(string: textView.text)
+        }
+        
+    }
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -74,17 +117,14 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
         textView.textContainer.lineBreakMode = .byWordWrapping
         textView.textContainer.widthTracksTextView = true
         textView.textContainer.size = textView.frame.size
-        
-        
-        //toolbar
-        toolbar.sizeToFit()
-        textView.inputAccessoryView = toolbar
-        IQKeyboardManager.shared.keyboardDistanceFromTextField = toolbar.frame.height
-        
     }
     
     
-    
+    override func layoutSubviews() {//round the edges
+        super.layoutSubviews()
+        contentView.layer.cornerRadius = 10
+        contentView.clipsToBounds = true
+    }
     
     
     
@@ -185,16 +225,23 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
                 return false
             }
         
-            if (textView.text == "") {
-                if (text.isBackspace) {
+            if (text.isBackspace) {
+                if (textView.text == "") {
                     resignedOnBackspace = true
                     textView.resignFirstResponder()
                     return false
                 }
+                
             }
+            if (textView.text.prefix(1) == "⚡️" && range.location < 1) {
+                    //if the user wants to write text before this position, don't let the user
+                print("user writes before the prefix lightning")
+                return false
+            }
+            
             return true
         
-        }
+    }
     
     
 }
