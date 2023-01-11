@@ -91,18 +91,21 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
         if (isCurrent) {
             //let imageAttachment = NSTextAttachment()
             //imageAttachment.image = UIImage(systemName: "bolt.fill")?.withTintColor(.systemYellow)
-            let fullString = NSMutableAttributedString(string:  textView.text)
+            
             
             //fullString.insert(NSAttributedString(attachment: imageAttachment), at: 0)
             if (textView.text.prefix(1) != "⚡️") {
                 print("no lightning, set the lightning")
-                fullString.insert(NSAttributedString("⚡️"), at: 0)
+                textView.text.insert("⚡️", at: textView.text.startIndex)
             }
-            textView.attributedText = fullString
+            textView.attributedText = NSMutableAttributedString(string: textView.text)
         }
         else {
-            textView.text = String(textView.text.dropFirst())
+            if (textView.text.prefix(1) == "⚡️") {
+                textView.text = String(textView.text.dropFirst())
+            }
             textView.attributedText = NSMutableAttributedString(string: textView.text)
+            
         }
         
     }
@@ -233,7 +236,7 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
                 }
                 
             }
-            if (textView.text.prefix(1) == "⚡️" && range.location < 1) {
+            else if (textView.text.prefix(1) == "⚡️" && range.location < 1) {
                     //if the user wants to write text before this position, don't let the user
                 print("user writes before the prefix lightning")
                 return false

@@ -74,17 +74,20 @@ class SMViewController: UIViewController {
     private func updateLikeInFirestore(post: Post) {
         
        
-            guard let uid = Auth.auth().currentUser?.uid else {
-                print("could not find current user in updatelikeinfirestore")
-                return
-            }
-            let postUID = post.uid
-            Firestore.updateUserInfo(uid: postUID, field: "likesCount", value: FieldValue.increment(1.0))
-            db.collection(Constants.FBase.collectionName).document(postUID).updateData([
-                "likes": FieldValue.arrayUnion([uid])
-            ])
+        guard let uid = Auth.auth().currentUser?.uid else {
+            print("could not find current user in updatelikeinfirestore")
+            return
+        }
+        let postUID = post.uid
+        
+        Firestore.updateUserInfo(uid: postUID, fields: ["likesCount": FieldValue.increment(1.0), "likes": FieldValue.arrayUnion([uid])])
+        print("like is sent")
+        //MARK: CONTINUE HERE. PERFORM LIKE ANIMATION NOT FULLY WORKING BC NOT INITITIALLY SETTING, RESOLVE THIS
+        
         
     }
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -98,36 +101,54 @@ class SMViewController: UIViewController {
 }
 
 extension SMViewController: UITableViewDataSource {
+    //sections as spacers
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    func numberOfSections(in tableView: UITableView) -> Int {
+        
         return posts.count
     }
+    func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        return " "
+    }
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        
+        return 10
+    }
+    
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.SM.reuseIdentifier, for: indexPath) as! SMPostCell
         
         cell.postDelegate = self
         
-        cell.username.text = posts[indexPath.row].username
-        cell.streak.text = String(posts[indexPath.row].streak) + "🔥"
-        cell.likes.text = String(posts[indexPath.row].likesCount) + "👏"
-        cell.progressBar.progress = posts[indexPath.row].progress
+        cell.username.text = posts[indexPath.section].username
+        cell.streak.text = String(posts[indexPath.section].streak) + "🔥"
+        cell.likes.text = String(posts[indexPath.section].likesCount) + "👏"
+        cell.progressBar.progress = posts[indexPath.section].progress
+        cell.contentView.backgroundColor = (posts[indexPath.section].isLiked == true) ? .systemYellow : .systemGray6
+        //cell.isLiked = posts[indexPath.section].isLiked
+        
         return cell
     }
-    
-    
+
 }
 
 extension SMViewController: PostDelegate {
-    func likedPost(in cell: SMPostCell) {
+    func likedPost(in cell: SMPostCell) -> Bool{
         guard let indexPath = tableView.indexPath(for: cell) else {
             print("could not find cell in postdelegate likedpost")
-            return
+            return false
             
         }
-        let post = posts[indexPath.row]
-        updateLikeInFirestore(post: post)
-        
+        let post = posts[indexPath.section]
+        if (post.isLiked == false) {
+            updateLikeInFirestore(post: post)
+            return true
+        }
+        else {
+            return false
+        }
     }
-    
-    
 }

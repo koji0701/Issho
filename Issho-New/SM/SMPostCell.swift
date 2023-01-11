@@ -8,7 +8,7 @@
 import UIKit
 
 protocol PostDelegate {
-    func likedPost(in cell: SMPostCell)
+    func likedPost(in cell: SMPostCell) -> Bool
 }
 
 class SMPostCell: UITableViewCell {
@@ -35,6 +35,7 @@ class SMPostCell: UITableViewCell {
         let doubleTapToLike = UITapGestureRecognizer(target: self, action: #selector(handleLike))
         doubleTapToLike.numberOfTapsRequired = 2
         contentView.addGestureRecognizer(doubleTapToLike)
+        
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -45,16 +46,27 @@ class SMPostCell: UITableViewCell {
     
     override func layoutSubviews() {//round the edges
         super.layoutSubviews()
-        contentView.layer.cornerRadius = 10
+        contentView.layer.cornerRadius = 35
         contentView.clipsToBounds = true
+        
     }
     
     @objc func handleLike() {
-        postDelegate?.likedPost(in: self)
-        print("double tapped to like")
+        let postLiked = postDelegate?.likedPost(in: self)
+        
+        if postLiked == true {//able to like the post
+            print("will perform like animation")
+            performLikeAnimation()
+        }
     }
     
     
-    
+    private func performLikeAnimation() {
+        //MARK: LIKE ANIMATION NOT DONE
+        print("like animation performed")
+        
+        contentView.backgroundColor = .yellow//testing color
+        
+    }
     
 }

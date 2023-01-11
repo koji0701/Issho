@@ -12,158 +12,15 @@ import FirebaseAuth
 
 
 class ToDoViewController: UIViewController{
-    
-    
 
     var entries = [ToDoEntry]()
     
     var progress: Float = 0.0
     
-    
-    
-    
     private var updateTimer: Timer?
-
-    private func updateProgress(shouldBeLastUpdated: Bool) {
-        
-        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
-        let fetchRequest: NSFetchRequest<ToDoEntry> = ToDoEntry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "date <= %@", tomorrow as NSDate)
-
-        do {
-            let checkedEntries = try context.fetch(fetchRequest)
-                                            .filter { $0.isChecked == true }
-            let totalEntries = try context.fetch(fetchRequest).filter {$0.isPlaceholder == false}
-            //account for the isPlaceholder cell
-            
-            self.progress = Float(checkedEntries.count) / Float(totalEntries.count)
-            if (self.progress.isNaN == true) {
-                self.progress = 1.0//if not a number set to 1.0
-            }
-
-        } catch {
-            progress = 0.0
-            print("error in updateProgress")
-        }
-        percentageLabel.text = String(format: "%.1f%%", progress * 100)
-        progressBar.progress = progress
-        
-        // invalidate the timer if it's already running
-        updateTimer?.invalidate()
-        
-        // start a new timer
-        updateTimer = Timer.scheduledTimer(withTimeInterval: 60.0, repeats: false) { [weak self] _ in
-            // this block of code will be executed 1 minute after `updateProgress` was last called
-            guard let uid = Auth.auth().currentUser?.uid else {
-                print("could not find uid for currentuser in the todoviewcontroller")
-                return
-            }
-            Firestore.updateUserInfo(uid: uid, field: "progress", value: self?.progress ?? 0.0)
-            if (shouldBeLastUpdated == true) {
-                Firestore.updateUserInfo(uid: uid, field: "lastUpdated", value: FieldValue.serverTimestamp())
-                Firestore.updateUserInfo(uid: uid, field: "likes", value: [String]())//clear likes and open for new post
-            }
-            
-        }
-    }
-
     
     var uniqueDates: [DateComponents] = []
     
-    private func updateUniqueDates() {
-        
-        uniqueDates = {
-            let calendar = Calendar.current
-            
-            let filteredEntries: [ToDoEntry] = {
-                if (Constants.ToDo.showCheckedEntries == true) {
-                    return entries
-                }
-                else {
-                    return entries.filter { $0.isChecked == false }
-                }
-            }()
-            
-            var dateComponents = filteredEntries.map { calendar.dateComponents([.day, .month, .year], from: $0.date!) }
-            dateComponents.append(calendar.dateComponents([.day, .month, .year], from: Date()))
-            let rV = Set(dateComponents).sorted {
-              if $0.year != $1.year {
-                return $0.year! < $1.year!
-              } else if $0.month != $1.month {
-                return $0.month! < $1.month!
-              } else {
-                return $0.day! < $1.day!
-              }
-            }
-            return rV
-
-        }()
-    }
-    
-    private func orderEntries() {
-        let calendar = Calendar.current
-        self.entries.removeAll(where: {$0.text == "" && $0.isPlaceholder == false})//removes all unnecessary ones
-        
-        self.entries.sort {
-            if (calendar.isDate($0.date!, equalTo: $1.date!, toGranularity: .day)) {//if same day
-                if ($0.isPlaceholder == true) {//if its the placeholder
-                    return Constants.ToDo.showCheckedEntries //if show checked entries is true, then returning true -> placeholder goes to top
-                }
-                
-                if ($0.isChecked == $1.isChecked) {
-                    return $0.order < $1.order
-                }
-                else {
-                    return $1.isChecked
-                }
-            }
-            else {//if different days
-                
-                return $0.date! < $1.date!
-            }
-        }
-        let placeholder = self.entries.filter({$0.isPlaceholder == true})
-        if (placeholder.count == 0)  {//if there's no placeholders
-            let newToDoEntry = ToDoEntry(context: self.context)
-            initializeToDoEntry(newEntry: newToDoEntry, order: 0, isPlaceholder: true)
-            if (Constants.ToDo.showCheckedEntries == true) {
-                //insert at top of today's section
-                if let index = entries.firstIndex(where: {calendar.isDate($0.date!, equalTo: Date(), toGranularity: .day)}) {//case where there is 0 index in today is already handled by the tableview sections stuff
-                    entries.insert(newToDoEntry, at: index)
-                }
-                
-            }
-            else {
-                //insert at bottom of today's section
-                if let index = entries.lastIndex(where: {calendar.isDate($0.date!, equalTo: Date(), toGranularity: .day)}) {
-                    entries.insert(newToDoEntry, at: index + 1)
-                }
-            }
-        }
-        resetOrder()//i always run this
-        saveItems()//i always run this
-        
-    }
-    
-    
-    private func resetOrder() {
-        for (index, entry) in entries.enumerated() {
-            entry.order = Int16(index)
-        }
-    }
-    
-    //functions to easily initialize to do entry
-    
-    
-    private func initializeToDoEntry(newEntry: ToDoEntry, text: String = "", isChecked: Bool = false, isCurrentTask: Bool = false, date: Date = Date(), time: Double = 0.0, order: Int16, isPlaceholder: Bool = false) {//to initialize default new one
-        newEntry.text = text
-        newEntry.isChecked = isChecked
-        newEntry.isCurrentTask = isCurrentTask
-        newEntry.date = date
-        newEntry.time = time
-        newEntry.order = order
-        newEntry.isPlaceholder = isPlaceholder
-    }
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext //context globally for this
     
@@ -184,50 +41,7 @@ class ToDoViewController: UIViewController{
     
     @IBOutlet weak var percentageLabel: UILabel!
     
-    
-    
-    private func newDayUpdates() {
-        let fetchRequest: NSFetchRequest<ToDoEntry> = ToDoEntry.fetchRequest()
-        let predicate1 = NSPredicate(format: "isChecked == true AND date < %@", NSDate())
-        let predicate2 = NSPredicate(format: "isPlaceholder == true")//get rid of the old placeholder
-        let compoundPredicate = NSCompoundPredicate(type: .or, subpredicates: [predicate1, predicate2])
-        fetchRequest.predicate = compoundPredicate
-        print("new day update")
-        do {
-            let toDelete = try context.fetch(fetchRequest)
-            for entry in toDelete {
-                context.delete(entry)
-            }
-            try context.save()
-        }
-        catch {
-            print("error in newDayUpdate todoviewcontroller")
-        }
-        loadItems()
-        
-        orderEntries()//new placeholder will be added back in here
-        
-        
-        guard let uid = Auth.auth().currentUser?.uid else {
-            print("could not find uid for currentuser in the todoviewcontroller")
-            return
-        }
-        Firestore.updateUserInfo(uid: uid, field: "likes", value: [String]())
-        Firestore.updateUserInfo(uid: uid, field: "likesCount", value: 0)
-        updateProgress(shouldBeLastUpdated: false)
-        
-        //for streak
-        let calendar = Calendar.current
-        let twoDaysAgo = calendar.date(byAdding: .day, value: -2, to: Date())!
-        
-        if (entries[0].date! <= twoDaysAgo) {//if the first entry's date is less than or equal to two days ago from the start of the new day
-            Firestore.updateUserInfo(uid: uid, field: "streak", value: 0)
-        }
-        else {
-            Firestore.updateUserInfo(uid: uid, field: "streak", value: FieldValue.increment(1.0))//increment if everything looks good
-        }
-        
-    }
+
     
     override func viewDidLoad() {
         
@@ -260,7 +74,6 @@ class ToDoViewController: UIViewController{
                 newDayUpdates()
             }
         }
-        
     }
     
     
@@ -387,21 +200,7 @@ extension ToDoViewController: UITableViewDataSource {
 
     }
     
-    //for total indexpath
-    private func returnPositionForThisIndexPath(indexPath:IndexPath, insideThisTable theTable:UITableView)->Int{
-
-        var i = 0
-        var rowCount = 0
-
-        while i < indexPath.section {
-            rowCount += theTable.numberOfRows(inSection: i)
-            i+=1
-        }
-
-        rowCount += indexPath.row
-
-        return rowCount
-    }
+    
 
     
     //MARK: Model manipulation methods for coredata
@@ -578,12 +377,214 @@ extension ToDoViewController: ToDoEntryDelegate {
     func updateToolbarAttributesExceptDate(in cell: ToDoEntryCell, isCurrentTask: Bool) {
         print("updateToolbarAttributesExceptDate working")
         
-        
-        
         self.entries[Int(cell.toDoEntry!.order)].isCurrentTask = isCurrentTask//set current Task
         
     }
 }
 
+extension ToDoViewController {//all helper funcs for organization
+    
+    
 
+    private func updateProgress(shouldBeLastUpdated: Bool) {
+        
+        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
+        let fetchRequest: NSFetchRequest<ToDoEntry> = ToDoEntry.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "date <= %@", tomorrow as NSDate)
 
+        do {
+            let checkedEntries = try context.fetch(fetchRequest)
+                                            .filter { $0.isChecked == true }
+            let totalEntries = try context.fetch(fetchRequest).filter {$0.isPlaceholder == false}
+            //account for the isPlaceholder cell
+            
+            self.progress = Float(checkedEntries.count) / Float(totalEntries.count)
+            if (self.progress.isNaN == true) {
+                self.progress = 1.0//if not a number set to 1.0
+            }
+
+        } catch {
+            progress = 0.0
+            print("error in updateProgress")
+        }
+        percentageLabel.text = String(format: "%.1f%%", progress * 100)
+        progressBar.progress = progress
+        
+        // invalidate the timer if it's already running
+        updateTimer?.invalidate()
+        
+        // start a new timer
+        updateTimer = Timer.scheduledTimer(withTimeInterval: 30.0, repeats: false) { [weak self] _ in
+            // this block of code will be executed 1 minute after `updateProgress` was last called
+            guard let uid = Auth.auth().currentUser?.uid else {
+                print("could not find uid for currentuser in the todoviewcontroller")
+                return
+            }
+            
+            if (shouldBeLastUpdated == true) {
+                Firestore.updateUserInfo(uid: uid, fields: ["likes": [String](), "lastUpdated": FieldValue.serverTimestamp(), "progress": self?.progress ?? 0.0])//batch updates
+            }
+            else {
+                Firestore.updateUserInfo(uid: uid, field: "progress", value: self?.progress ?? 0.0)
+            }
+            
+            
+        }
+    }
+    
+    private func updateUniqueDates() {
+        
+        uniqueDates = {
+            let calendar = Calendar.current
+            
+            let filteredEntries: [ToDoEntry] = {
+                if (Constants.ToDo.showCheckedEntries == true) {
+                    return entries
+                }
+                else {
+                    return entries.filter { $0.isChecked == false }
+                }
+            }()
+            
+            var dateComponents = filteredEntries.map { calendar.dateComponents([.day, .month, .year], from: $0.date!) }
+            dateComponents.append(calendar.dateComponents([.day, .month, .year], from: Date()))
+            let rV = Set(dateComponents).sorted {
+              if $0.year != $1.year {
+                return $0.year! < $1.year!
+              } else if $0.month != $1.month {
+                return $0.month! < $1.month!
+              } else {
+                return $0.day! < $1.day!
+              }
+            }
+            return rV
+
+        }()
+    }
+    
+    private func orderEntries() {
+        let calendar = Calendar.current
+        self.entries.removeAll(where: {($0.text == "" || $0.text == "⚡️") && $0.isPlaceholder == false})//removes all unnecessary ones
+        
+        self.entries.sort {
+            if (calendar.isDate($0.date!, equalTo: $1.date!, toGranularity: .day)) {//if same day
+                if ($0.isPlaceholder == true) {//if its the placeholder
+                    return Constants.ToDo.showCheckedEntries //if show checked entries is true, then returning true -> placeholder goes to top
+                }
+                if ($0.isCurrentTask != $1.isCurrentTask) {//if only one is a current task
+                    return $0.isCurrentTask
+                }
+                else if ($0.isChecked == $1.isChecked) {//if both are current task, both must be checked so always this. if both aren't current task, this checks checking status
+                    return $0.order < $1.order
+                }
+                else {
+                    return $1.isChecked
+                }
+            }
+            else {//if different days
+                
+                return $0.date! < $1.date!
+            }
+        }
+        let placeholder = self.entries.filter({$0.isPlaceholder == true})
+        if (placeholder.count == 0)  {//if there's no placeholders
+            let newToDoEntry = ToDoEntry(context: self.context)
+            initializeToDoEntry(newEntry: newToDoEntry, order: 0, isPlaceholder: true)
+            if (Constants.ToDo.showCheckedEntries == true) {
+                //insert at top of today's section
+                if let index = entries.firstIndex(where: {calendar.isDate($0.date!, equalTo: Date(), toGranularity: .day)}) {//case where there is 0 index in today is already handled by the tableview sections stuff
+                    entries.insert(newToDoEntry, at: index)
+                }
+                
+            }
+            else {
+                //insert at bottom of today's section
+                if let index = entries.lastIndex(where: {calendar.isDate($0.date!, equalTo: Date(), toGranularity: .day)}) {
+                    entries.insert(newToDoEntry, at: index + 1)
+                }
+            }
+        }
+        resetOrder()//i always run this
+        saveItems()//i always run this
+        
+    }
+    
+    
+    private func resetOrder() {
+        for (index, entry) in entries.enumerated() {
+            entry.order = Int16(index)
+        }
+    }
+    
+    //functions to easily initialize to do entry
+    
+    
+    private func initializeToDoEntry(newEntry: ToDoEntry, text: String = "", isChecked: Bool = false, isCurrentTask: Bool = false, date: Date = Date(), time: Double = 0.0, order: Int16, isPlaceholder: Bool = false) {//to initialize default new one
+        newEntry.text = text
+        newEntry.isChecked = isChecked
+        newEntry.isCurrentTask = isCurrentTask
+        newEntry.date = date
+        newEntry.time = time
+        newEntry.order = order
+        newEntry.isPlaceholder = isPlaceholder
+    }
+    
+    private func newDayUpdates() {
+        let fetchRequest: NSFetchRequest<ToDoEntry> = ToDoEntry.fetchRequest()
+        let predicate1 = NSPredicate(format: "isChecked == true AND date < %@", NSDate())
+        let predicate2 = NSPredicate(format: "isPlaceholder == true")//get rid of the old placeholder
+        let compoundPredicate = NSCompoundPredicate(type: .or, subpredicates: [predicate1, predicate2])
+        fetchRequest.predicate = compoundPredicate
+        print("new day update")
+        do {
+            let toDelete = try context.fetch(fetchRequest)
+            for entry in toDelete {
+                context.delete(entry)
+            }
+            try context.save()
+        }
+        catch {
+            print("error in newDayUpdate todoviewcontroller")
+        }
+        loadItems()
+        
+        orderEntries()//new placeholder will be added back in here
+        
+        
+        guard let uid = Auth.auth().currentUser?.uid else {
+            print("could not find uid for currentuser in the todoviewcontroller")
+            return
+        }
+        
+        updateProgress(shouldBeLastUpdated: false)
+        
+        //for streak
+        let calendar = Calendar.current
+        let twoDaysAgo = calendar.date(byAdding: .day, value: -2, to: Date())!
+        
+        if (entries[0].date! <= twoDaysAgo) {//if the first entry's date is less than or equal to two days ago from the start of the new day
+            Firestore.updateUserInfo(uid: uid, fields: ["likes": [String](), "likesCount": 0, "streak": 0])
+            
+        }
+        else {
+            Firestore.updateUserInfo(uid: uid, fields: ["likes": [String](), "likesCount": 0, "streak": FieldValue.increment(1.0)])
+            
+        }
+        
+    }
+    //for total indexpath
+    private func returnPositionForThisIndexPath(indexPath:IndexPath, insideThisTable theTable:UITableView)->Int{
+
+        var i = 0
+        var rowCount = 0
+
+        while i < indexPath.section {
+            rowCount += theTable.numberOfRows(inSection: i)
+            i+=1
+        }
+
+        rowCount += indexPath.row
+
+        return rowCount
+    }
+}

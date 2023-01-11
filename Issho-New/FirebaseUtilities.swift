@@ -21,6 +21,13 @@ extension Firestore {
             }
         }
     }
+    static func updateUserInfo(uid: String, fields: [String: Any]) {
+        db.collection(Constants.FBase.collectionName).document(uid).updateData(fields) { err in
+            if let err = err {
+                print("Error updating document: \(err)")
+            }
+        }
+    }
     
     static func initializeUser(uid: String, username: String) {
         
