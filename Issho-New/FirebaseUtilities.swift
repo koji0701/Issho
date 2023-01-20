@@ -29,6 +29,22 @@ extension Firestore {
         }
     }
     
+    /**static func readUserDocument(uid: String) -> [String: Any] {
+        let docRef = db.collection(Constants.FBase.collectionName).document(uid)
+        var rV: [String: Any] = ["": ""]
+        docRef.getDocument { (document, error) in
+            if let document = document, document.exists {
+                print("was able to read document data")
+                rV = document.data()!
+                
+            } else {
+                print("Document does not exist")
+                fatalError("could not read user document, readUserDocument")
+            }
+        }
+        return rV
+    }**/
+    
     static func initializeUser(uid: String, username: String) {
         
         

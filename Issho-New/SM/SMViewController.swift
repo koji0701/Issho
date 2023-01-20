@@ -82,7 +82,7 @@ class SMViewController: UIViewController {
         
         Firestore.updateUserInfo(uid: postUID, fields: ["likesCount": FieldValue.increment(1.0), "likes": FieldValue.arrayUnion([uid])])
         print("like is sent")
-        //MARK: CONTINUE HERE. PERFORM LIKE ANIMATION NOT FULLY WORKING BC NOT INITITIALLY SETTING, RESOLVE THIS
+        
         
         
     }
@@ -122,13 +122,18 @@ extension SMViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.SM.reuseIdentifier, for: indexPath) as! SMPostCell
         
         cell.postDelegate = self
+        if (posts[indexPath.section].isWorking == true) {
+            cell.username.text = "⚡️" + posts[indexPath.section].username
+        }
+        else {
+            cell.username.text = posts[indexPath.section].username
+        }
         
-        cell.username.text = posts[indexPath.section].username
         cell.streak.text = String(posts[indexPath.section].streak) + "🔥"
         cell.likes.text = String(posts[indexPath.section].likesCount) + "👏"
         cell.progressBar.progress = posts[indexPath.section].progress
+        cell.progressPercentage.text = String(format: "%.0f", posts[indexPath.section].progress * 100) + "%"
         cell.contentView.backgroundColor = (posts[indexPath.section].isLiked == true) ? .systemYellow : .systemGray6
-        //cell.isLiked = posts[indexPath.section].isLiked
         
         return cell
     }

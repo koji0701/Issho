@@ -8,6 +8,100 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--Settings-->
+        <scene sceneID="C1R-rf-xu7">
+            <objects>
+                <viewController id="FW2-v1-mGQ" userLabel="Settings" customClass="SettingsViewController" customModule="Issho_New" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="EuJ-H6-hiA">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="settings" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rdU-wo-5Vj">
+                                <rect key="frame" x="20" y="44" width="64" height="19"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SFe-Cu-glC" userLabel="ProfileView">
+                                <rect key="frame" x="0.0" y="125" width="414" height="143"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qvu-27-vxk" userLabel="ProfilePicImage">
+                                        <rect key="frame" x="24" y="23" width="96" height="96"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Edit Profile" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="034-WG-mq5" userLabel="EditProfileLabel">
+                                        <rect key="frame" x="139" y="61" width="82" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tPr-xH-z66" userLabel="TasksView">
+                                <rect key="frame" x="0.0" y="276" width="414" height="94"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Show completed tasks" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eeX-ac-vwi" userLabel="ShowTasksLabel">
+                                        <rect key="frame" x="25" y="37" width="172" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="e9y-vr-2p4">
+                                        <rect key="frame" x="290" y="33" width="87" height="31"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="tinted" title="Yes"/>
+                                        <connections>
+                                            <action selector="completedTasksButtonClicked:" destination="FW2-v1-mGQ" eventType="touchUpInside" id="xY9-id-Jjy"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fgj-pk-Kg1" userLabel="DisplayView">
+                                <rect key="frame" x="0.0" y="401" width="414" height="94"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Display mode" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nDr-VH-aeq" userLabel="DisplayMode">
+                                        <rect key="frame" x="25" y="37" width="103" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pzU-bh-ftZ" userLabel="DisplayButton">
+                                        <rect key="frame" x="262" y="32" width="116" height="31"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="tinted" title="🌗Automatic"/>
+                                        <connections>
+                                            <action selector="displayModeButtonClicked:" destination="FW2-v1-mGQ" eventType="touchUpInside" id="3KI-JF-TqZ"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="7xE-F4-T7B"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="9Nn-Kg-csi"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="completedTasksButton" destination="e9y-vr-2p4" id="dmp-oQ-h13"/>
+                        <outlet property="displayModeButton" destination="pzU-bh-ftZ" id="kbn-OA-ncu"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="RUW-qG-Rek" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-826.08695652173924" y="304.6875"/>
+        </scene>
         <!--ToDoList-->
         <scene sceneID="tne-QT-ifu">
             <objects>
@@ -40,6 +134,7 @@
                                                     </state>
                                                     <connections>
                                                         <action selector="settingsButtonClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="8T5-ZT-qEz"/>
+                                                        <segue destination="FW2-v1-mGQ" kind="show" id="8mN-0A-lGF"/>
                                                     </connections>
                                                 </button>
                                             </subviews>
@@ -96,13 +191,13 @@
                                                     <rect key="frame" x="0.0" y="57" width="398" height="50"/>
                                                     <subviews>
                                                         <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="68M-v8-6uS" userLabel="ProgressBar">
-                                                            <rect key="frame" x="15" y="15" width="308.33333333333331" height="20"/>
+                                                            <rect key="frame" x="15" y="15" width="368" height="20"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="20" id="a9j-W1-kPj"/>
                                                             </constraints>
                                                         </progressView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9jk-sx-6m6" userLabel="Percentage">
-                                                            <rect key="frame" x="346.66666666666669" y="14.666666666666657" width="41.333333333333314" height="21"/>
+                                                            <rect key="frame" x="30.000000000000004" y="14.666666666666657" width="41.333333333333343" height="21"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="21" id="lgp-ZJ-6c7"/>
                                                             </constraints>
@@ -113,11 +208,11 @@
                                                     </subviews>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="trailing" secondItem="9jk-sx-6m6" secondAttribute="trailing" constant="10" id="2GJ-si-kiI"/>
                                                         <constraint firstItem="68M-v8-6uS" firstAttribute="centerY" secondItem="Swe-tX-ps0" secondAttribute="centerY" id="8nS-Cu-jya"/>
-                                                        <constraint firstItem="9jk-sx-6m6" firstAttribute="leading" secondItem="68M-v8-6uS" secondAttribute="trailing" constant="23.5" id="U92-BY-0y5"/>
+                                                        <constraint firstAttribute="trailing" secondItem="68M-v8-6uS" secondAttribute="trailing" constant="15" id="fxt-QY-arj"/>
                                                         <constraint firstItem="68M-v8-6uS" firstAttribute="leading" secondItem="Swe-tX-ps0" secondAttribute="leading" constant="15" id="kAB-AS-uP8"/>
                                                         <constraint firstItem="9jk-sx-6m6" firstAttribute="centerY" secondItem="Swe-tX-ps0" secondAttribute="centerY" id="uNt-og-n8l"/>
+                                                        <constraint firstItem="9jk-sx-6m6" firstAttribute="leading" secondItem="Swe-tX-ps0" secondAttribute="leading" constant="30" id="xgV-lC-m72"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
@@ -151,6 +246,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="HRO-WU-EiU"/>
                     <nil key="simulatedTopBarMetrics"/>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="ToDoTableView" destination="7np-CV-0J4" id="na8-qr-MX1"/>
                         <outlet property="likesLabel" destination="rNE-qY-S1P" id="Ldg-jr-pRn"/>

@@ -14,6 +14,7 @@
 		E52FBCBF292F18D40053208C /* Issho_NewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FBCBE292F18D40053208C /* Issho_NewTests.swift */; };
 		E52FBCC9292F18D40053208C /* Issho_NewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FBCC8292F18D40053208C /* Issho_NewUITests.swift */; };
 		E52FBCCB292F18D40053208C /* Issho_NewUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FBCCA292F18D40053208C /* Issho_NewUITestsLaunchTests.swift */; };
+		E53721A0296F7ECF00AD0BF7 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E537219F296F7ECF00AD0BF7 /* SettingsViewController.swift */; };
 		E539DD172963B3970034E1E5 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E539DD162963B3970034E1E5 /* SignupViewController.swift */; };
 		E53AED922963B801000AF59D /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53AED912963B801000AF59D /* LoginViewController.swift */; };
 		E58245C3296622EF0093E0D5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E58245C2296622EF0093E0D5 /* GoogleService-Info.plist */; };
@@ -65,6 +66,7 @@
 		E52FBCC4292F18D40053208C /* Issho-NewUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Issho-NewUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E52FBCC8292F18D40053208C /* Issho_NewUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Issho_NewUITests.swift; sourceTree = "<group>"; };
 		E52FBCCA292F18D40053208C /* Issho_NewUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Issho_NewUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		E537219F296F7ECF00AD0BF7 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		E539DD162963B3970034E1E5 /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		E53AED912963B801000AF59D /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		E58245C2296622EF0093E0D5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -112,6 +114,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E51B31192977508E00E918C3 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
 		E521803A29415A7400925BAC /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -151,12 +160,14 @@
 				E52FBCA9292F18D30053208C /* SceneDelegate.swift */,
 				E58DED4F292F19FF00F1EF0C /* Constants.swift */,
 				E52FBCB0292F18D40053208C /* Assets.xcassets */,
+				E51B31192977508E00E918C3 /* Fonts */,
 				E58245C2296622EF0093E0D5 /* GoogleService-Info.plist */,
 				E58DED51292F1AD000F1EF0C /* Main.storyboard */,
 				E58DED54292F265800F1EF0C /* ToDo */,
 				E58DED53292F263000F1EF0C /* SM */,
 				E52FBCB5292F18D40053208C /* Info.plist */,
 				E52FBCB2292F18D40053208C /* LaunchScreen.storyboard */,
+				E537219F296F7ECF00AD0BF7 /* SettingsViewController.swift */,
 				E58B01DA29691492007061D0 /* FirebaseUtilities.swift */,
 			);
 			path = "Issho-New";
@@ -362,6 +373,7 @@
 				E5A5166C2958D329002BC2B3 /* ToDoEntryData.xcdatamodeld in Sources */,
 				E539DD172963B3970034E1E5 /* SignupViewController.swift in Sources */,
 				E5A8B1D7295E535C00D5E684 /* ToDoEntryToolbar.swift in Sources */,
+				E53721A0296F7ECF00AD0BF7 /* SettingsViewController.swift in Sources */,
 				E58DED4C292F19B200F1EF0C /* SMPostCell.swift in Sources */,
 				E52FBCAA292F18D30053208C /* SceneDelegate.swift in Sources */,
 				E58DED46292F19A300F1EF0C /* ToDoViewController.swift in Sources */,

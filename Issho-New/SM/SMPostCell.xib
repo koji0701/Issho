@@ -94,12 +94,23 @@
                                             <constraint firstAttribute="height" constant="20" id="q8u-pD-aad"/>
                                         </constraints>
                                     </progressView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VXT-Mp-QlW" userLabel="Percentage">
+                                        <rect key="frame" x="15" y="-0.5" width="41.5" height="21"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="21" id="z2q-zH-K7S"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20" id="4QS-rr-fJN"/>
                                     <constraint firstAttribute="trailing" secondItem="SOe-Z7-gLc" secondAttribute="trailing" id="9eM-Ur-03S"/>
                                     <constraint firstItem="SOe-Z7-gLc" firstAttribute="centerY" secondItem="3mJ-oC-LcW" secondAttribute="centerY" id="Cv1-Zi-6vC"/>
+                                    <constraint firstItem="VXT-Mp-QlW" firstAttribute="centerY" secondItem="3mJ-oC-LcW" secondAttribute="centerY" id="NAc-8O-8vX"/>
+                                    <constraint firstItem="VXT-Mp-QlW" firstAttribute="leading" secondItem="3mJ-oC-LcW" secondAttribute="leading" constant="15" id="a9d-Zc-y5t"/>
                                     <constraint firstItem="SOe-Z7-gLc" firstAttribute="leading" secondItem="3mJ-oC-LcW" secondAttribute="leading" id="zhO-PJ-I51"/>
                                 </constraints>
                             </view>
@@ -125,6 +136,7 @@
                 <outlet property="likes" destination="CU5-vK-jnA" id="HCY-a5-h30"/>
                 <outlet property="profilePicView" destination="Oda-Al-lAj" id="4x0-f1-rpR"/>
                 <outlet property="progressBar" destination="SOe-Z7-gLc" id="Lz5-TS-vGx"/>
+                <outlet property="progressPercentage" destination="VXT-Mp-QlW" id="EXu-EF-T6M"/>
                 <outlet property="streak" destination="hco-Jk-Qz9" id="g8A-mY-Eb6"/>
                 <outlet property="username" destination="vAr-vB-nHD" id="bmU-i9-oqE"/>
             </connections>

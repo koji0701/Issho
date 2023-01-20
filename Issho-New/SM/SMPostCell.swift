@@ -24,6 +24,7 @@ class SMPostCell: UITableViewCell {
     @IBOutlet weak var streak: UILabel!
     
     
+    @IBOutlet weak var progressPercentage: UILabel!
     
     
     override func awakeFromNib() {
@@ -63,6 +64,7 @@ class SMPostCell: UITableViewCell {
     
     private func performLikeAnimation() {
         //MARK: LIKE ANIMATION NOT DONE
+        //MARK: CONTINUE HERE. ANIMATION STUFF HERE, COPY DOWN THE LIKES ANIMATION FROM THE INSTAGRAM CLONE.
         print("like animation performed")
         
         contentView.backgroundColor = .yellow//testing color

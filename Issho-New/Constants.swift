@@ -13,9 +13,6 @@ struct Constants {
     struct ToDo {
         static let nibName = "ToDoEntryCell"
         static let reuseIdentifier = "ToDoReusableEntryCell"
-        
-        //settings
-        static var showCheckedEntries = false
     }
     
     struct SM {
@@ -32,6 +29,11 @@ struct Constants {
     struct FBase {
         static let collectionName = "users"
         
+    }
+    struct Settings {
+        
+        static var showCompletedEntries = true
+        static var displayMode = 1
     }
     
     

@@ -12,14 +12,14 @@ import FirebaseCore
 import FirebaseFirestore
 import FirebaseAuth
 
-//MARK: General mark, I deleted a lot of the default methods that are new bc of the udemy tutorial (apparently it does like different types of interruptions phone calls etc.) if that is a problem paste them in later
+//MARK: I deleted a lot of the default methods that are new bc of the udemy tutorial (different types of interruptions phone calls etc.) if that is a problem paste them in later
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-    
+    let defaults = UserDefaults.standard
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
         let db = Firestore.firestore()
@@ -27,6 +27,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         IQKeyboardManager.shared.enableAutoToolbar = false
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.shouldResignOnTouchOutside = true
+        
+        //settings constants init from userdefaults
+        Constants.Settings.displayMode = defaults.value(forKey: "displayMode") as? Int ?? 1
+        Constants.Settings.showCompletedEntries = defaults.value(forKey: "showCompletedEntries") as? Bool ?? true
+        if (defaults.value(forKey: "showCompletedEntries") == nil) {//settings init condition, only check one
+            defaults.set(Constants.Settings.displayMode, forKey: "displayMode")
+            defaults.set(Constants.Settings.showCompletedEntries, forKey: "showCompletedEntries")
+        }
         
         
         return true

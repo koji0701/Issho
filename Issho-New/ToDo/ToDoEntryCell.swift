@@ -133,6 +133,7 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
     
     @IBAction func checkboxPressed(_ sender: Any) {
         self.toDoEntryDelegate?.checkBoxPressed(in: self, deletion: false)
+        
     }
     
     @IBAction func addPressed(_ sender: Any) {
@@ -161,7 +162,7 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
     func textViewDidEndEditing(_ textView: UITextView) {
         
         
-        if (textView.text == "") {//if textview is still blank after done editing
+        if (textView.text == "" || textView.text == "⚡️") {//if textview is still blank after done editing
             
             if (toDoEntry?.isPlaceholder == true) {//if its the placeholder cell, go back to the "add" phase
                 addButton.isHidden = false
@@ -190,11 +191,11 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
                     self.toDoEntryDelegate?.createNewToDoEntryCell(in: self, makeFirstResponder: true)
                     resignedOnEnter = false
                 }
-                else if (Constants.ToDo.showCheckedEntries == false) {
+                else if (Constants.Settings.showCompletedEntries == false) {
                     self.toDoEntryDelegate?.createNewToDoEntryCell(in: self, makeFirstResponder: true)
                     resignedOnEnter = false
                 }
-                else if (Constants.ToDo.showCheckedEntries == true) {
+                else if (Constants.Settings.showCompletedEntries == true) {
                     self.toDoEntryDelegate?.createNewToDoEntryCell(in: self, makeFirstResponder: true)
                     IQKeyboardManager.shared.goPrevious()
                     resignedOnEnter = false

@@ -17,7 +17,12 @@ class ToDoViewController: UIViewController{
     
     var progress: Float = 0.0
     
-    private var updateTimer: Timer?
+    
+    private var updateProgressTimer: Timer?
+    private var updateProgressShouldBeLastUpdatedFlag = false
+    
+    private var updateIsWorkingTimer: Timer?
+    private var userIsWorking: Bool = false
     
     var uniqueDates: [DateComponents] = []
     
@@ -41,14 +46,16 @@ class ToDoViewController: UIViewController{
     
     @IBOutlet weak var percentageLabel: UILabel!
     
-
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.setNavigationBarHidden(true, animated: true)
+        tabBarController?.tabBar.isHidden = false
+    }
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-       
         
         ToDoTableView.dataSource = self
         
@@ -61,11 +68,25 @@ class ToDoViewController: UIViewController{
         loadItems()
         
         updateUniqueDates()
-        updateProgress(shouldBeLastUpdated: false)
+        initProgressNoFirestore()
+        
+        //init userIsWorking flag
+        
         
         //header
         streakLabel.text = "0🔥"
         likesLabel.text = "0👏"
+    
+        //init userIsWorking flag
+        userIsWorking = {
+            for entry in entries {
+                if entry.isCurrentTask == true {
+                    print("found an entry that isWorking = true")
+                    return true
+                }
+            }
+            return false
+        }()
         
         //new day stuff
         Task {
@@ -217,14 +238,14 @@ extension ToDoViewController: UITableViewDataSource {
         updateUniqueDates()
         //updateProgress()
         ToDoTableView.reloadData()
-        print(entries)
+        
     }
     
 
     func loadItems() {
         let request: NSFetchRequest<ToDoEntry> = ToDoEntry.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(key: "order", ascending: true)]
-        if (Constants.ToDo.showCheckedEntries == false) {
+        if (Constants.Settings.showCompletedEntries == false) {
             request.predicate = NSPredicate(format: "isChecked == false")
         }
         do {
@@ -253,7 +274,10 @@ extension ToDoViewController: ToDoEntryDelegate {
         
         
         let totalIndexRow = returnPositionForThisIndexPath(indexPath: indexPath, insideThisTable: ToDoTableView)
-        
+        if (cell.toDoEntry?.isCurrentTask == true) {//if deleting a current task, then make sure to set it to false and update the is working
+            entries[totalIndexRow].isCurrentTask = false
+            updateIsWorking()
+        }
         if (deletion) {
             
             if totalIndexRow < entries.count {
@@ -268,7 +292,7 @@ extension ToDoViewController: ToDoEntryDelegate {
         }
         else {
             entries[totalIndexRow].isPlaceholder = false//assure that the placeholder is false
-            if (Constants.ToDo.showCheckedEntries == true) {
+            if (Constants.Settings.showCompletedEntries == true) {
                 entries[totalIndexRow].isChecked.toggle()
             }
             else {
@@ -282,7 +306,10 @@ extension ToDoViewController: ToDoEntryDelegate {
         
         orderEntries()
         
-        updateProgress(shouldBeLastUpdated: !deletion)//if deletion true, then don't be last updated since its just deleting one
+        updateProgress()
+        if (deletion == false) {
+            updateProgressShouldBeLastUpdatedFlag = true
+        }
         
     }
     
@@ -322,7 +349,7 @@ extension ToDoViewController: ToDoEntryDelegate {
         if (isPlaceholder == true) {
             let totalIndexPath = returnPositionForThisIndexPath(indexPath: indexPath, insideThisTable: ToDoTableView)
             entries[totalIndexPath].isPlaceholder = false
-            if (Constants.ToDo.showCheckedEntries == true) {
+            if (Constants.Settings.showCompletedEntries == true) {
                 initializeToDoEntry(newEntry: newToDoEntry, date: date, order: order - 1, isPlaceholder: true)
                 entries.insert(newToDoEntry, at: Int(order))//insert it above the current if showcheckedentries is true
             }
@@ -340,7 +367,7 @@ extension ToDoViewController: ToDoEntryDelegate {
         
         resetOrder()
         
-        updateProgress(shouldBeLastUpdated: false)//no celebrating creating new ones
+        updateProgress()
         
         self.saveItems()
         
@@ -369,7 +396,7 @@ extension ToDoViewController: ToDoEntryDelegate {
         self.entries[Int(cell.toDoEntry!.order)].order = Int16(self.entries.count) //set order to max so that it'll go to the back of each section
         self.orderEntries()
             
-        self.updateProgress(shouldBeLastUpdated: false)
+        self.updateProgress()
             
             
     }
@@ -378,15 +405,69 @@ extension ToDoViewController: ToDoEntryDelegate {
         print("updateToolbarAttributesExceptDate working")
         
         self.entries[Int(cell.toDoEntry!.order)].isCurrentTask = isCurrentTask//set current Task
+        updateIsWorking()
         
     }
 }
 
 extension ToDoViewController {//all helper funcs for organization
     
+    private func updateIsWorking() {
+        updateIsWorkingTimer?.invalidate()//invalidate the timer if it is already running
+        updateIsWorkingTimer = Timer.scheduledTimer(withTimeInterval: 30.0, repeats: false) { [weak self] _ in
+            guard let uid = Auth.auth().currentUser?.uid else {
+                print("could not find uid for currentuser in the updateIsWorking")
+                return
+            }
+            print("updateIsWorkingTimer is running")
+            
+            //MARK: CONTINUE HERE. INSTEAD OF READING IT IN FIRESTORE, IT IS CHEAPER JUST TO SET A FLAG VARIABLE WHENEVER I LOAD ENTRIES. THEN I CAN TOGGLE THE FLAG WHEN I DO THE WRITING OPERATION. -1 READING
+            let workingStatusChanged: Bool = {
+                
+                let entryIsWorking: Bool = {
+                    for entry in self!.entries {
+                        if entry.isCurrentTask == true {
+                            print("found an entry that isWorking = true")
+                            return true
+                        }
+                    }
+                    return false
+                }()
+                print("all entries have isWorking = false")
+                return self!.userIsWorking == entryIsWorking
+            }()
+            if (workingStatusChanged) {
+                Firestore.updateUserInfo(uid: uid, fields: ["isWorking": !(self!.userIsWorking)])
+                self!.userIsWorking.toggle()//update the flag
+            }
+        }
+    }
     
+    private func initProgressNoFirestore() {
+        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
+        let fetchRequest: NSFetchRequest<ToDoEntry> = ToDoEntry.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "date <= %@", tomorrow as NSDate)
 
-    private func updateProgress(shouldBeLastUpdated: Bool) {
+        do {
+            let checkedEntries = try context.fetch(fetchRequest)
+                                            .filter { $0.isChecked == true }
+            let totalEntries = try context.fetch(fetchRequest).filter {$0.isPlaceholder == false}
+            //account for the isPlaceholder cell
+            
+            self.progress = Float(checkedEntries.count) / Float(totalEntries.count)
+            if (self.progress.isNaN == true) {
+                self.progress = 1.0//if not a number set to 1.0
+            }
+
+        } catch {
+            progress = 0.0
+            print("error in updateProgress")
+        }
+        percentageLabel.text = String(format: "%.0f", progress * 100) + "%"
+        progressBar.progress = progress
+    }
+
+    private func updateProgress() {
         
         let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
         let fetchRequest: NSFetchRequest<ToDoEntry> = ToDoEntry.fetchRequest()
@@ -411,24 +492,38 @@ extension ToDoViewController {//all helper funcs for organization
         progressBar.progress = progress
         
         // invalidate the timer if it's already running
-        updateTimer?.invalidate()
+        updateProgressTimer?.invalidate()
         
         // start a new timer
-        updateTimer = Timer.scheduledTimer(withTimeInterval: 30.0, repeats: false) { [weak self] _ in
+        updateProgressTimer = Timer.scheduledTimer(withTimeInterval: 30.0, repeats: false) { [weak self] _ in
             // this block of code will be executed 1 minute after `updateProgress` was last called
+            guard let self = self else {return}
             guard let uid = Auth.auth().currentUser?.uid else {
                 print("could not find uid for currentuser in the todoviewcontroller")
                 return
             }
-            
-            if (shouldBeLastUpdated == true) {
-                Firestore.updateUserInfo(uid: uid, fields: ["likes": [String](), "lastUpdated": FieldValue.serverTimestamp(), "progress": self?.progress ?? 0.0])//batch updates
+            print("updateProgressTimer function is running")
+            //while im doing a write operation, i might as well update the isCurrent bc no cost
+            self.updateIsWorkingTimer?.invalidate()//if im doing updates in here, then i might as well invalidate that one bc i can write it in here anyways. this will help reduce writes in cases wehre isCurrent is changed after the progress
+            print("in the updateProgressTimer function, updateIsWorkingTimer function is invalidated")
+            let entryIsWorking: Bool = {
+                for entry in self.entries {
+                    if entry.isCurrentTask == true {
+                        print("found an entry that isWorking = true")
+                        return true
+                    }
+                }
+                return false
+            }()
+            self.userIsWorking = entryIsWorking//update flag
+           
+            if (self.updateProgressShouldBeLastUpdatedFlag == true) {
+                Firestore.updateUserInfo(uid: uid, fields: ["likes": [String](), "lastUpdated": FieldValue.serverTimestamp(), "progress": self.progress, "isWorking": entryIsWorking])//batch updates
+                self.updateProgressShouldBeLastUpdatedFlag = false
             }
             else {
-                Firestore.updateUserInfo(uid: uid, field: "progress", value: self?.progress ?? 0.0)
+                Firestore.updateUserInfo(uid: uid, fields: ["progress": self.progress, "isWorking": entryIsWorking])
             }
-            
-            
         }
     }
     
@@ -438,7 +533,7 @@ extension ToDoViewController {//all helper funcs for organization
             let calendar = Calendar.current
             
             let filteredEntries: [ToDoEntry] = {
-                if (Constants.ToDo.showCheckedEntries == true) {
+                if (Constants.Settings.showCompletedEntries == true) {
                     return entries
                 }
                 else {
@@ -469,7 +564,7 @@ extension ToDoViewController {//all helper funcs for organization
         self.entries.sort {
             if (calendar.isDate($0.date!, equalTo: $1.date!, toGranularity: .day)) {//if same day
                 if ($0.isPlaceholder == true) {//if its the placeholder
-                    return Constants.ToDo.showCheckedEntries //if show checked entries is true, then returning true -> placeholder goes to top
+                    return Constants.Settings.showCompletedEntries //if show checked entries is true, then returning true -> placeholder goes to top
                 }
                 if ($0.isCurrentTask != $1.isCurrentTask) {//if only one is a current task
                     return $0.isCurrentTask
@@ -490,7 +585,7 @@ extension ToDoViewController {//all helper funcs for organization
         if (placeholder.count == 0)  {//if there's no placeholders
             let newToDoEntry = ToDoEntry(context: self.context)
             initializeToDoEntry(newEntry: newToDoEntry, order: 0, isPlaceholder: true)
-            if (Constants.ToDo.showCheckedEntries == true) {
+            if (Constants.Settings.showCompletedEntries == true) {
                 //insert at top of today's section
                 if let index = entries.firstIndex(where: {calendar.isDate($0.date!, equalTo: Date(), toGranularity: .day)}) {//case where there is 0 index in today is already handled by the tableview sections stuff
                     entries.insert(newToDoEntry, at: index)
@@ -556,7 +651,7 @@ extension ToDoViewController {//all helper funcs for organization
             return
         }
         
-        updateProgress(shouldBeLastUpdated: false)
+        updateProgress()
         
         //for streak
         let calendar = Calendar.current
