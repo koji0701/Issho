@@ -110,7 +110,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="interactive" dataMode="prototypes" style="grouped" separatorStyle="default" allowsSelectionDuringEditing="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="25" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="7np-CV-0J4" userLabel="ToDoTableView">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="interactive" dataMode="prototypes" style="grouped" separatorStyle="default" allowsSelectionDuringEditing="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="30" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="7np-CV-0J4" userLabel="ToDoTableView">
                                 <rect key="frame" x="0.0" y="44" width="414" height="769"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <view key="tableHeaderView" contentMode="scaleToFill" id="wXt-9J-wQh" userLabel="HeaderView">
@@ -147,10 +147,10 @@
                                             </constraints>
                                         </view>
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="oE4-2V-DeD">
-                                            <rect key="frame" x="8" y="61" width="398" height="107"/>
+                                            <rect key="frame" x="15" y="61" width="384" height="107"/>
                                             <subviews>
-                                                <stackView opaque="NO" contentMode="scaleToFill" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="8Em-I4-60H">
-                                                    <rect key="frame" x="0.0" y="0.0" width="141" height="50"/>
+                                                <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="8Em-I4-60H">
+                                                    <rect key="frame" x="0.0" y="0.0" width="134" height="50"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6b4-pq-F9J">
                                                             <rect key="frame" x="0.0" y="0.0" width="63" height="50"/>
@@ -169,7 +169,7 @@
                                                             </constraints>
                                                         </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AGO-kC-t9S">
-                                                            <rect key="frame" x="78" y="0.0" width="63" height="50"/>
+                                                            <rect key="frame" x="71" y="0.0" width="63" height="50"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Likes" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rNE-qY-S1P" userLabel="Likes">
                                                                     <rect key="frame" x="0.0" y="0.0" width="63" height="49"/>
@@ -188,16 +188,16 @@
                                                     </subviews>
                                                 </stackView>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Swe-tX-ps0" userLabel="ProgressView">
-                                                    <rect key="frame" x="0.0" y="57" width="398" height="50"/>
+                                                    <rect key="frame" x="0.0" y="57" width="384" height="50"/>
                                                     <subviews>
                                                         <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="68M-v8-6uS" userLabel="ProgressBar">
-                                                            <rect key="frame" x="15" y="15" width="368" height="20"/>
+                                                            <rect key="frame" x="0.0" y="15" width="384" height="20"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="20" id="a9j-W1-kPj"/>
                                                             </constraints>
                                                         </progressView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9jk-sx-6m6" userLabel="Percentage">
-                                                            <rect key="frame" x="30.000000000000004" y="14.666666666666657" width="41.333333333333343" height="21"/>
+                                                            <rect key="frame" x="15.000000000000004" y="14.666666666666657" width="41.333333333333343" height="21"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="21" id="lgp-ZJ-6c7"/>
                                                             </constraints>
@@ -208,11 +208,11 @@
                                                     </subviews>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                     <constraints>
+                                                        <constraint firstAttribute="trailing" secondItem="68M-v8-6uS" secondAttribute="trailing" id="1v3-dE-7hU"/>
                                                         <constraint firstItem="68M-v8-6uS" firstAttribute="centerY" secondItem="Swe-tX-ps0" secondAttribute="centerY" id="8nS-Cu-jya"/>
-                                                        <constraint firstAttribute="trailing" secondItem="68M-v8-6uS" secondAttribute="trailing" constant="15" id="fxt-QY-arj"/>
-                                                        <constraint firstItem="68M-v8-6uS" firstAttribute="leading" secondItem="Swe-tX-ps0" secondAttribute="leading" constant="15" id="kAB-AS-uP8"/>
+                                                        <constraint firstItem="68M-v8-6uS" firstAttribute="leading" secondItem="Swe-tX-ps0" secondAttribute="leading" id="Ije-5i-JxV"/>
                                                         <constraint firstItem="9jk-sx-6m6" firstAttribute="centerY" secondItem="Swe-tX-ps0" secondAttribute="centerY" id="uNt-og-n8l"/>
-                                                        <constraint firstItem="9jk-sx-6m6" firstAttribute="leading" secondItem="Swe-tX-ps0" secondAttribute="leading" constant="30" id="xgV-lC-m72"/>
+                                                        <constraint firstItem="9jk-sx-6m6" firstAttribute="leading" secondItem="Swe-tX-ps0" secondAttribute="leading" constant="15" id="xgV-lC-m72"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
@@ -227,9 +227,9 @@
                                     <constraints>
                                         <constraint firstItem="Dej-7g-YVV" firstAttribute="top" secondItem="wXt-9J-wQh" secondAttribute="top" id="V5h-0K-0NA"/>
                                         <constraint firstItem="oE4-2V-DeD" firstAttribute="top" secondItem="wXt-9J-wQh" secondAttribute="top" constant="61" id="VYU-1Q-eXn"/>
-                                        <constraint firstAttribute="trailing" secondItem="oE4-2V-DeD" secondAttribute="trailing" constant="8" id="b11-KD-CKM"/>
+                                        <constraint firstAttribute="trailing" secondItem="oE4-2V-DeD" secondAttribute="trailing" constant="15" id="b11-KD-CKM"/>
                                         <constraint firstAttribute="bottom" secondItem="oE4-2V-DeD" secondAttribute="bottom" constant="8" id="bOS-vF-U4B"/>
-                                        <constraint firstItem="oE4-2V-DeD" firstAttribute="leading" secondItem="wXt-9J-wQh" secondAttribute="leading" constant="8" id="fRl-MD-r5a"/>
+                                        <constraint firstItem="oE4-2V-DeD" firstAttribute="leading" secondItem="wXt-9J-wQh" secondAttribute="leading" constant="15" id="fRl-MD-r5a"/>
                                         <constraint firstAttribute="trailing" secondItem="Dej-7g-YVV" secondAttribute="trailing" id="mAD-V7-yJp"/>
                                     </constraints>
                                 </view>

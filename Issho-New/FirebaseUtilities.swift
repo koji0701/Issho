@@ -45,6 +45,7 @@ extension Firestore {
         return rV
     }**/
     
+    
     static func initializeUser(uid: String, username: String) {
         
         

@@ -21,7 +21,7 @@ class SMViewController: UIViewController {
     private func fetchPosts() {
         guard let uid = Auth.auth().currentUser?.uid else {return}
         
-        db.collection(Constants.FBase.collectionName).whereField("friends", arrayContains: uid).addSnapshotListener { querySnapshot, error in
+        db.collection(Constants.FBase.collectionName).whereField("friends", arrayContains: uid).getDocuments() { querySnapshot, error in
             self.posts = []
             print("found the friend")
             if let e = error {

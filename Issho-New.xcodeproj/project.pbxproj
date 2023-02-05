@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E50C7725298F3F2A00D7717C /* NunitoSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E50C7724298F3F2A00D7717C /* NunitoSans-Regular.ttf */; };
+		E50C7727298F3F5500D7717C /* NunitoSans-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E50C7726298F3F5500D7717C /* NunitoSans-ExtraBold.ttf */; };
+		E50C7729298F3F6000D7717C /* NunitoSans-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E50C7728298F3F6000D7717C /* NunitoSans-Black.ttf */; };
 		E52FBCA8292F18D30053208C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FBCA7292F18D30053208C /* AppDelegate.swift */; };
 		E52FBCAA292F18D30053208C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FBCA9292F18D30053208C /* SceneDelegate.swift */; };
 		E52FBCB1292F18D40053208C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E52FBCB0292F18D40053208C /* Assets.xcassets */; };
@@ -55,6 +58,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		E50C7724298F3F2A00D7717C /* NunitoSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NunitoSans-Regular.ttf"; sourceTree = "<group>"; };
+		E50C7726298F3F5500D7717C /* NunitoSans-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NunitoSans-ExtraBold.ttf"; sourceTree = "<group>"; };
+		E50C7728298F3F6000D7717C /* NunitoSans-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NunitoSans-Black.ttf"; sourceTree = "<group>"; };
 		E52FBCA4292F18D30053208C /* Issho-New.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Issho-New.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E52FBCA7292F18D30053208C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E52FBCA9292F18D30053208C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -117,6 +123,9 @@
 		E51B31192977508E00E918C3 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				E50C7728298F3F6000D7717C /* NunitoSans-Black.ttf */,
+				E50C7726298F3F5500D7717C /* NunitoSans-ExtraBold.ttf */,
+				E50C7724298F3F2A00D7717C /* NunitoSans-Regular.ttf */,
 			);
 			path = Fonts;
 			sourceTree = "<group>";
@@ -335,8 +344,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				E52FBCB4292F18D40053208C /* LaunchScreen.storyboard in Resources */,
+				E50C7727298F3F5500D7717C /* NunitoSans-ExtraBold.ttf in Resources */,
 				E58DED52292F1AD000F1EF0C /* Main.storyboard in Resources */,
 				E52FBCB1292F18D40053208C /* Assets.xcassets in Resources */,
+				E50C7729298F3F6000D7717C /* NunitoSans-Black.ttf in Resources */,
+				E50C7725298F3F2A00D7717C /* NunitoSans-Regular.ttf in Resources */,
 				E58DED40292F196E00F1EF0C /* ToDoEntryCell.xib in Resources */,
 				E58DED4B292F19B200F1EF0C /* SMPostCell.xib in Resources */,
 				E58245C3296622EF0093E0D5 /* GoogleService-Info.plist in Resources */,

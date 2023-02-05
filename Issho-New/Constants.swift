@@ -36,7 +36,11 @@ struct Constants {
         static var displayMode = 1
     }
     
-    
+    struct Fonts {
+        static let toDoEntryCellFont = UIFont(name: "NunitoSans-Regular", size: 13)
+        static let toDoEntrySectionHeaderFont = UIFont(name: "NunitoSans-ExtraBold", size: 20)
+        
+    }
     
     
 }

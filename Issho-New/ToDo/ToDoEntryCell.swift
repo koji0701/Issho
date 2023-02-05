@@ -33,9 +33,10 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
     
     var toDoEntry: ToDoEntry? {
         didSet {
-            
+
             textView.text = toDoEntry?.text
-            
+
+            //MARK: CONTINUE HERE. DETERMINE THE FONTS, THEN CHANGE THE FONTS. ALSO KEEP FONTS IN THE CONSTANTS FILE
             if (toDoEntry?.isChecked == true) {
                 checkboxButton.setImage(UIImage(systemName: "checkmark.circle.fill"), for: .normal)
                 print("ischecked is true")
@@ -97,6 +98,7 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
             if (textView.text.prefix(1) != "⚡️") {
                 print("no lightning, set the lightning")
                 textView.text.insert("⚡️", at: textView.text.startIndex)
+                
             }
             textView.attributedText = NSMutableAttributedString(string: textView.text)
         }
@@ -107,12 +109,16 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
             textView.attributedText = NSMutableAttributedString(string: textView.text)
             
         }
+        textView.font = Constants.Fonts.toDoEntryCellFont
+
         
     }
     
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        textView.text = toDoEntry?.text
+        
         textView.delegate = self
         textView.isScrollEnabled = false
         textView.textContainer.maximumNumberOfLines = 0
@@ -120,6 +126,7 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
         textView.textContainer.lineBreakMode = .byWordWrapping
         textView.textContainer.widthTracksTextView = true
         textView.textContainer.size = textView.frame.size
+        
     }
     
     
@@ -160,7 +167,7 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
     private var resignedOnEnter = false
     
     func textViewDidEndEditing(_ textView: UITextView) {
-        
+
         
         if (textView.text == "" || textView.text == "⚡️") {//if textview is still blank after done editing
             
@@ -206,6 +213,7 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
             }
             
         }
+
         
     }
     
@@ -213,36 +221,42 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
     func textViewDidChange(_ textView: UITextView) {
         
         let str = textView.text ?? ""
+        
         textViewCallBack?(str)
     }
     
     private var resignedOnBackspace = false
     
+    private let tagWords: [String] = ["today", "tomorrow", "yesterday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday", "next monday", "next tuesday", "next wednesday", "next thursday", "next friday", "next saturday", "next sunday", "next week"];
+    
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         
-            if text == "\n" {
-                
-                if (textView.text != "") {
-                    resignedOnEnter = true
-                }
+        
+        
+        if text == "\n" {
+            if (textView.text != "") {
+                resignedOnEnter = true
+            }
+            textView.resignFirstResponder()
+            return false
+        }
+        
+        if (text.isBackspace) {
+            if (textView.text == "") {
+                resignedOnBackspace = true
                 textView.resignFirstResponder()
                 return false
             }
-        
-            if (text.isBackspace) {
-                if (textView.text == "") {
-                    resignedOnBackspace = true
-                    textView.resignFirstResponder()
-                    return false
-                }
-                
-            }
-            else if (textView.text.prefix(1) == "⚡️" && range.location < 1) {
-                    //if the user wants to write text before this position, don't let the user
-                print("user writes before the prefix lightning")
-                return false
-            }
             
+        }
+        else if (textView.text.prefix(1) == "⚡️" && range.location < 1) {
+            //if the user wants to write text before this position, don't let the user
+            print("user writes before the prefix lightning")
+            return false
+        }
+        
+        
+        
             return true
         
     }

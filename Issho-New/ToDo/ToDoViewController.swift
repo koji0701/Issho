@@ -58,6 +58,7 @@ class ToDoViewController: UIViewController{
         
         
         ToDoTableView.dataSource = self
+        ToDoTableView.delegate = self
         
         navigationController?.navigationBar.isHidden = true
         ToDoTableView.register(UINib(nibName: Constants.ToDo.nibName, bundle: nil), forCellReuseIdentifier: Constants.ToDo.reuseIdentifier)
@@ -69,11 +70,13 @@ class ToDoViewController: UIViewController{
         
         updateUniqueDates()
         initProgressNoFirestore()
-        
+        initFirestoreInfo()
         //init userIsWorking flag
         
         
         //header
+        streakLabel.font = Constants.Fonts.toDoEntrySectionHeaderFont
+        likesLabel.font = Constants.Fonts.toDoEntrySectionHeaderFont
         streakLabel.text = "0🔥"
         likesLabel.text = "0👏"
     
@@ -87,7 +90,7 @@ class ToDoViewController: UIViewController{
             }
             return false
         }()
-        
+        newDayUpdates()
         //new day stuff
         Task {
             for await _ in NotificationCenter.default.notifications(named: .NSCalendarDayChanged) {
@@ -101,7 +104,7 @@ class ToDoViewController: UIViewController{
 }
 
 
-extension ToDoViewController: UITableViewDataSource {
+extension ToDoViewController: UITableViewDataSource, UITableViewDelegate {
     
     //sections stuff
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -155,7 +158,20 @@ extension ToDoViewController: UITableViewDataSource {
         return sectionTitle
     }
     
-
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        
+        
+        
+        let myLabel = UILabel()
+        myLabel.frame = CGRect(x: 20, y: 8, width: 320, height: 20)
+        myLabel.font = Constants.Fonts.toDoEntrySectionHeaderFont
+        myLabel.text = self.tableView(tableView, titleForHeaderInSection: section)
+        let headerView = UIView()
+        headerView.addSubview(myLabel)
+        return headerView
+    }
+    
+    
     //table view methods
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -201,7 +217,8 @@ extension ToDoViewController: UITableViewDataSource {
         cell.toDoEntryDelegate = self
         cell.toolbar = ToDoEntryToolbar(setDate: entries[totalIndexRow].date!, isCurrentTask: entries[totalIndexRow].isCurrentTask)
         cell.styleTextView(isCurrent: entries[totalIndexRow].isCurrentTask)
-        
+        cell.textView.font = Constants.Fonts.toDoEntryCellFont
+
         // set the closure
         weak var tv = tableView
         cell.textViewCallBack = { [weak self] str in
@@ -212,7 +229,6 @@ extension ToDoViewController: UITableViewDataSource {
             self.entries[totalIndexRow].text = str//
             // we don't need to do anything else here
             // this will force the table to recalculate row heights
-            
             tv.beginUpdates()
             tv.endUpdates()//height recalculation
             
@@ -421,7 +437,7 @@ extension ToDoViewController {//all helper funcs for organization
             }
             print("updateIsWorkingTimer is running")
             
-            //MARK: CONTINUE HERE. INSTEAD OF READING IT IN FIRESTORE, IT IS CHEAPER JUST TO SET A FLAG VARIABLE WHENEVER I LOAD ENTRIES. THEN I CAN TOGGLE THE FLAG WHEN I DO THE WRITING OPERATION. -1 READING
+            
             let workingStatusChanged: Bool = {
                 
                 let entryIsWorking: Bool = {
@@ -463,7 +479,7 @@ extension ToDoViewController {//all helper funcs for organization
             progress = 0.0
             print("error in updateProgress")
         }
-        percentageLabel.text = String(format: "%.0f", progress * 100) + "%"
+        percentageLabel.text = String(format: "%.f", progress * 100) + "%"
         progressBar.progress = progress
     }
 
@@ -488,7 +504,7 @@ extension ToDoViewController {//all helper funcs for organization
             progress = 0.0
             print("error in updateProgress")
         }
-        percentageLabel.text = String(format: "%.1f%%", progress * 100)
+        percentageLabel.text = String(format: "%.f%%", progress * 100)
         progressBar.progress = progress
         
         // invalidate the timer if it's already running
@@ -682,4 +698,29 @@ extension ToDoViewController {//all helper funcs for organization
 
         return rowCount
     }
+    
+    //for initial firestore info (likesCount, streak)
+    private func initFirestoreInfo() {
+        guard let uid = Auth.auth().currentUser?.uid else {return}
+        let db = Firestore.firestore()
+        let docRef = db.collection(Constants.FBase.collectionName).document(uid)
+        
+        docRef.getDocument { (document, error) in
+            if let document = document, document.exists {
+                print("was able to read document data")
+                DispatchQueue.main.async {
+                    let likesCount = document["likesCount"] as! Int
+                    self.likesLabel.text = String(likesCount) + "👏"
+                    let streak = document["streak"] as! Int
+                    self.streakLabel.text = String(streak) + "🔥"
+                }
+                
+            } else {
+                print("Document does not exist")
+                fatalError("could not read user document, readUserDocument")
+            }
+        }
+    }
+    
+    
 }
