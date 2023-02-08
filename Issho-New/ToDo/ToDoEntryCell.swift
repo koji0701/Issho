@@ -96,20 +96,32 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
             
             //fullString.insert(NSAttributedString(attachment: imageAttachment), at: 0)
             if (textView.text.prefix(1) != "⚡️") {
-                print("no lightning, set the lightning")
-                textView.text.insert("⚡️", at: textView.text.startIndex)
-                
+                textView.text.insert(contentsOf: "⚡️: ", at: textView.text.startIndex)
+
             }
-            textView.attributedText = NSMutableAttributedString(string: textView.text)
+            
+            let displayText = NSMutableAttributedString(string: textView.text)
+            displayText.addAttribute(NSAttributedString.Key.font, value: Constants.Fonts.toDoEntryCellFont, range: NSRange(location: 3, length: textView.text.count + 1 - 3))
+
+            displayText.addAttribute(NSAttributedString.Key.backgroundColor, value: UIColor.systemGray5, range: NSRange(location: 0, length: 3))
+            displayText.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.systemPink, range: NSRange(location: 0, length: 3))
+            displayText.addAttribute(NSAttributedString.Key.font, value: UIFont.systemFont(ofSize: 15, weight: .bold), range: NSRange(location: 0, length: 3))
+
+            textView.attributedText = displayText
+            
+
         }
         else {
             if (textView.text.prefix(1) == "⚡️") {
                 textView.text = String(textView.text.dropFirst())
+                textView.text = String(textView.text.dropFirst())
+                textView.text = String(textView.text.dropFirst())
             }
             textView.attributedText = NSMutableAttributedString(string: textView.text)
+            textView.font = Constants.Fonts.toDoEntryCellFont
+
             
         }
-        textView.font = Constants.Fonts.toDoEntryCellFont
 
         
     }
@@ -125,7 +137,8 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
         textView.isEditable = true
         textView.textContainer.lineBreakMode = .byWordWrapping
         textView.textContainer.widthTracksTextView = true
-        textView.textContainer.size = textView.frame.size
+        //textView.textContainer.size = textView.frame.size
+        
         
     }
     
@@ -134,7 +147,12 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
         super.layoutSubviews()
         contentView.layer.cornerRadius = 10
         contentView.clipsToBounds = true
+        
+        
+
     }
+    
+    
     
     
     
@@ -169,7 +187,7 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
     func textViewDidEndEditing(_ textView: UITextView) {
 
         
-        if (textView.text == "" || textView.text == "⚡️") {//if textview is still blank after done editing
+        if (textView.text == "" || textView.text == "⚡️: ") {//if textview is still blank after done editing
             
             if (toDoEntry?.isPlaceholder == true) {//if its the placeholder cell, go back to the "add" phase
                 addButton.isHidden = false
@@ -221,7 +239,7 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
     func textViewDidChange(_ textView: UITextView) {
         
         let str = textView.text ?? ""
-        
+        print(Constants.Fonts.toDoEntryCellFont?.lineHeight)
         textViewCallBack?(str)
     }
     
@@ -249,7 +267,7 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
             }
             
         }
-        else if (textView.text.prefix(1) == "⚡️" && range.location < 1) {
+        else if (textView.text.prefix(1) == "⚡️" && range.location < 3) {
             //if the user wants to write text before this position, don't let the user
             print("user writes before the prefix lightning")
             return false
@@ -263,11 +281,3 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
     
     
 }
-
-extension String {//for backspace
-  var isBackspace: Bool {
-    let char = self.cString(using: String.Encoding.utf8)!
-    return strcmp(char, "\\b") == -92
-  }
-}
-

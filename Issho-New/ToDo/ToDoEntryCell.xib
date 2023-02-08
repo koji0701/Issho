@@ -7,11 +7,6 @@
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <customFonts key="customFonts">
-        <array key="NunitoSans-Regular.ttf">
-            <string>NunitoSans-Regular</string>
-        </array>
-    </customFonts>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -26,7 +21,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="70"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nr4-QR-eA0" userLabel="ButtonBox">
-                                <rect key="frame" x="0.0" y="0.0" width="70" height="70"/>
+                                <rect key="frame" x="0.0" y="0.0" width="55" height="70"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AEn-yb-h53">
                                         <rect key="frame" x="23" y="23" width="24" height="24"/>
@@ -64,28 +59,28 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstItem="AEn-yb-h53" firstAttribute="top" secondItem="nr4-QR-eA0" secondAttribute="top" constant="23" id="A7q-NJ-Dk3"/>
+                                    <constraint firstItem="AEn-yb-h53" firstAttribute="leading" secondItem="nr4-QR-eA0" secondAttribute="leading" constant="23" id="Hy9-vT-lBY"/>
+                                    <constraint firstItem="cEu-FX-gj0" firstAttribute="leading" secondItem="nr4-QR-eA0" secondAttribute="leading" constant="23" id="K95-G6-nmg"/>
                                     <constraint firstItem="cEu-FX-gj0" firstAttribute="top" secondItem="nr4-QR-eA0" secondAttribute="top" constant="23" id="cA6-Kr-mK3"/>
-                                    <constraint firstItem="cEu-FX-gj0" firstAttribute="centerX" secondItem="nr4-QR-eA0" secondAttribute="centerX" id="dOf-Bh-PbM"/>
-                                    <constraint firstAttribute="width" constant="70" id="lF6-Qt-1Ct"/>
-                                    <constraint firstItem="AEn-yb-h53" firstAttribute="centerX" secondItem="nr4-QR-eA0" secondAttribute="centerX" id="lWO-zj-96C"/>
+                                    <constraint firstAttribute="width" constant="55" id="lF6-Qt-1Ct"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9WG-z9-Hxl" userLabel="TextViewBox">
-                                <rect key="frame" x="70" y="0.0" width="344" height="70"/>
+                                <rect key="frame" x="55" y="0.0" width="359" height="70"/>
                                 <subviews>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" keyboardDismissMode="interactive" translatesAutoresizingMaskIntoConstraints="NO" id="1d4-RH-f8P" userLabel="TextView">
-                                        <rect key="frame" x="0.0" y="18.5" width="327" height="33"/>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" keyboardDismissMode="interactive" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1d4-RH-f8P" userLabel="TextView">
+                                        <rect key="frame" x="0.0" y="16.5" width="342" height="30"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                        <fontDescription key="fontDescription" name="NunitoSans-Regular" family="Nunito Sans" pointSize="13"/>
+                                        <attributedString key="attributedText"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textView>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstItem="1d4-RH-f8P" firstAttribute="leading" secondItem="9WG-z9-Hxl" secondAttribute="leading" id="4XK-Zt-BtN" userLabel="TextView.leading = leading "/>
-                                    <constraint firstAttribute="bottom" secondItem="1d4-RH-f8P" secondAttribute="bottom" constant="18.5" id="GeH-Vc-ksd"/>
+                                    <constraint firstAttribute="bottom" secondItem="1d4-RH-f8P" secondAttribute="bottom" constant="23.5" id="hkt-NM-vdk"/>
                                     <constraint firstAttribute="trailing" secondItem="1d4-RH-f8P" secondAttribute="trailing" constant="17" id="jpI-q6-owF"/>
-                                    <constraint firstItem="1d4-RH-f8P" firstAttribute="centerY" secondItem="9WG-z9-Hxl" secondAttribute="centerY" id="nPN-Ey-Aw3"/>
+                                    <constraint firstItem="1d4-RH-f8P" firstAttribute="top" secondItem="9WG-z9-Hxl" secondAttribute="top" constant="16.25" id="xZv-0S-PwO"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -104,7 +99,7 @@
                     <constraint firstItem="QQg-ON-qFf" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="zKr-N2-0Jh"/>
                 </constraints>
             </tableViewCellContentView>
-            <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <viewLayoutGuide key="safeArea" id="rTq-Fs-Fdd"/>
             <connections>
                 <outlet property="addButton" destination="cEu-FX-gj0" id="kNK-LM-hoq"/>
                 <outlet property="checkboxButton" destination="AEn-yb-h53" id="1XO-i3-Ive"/>

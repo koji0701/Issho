@@ -32,13 +32,14 @@ class ToDoViewController: UIViewController{
     
     @IBOutlet weak var ToDoTableView: UITableView!
     
-    //header outlets
-    @IBAction func settingsButtonClicked(_ sender: Any) {
-        
-    }
+    
     
     @IBOutlet weak var streakLabel: UILabel!
     
+    //header outlets
+    @IBAction func settingsButtonClicked(_ sender: Any) {
+        print("settings button clicked")
+    }
     
     @IBOutlet weak var likesLabel: UILabel!
     
@@ -49,6 +50,8 @@ class ToDoViewController: UIViewController{
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.setNavigationBarHidden(true, animated: true)
         tabBarController?.tabBar.isHidden = false
+        
+        
     }
     
     override func viewDidLoad() {
@@ -90,7 +93,7 @@ class ToDoViewController: UIViewController{
             }
             return false
         }()
-        newDayUpdates()
+        //newDayUpdates()
         //new day stuff
         Task {
             for await _ in NotificationCenter.default.notifications(named: .NSCalendarDayChanged) {
@@ -127,12 +130,36 @@ extension ToDoViewController: UITableViewDataSource, UITableViewDelegate {
         }
         let dayOfWeek = calendar.dateComponents([.weekday], from: date).weekday
         
-        if (calendar.isDate(Date(), equalTo: date, toGranularity: .day)) {
-            
-            return "TODAY"
-        }
         
         var sectionTitle = ""
+        
+        sectionTitle = {
+            let year2022 = calendar.date(from: DateComponents(year: 2022))!
+            let numberOfDaysSince2022 = calendar.dateComponents([.day], from: year2022, to: date).day!
+            let adjustedNum = numberOfDaysSince2022 % Constants.ToDo.emojis.count
+            
+            
+            return Constants.ToDo.emojis[adjustedNum] + " "
+            //days since particular date with the modulo
+            //then put emojis
+        }()
+        if (calendar.isDate(Date(), equalTo: date, toGranularity: .day)) {
+            
+            sectionTitle += "TODAY"
+            return sectionTitle
+        }
+        if (calendar.isDate(calendar.date(byAdding: .day, value: 1, to: Date())!, equalTo: date, toGranularity: .day)) {
+            
+            sectionTitle += "TOMORROW"
+            return sectionTitle
+        }
+        
+        if (calendar.isDate(calendar.date(byAdding: .day, value: -1, to: Date())!, equalTo: date, toGranularity: .day)) {
+            
+            sectionTitle += "YESTERDAY"
+            return sectionTitle
+        }
+        
         switch dayOfWeek {
         case 1:
             sectionTitle += "Sunday"
@@ -163,9 +190,29 @@ extension ToDoViewController: UITableViewDataSource, UITableViewDelegate {
         
         
         let myLabel = UILabel()
+        let text = self.tableView(tableView, titleForHeaderInSection: section)!
         myLabel.frame = CGRect(x: 20, y: 8, width: 320, height: 20)
-        myLabel.font = Constants.Fonts.toDoEntrySectionHeaderFont
-        myLabel.text = self.tableView(tableView, titleForHeaderInSection: section)
+        
+        if let rangeOfSecondSpace = text.range(of: " ", options: .literal, range: text.index(text.startIndex, offsetBy: 3)..<text.endIndex, locale: nil)?.upperBound {
+            let attributedString = NSMutableAttributedString(string: text)
+
+            let startIndex = text.distance(from: text.startIndex, to: rangeOfSecondSpace)
+
+            //attributedString.addAttribute(NSAttributedString.Key.font, value: Constants.Fonts.toDoEntrySectionHeaderFont, range: NSRange(location: 0, length: startIndex))
+            
+            //attributedString.addAttribute(NSAttributedString.Key.font, value: UIFont.boldSystemFont(ofSize: 18), range: NSRange(location: startIndex, length: text.count - startIndex + 1))
+            
+            attributedString.addAttribute(NSAttributedString.Key.font, value: Constants.Fonts.toDoEntrySectionHeaderFont, range: NSRange(location: 0, length: text.count+1))
+            
+            attributedString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.gray, range: NSRange(location: startIndex, length: text.count - startIndex + 1))
+
+            
+            myLabel.attributedText = attributedString
+        }
+        else {
+            myLabel.font = Constants.Fonts.toDoEntrySectionHeaderFont
+            myLabel.text = self.tableView(tableView, titleForHeaderInSection: section)
+        }
         let headerView = UIView()
         headerView.addSubview(myLabel)
         return headerView
@@ -271,6 +318,7 @@ extension ToDoViewController: UITableViewDataSource, UITableViewDelegate {
             print("error fetching data from context: \(error)")
         }
     }
+    
     
 }
 
@@ -713,6 +761,8 @@ extension ToDoViewController {//all helper funcs for organization
                     self.likesLabel.text = String(likesCount) + "👏"
                     let streak = document["streak"] as! Int
                     self.streakLabel.text = String(streak) + "🔥"
+                    
+                    
                 }
                 
             } else {
@@ -721,6 +771,12 @@ extension ToDoViewController {//all helper funcs for organization
             }
         }
     }
+}
+
+extension ToDoViewController: SettingsToDoViewControllerDelegate {
     
-    
+    func refreshTableView() {
+        loadItems()
+        saveItems()
+    }
 }

@@ -36,6 +36,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             defaults.set(Constants.Settings.showCompletedEntries, forKey: "showCompletedEntries")
         }
         
+        UINavigationBar.appearance().backIndicatorImage = UIImage(named: "back")
+        UINavigationBar.appearance().backIndicatorTransitionMaskImage = UIImage(named: "back")
+        
         
         return true
     }

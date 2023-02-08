@@ -7,6 +7,14 @@
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="NunitoSans-Black.ttf">
+            <string>NunitoSans-Black</string>
+        </array>
+        <array key="NunitoSans-ExtraBold.ttf">
+            <string>NunitoSans-ExtraBold</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--Signup-->
         <scene sceneID="2r2-xA-sTO">
@@ -20,10 +28,10 @@
                                 <rect key="frame" x="0.0" y="88" width="414" height="186"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="👋Welcome to Issho" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b5i-5n-6EV" userLabel="WelcomeLabel">
-                                        <rect key="frame" x="21" y="8" width="270" height="170"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="👋 Welcome to Issho" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b5i-5n-6EV" userLabel="WelcomeLabel">
+                                        <rect key="frame" x="21" y="8" width="385" height="170"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <fontDescription key="fontDescription" name="NunitoSans-Black" family="Nunito Sans" pointSize="34"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -91,17 +99,19 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="I'm already a member, " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FhM-LJ-uip" userLabel="LoginSwitchLabel">
-                                        <rect key="frame" x="8" y="29" width="178" height="21"/>
+                                        <rect key="frame" x="8" y="29" width="221" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <fontDescription key="fontDescription" name="NunitoSans-ExtraBold" family="Nunito Sans" pointSize="20"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iYd-mZ-eet" userLabel="LoginSwitchButton">
-                                        <rect key="frame" x="181" y="24" width="98" height="31"/>
+                                        <rect key="frame" x="211" y="24" width="119" height="31"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="log me in"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="log me in">
+                                            <fontDescription key="titleFontDescription" name="NunitoSans-Black" family="Nunito Sans" pointSize="20"/>
+                                        </buttonConfiguration>
                                         <connections>
                                             <action selector="loginSwitchButtonPressed:" destination="RVl-Hw-g52" eventType="touchUpInside" id="iV8-bS-pVE"/>
                                         </connections>
@@ -225,7 +235,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="o6A-UI-EQ7"/>
+        <segue reference="bbm-SZ-m8m"/>
     </inferredMetricsTieBreakers>
     <resources>
         <systemColor name="systemBackgroundColor">

@@ -13,6 +13,11 @@ class SMViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
+    
+    @IBAction func addFriendsButtonClicked(_ sender: Any) {
+        print("add friends button clicked")
+    }
+    
     let db = Firestore.firestore()
     
     var posts = [Post]()
@@ -96,11 +101,22 @@ class SMViewController: UIViewController {
         fetchPosts()
         tableView.dataSource = self
         tableView.register(UINib(nibName: Constants.SM.nibName, bundle: nil), forCellReuseIdentifier: Constants.SM.reuseIdentifier)
-        
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.setNavigationBarHidden(true, animated: true)
+        tabBarController?.tabBar.isHidden = false
+    }
+    
+    
 }
 
 extension SMViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return posts.count
+    }
+    
+    /**
     //sections as spacers
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
@@ -115,25 +131,25 @@ extension SMViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         
         return 10
-    }
+    }**/
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.SM.reuseIdentifier, for: indexPath) as! SMPostCell
         
         cell.postDelegate = self
-        if (posts[indexPath.section].isWorking == true) {
-            cell.username.text = "⚡️" + posts[indexPath.section].username
+        if (posts[indexPath.row].isWorking == true) {
+            cell.username.text = "⚡️" + posts[indexPath.row].username
         }
         else {
-            cell.username.text = posts[indexPath.section].username
+            cell.username.text = posts[indexPath.row].username
         }
         
-        cell.streak.text = String(posts[indexPath.section].streak) + "🔥"
-        cell.likes.text = String(posts[indexPath.section].likesCount) + "👏"
-        cell.progressBar.progress = posts[indexPath.section].progress
-        cell.progressPercentage.text = String(format: "%.0f", posts[indexPath.section].progress * 100) + "%"
-        cell.contentView.backgroundColor = (posts[indexPath.section].isLiked == true) ? .systemYellow : .systemGray6
+        cell.streak.text = String(posts[indexPath.row].streak) + "🔥"
+        cell.likes.text = String(posts[indexPath.row].likesCount) + "👏"
+        cell.progressBar.progress = posts[indexPath.row].progress
+        cell.progressPercentage.text = String(format: "%.0f", posts[indexPath.row].progress * 100) + "%"
+        cell.contentView.backgroundColor = (posts[indexPath.row].isLiked == true) ? .systemYellow : .systemGray6
         
         return cell
     }
@@ -147,7 +163,7 @@ extension SMViewController: PostDelegate {
             return false
             
         }
-        let post = posts[indexPath.section]
+        let post = posts[indexPath.row]
         if (post.isLiked == false) {
             updateLikeInFirestore(post: post)
             return true

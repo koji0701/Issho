@@ -8,6 +8,10 @@
 import Foundation
 import UIKit
 
+protocol SettingsToDoViewControllerDelegate {
+    func refreshTableView()
+}
+
 class SettingsViewController: UIViewController {
     let defaults = UserDefaults.standard
 
@@ -18,9 +22,11 @@ class SettingsViewController: UIViewController {
     
     @IBOutlet weak var displayModeButton: UIButton!
 
+    var settingsToDoViewControllerDelegate: SettingsToDoViewControllerDelegate!
     
     override func viewDidLoad() {
         
+        setCompletedTasksButtonDisplay(mode: Constants.Settings.showCompletedEntries)
         
         //MARK: CONTINUE
         /**
@@ -42,13 +48,10 @@ class SettingsViewController: UIViewController {
         defaults.set(!Constants.Settings.showCompletedEntries, forKey: "showCompletedEntries")
         Constants.Settings.showCompletedEntries = !Constants.Settings.showCompletedEntries
         
-        //temp testing
-        if Constants.Settings.showCompletedEntries == true {
-            print("MODE: SHOW set mode completed tasks button to show completed tasks")
-        }
-        else {
-            print("MODE: HIDE set mode completed tasks button to hide completed tasks")
-        }
+        setCompletedTasksButtonDisplay(mode: Constants.Settings.showCompletedEntries)
+        //reload tableview
+        settingsToDoViewControllerDelegate?.refreshTableView()
+        
     }
     
     @IBAction func displayModeButtonClicked(_ sender: Any) {
@@ -62,18 +65,19 @@ class SettingsViewController: UIViewController {
             Constants.Settings.displayMode = Constants.Settings.displayMode + 1
         }
         
-        //temp testing
-        if (Constants.Settings.displayMode == 1) {
-            print("display mode automatic")
-        }
-        else if (Constants.Settings.displayMode == 2) {
-            print("display mode light mode")
-        }
-        else {
-            print("display mode dark mode")
-        }
+        
     }
     
+    private func setCompletedTasksButtonDisplay(mode: Bool) {
+        if (mode == true) {//show completed entries
+            //set to yes state, fix later
+            completedTasksButton.setTitle("Yes", for: .normal)
+            
+        }
+        else {
+            completedTasksButton.setTitle("No", for: .normal)
+        }
+    }
     
     
     
