@@ -25,6 +25,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         Auth.auth().addStateDidChangeListener { auth, user in
           if user != nil {
             // User is signed in. Show home screen
+              
+              User.shared().initUserInfo()
+              
               let mainStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
               self.window?.rootViewController = mainStoryboard.instantiateInitialViewController()!
               self.window?.makeKeyAndVisible()

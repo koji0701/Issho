@@ -11,10 +11,9 @@ import FirebaseFirestore
 import FirebaseAuth
 
 
-class ToDoViewController: UIViewController{
+class ToDoViewController: UIViewController {
 
     var entries = [ToDoEntry]()
-    
     var progress: Float = 0.0
     
     
@@ -26,13 +25,10 @@ class ToDoViewController: UIViewController{
     
     var uniqueDates: [DateComponents] = []
     
-    
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext //context globally for this
     
     
     @IBOutlet weak var ToDoTableView: UITableView!
-    
-    
     
     @IBOutlet weak var streakLabel: UILabel!
     
@@ -51,13 +47,24 @@ class ToDoViewController: UIViewController{
         navigationController?.setNavigationBarHidden(true, animated: true)
         tabBarController?.tabBar.isHidden = false
         
-        
+    }
+    
+    @objc private func userUpdate(_ notification: Notification) {
+        print("user updated notification recieved", notification.object)
+        //print(notification.object as? [String: Any] ?? [:])
+        let info = notification.object as? [String: Any]
+        let likesCount = info?["likesCount"] as? Int ?? 0
+        let streak = info?["streak"] as? Int ?? 0
+        likesLabel.text = String(likesCount) + "👏"
+        streakLabel.text = String(streak) + "🔥"
     }
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(userUpdate(_:)),name: NSNotification.Name ("userInfoUpdated"),                                           object: nil)
         
         
         ToDoTableView.dataSource = self
@@ -82,6 +89,7 @@ class ToDoViewController: UIViewController{
         likesLabel.font = Constants.Fonts.toDoEntrySectionHeaderFont
         streakLabel.text = "0🔥"
         likesLabel.text = "0👏"
+        
     
         //init userIsWorking flag
         userIsWorking = {
@@ -380,6 +388,7 @@ extension ToDoViewController: ToDoEntryDelegate {
     
     func createNewToDoEntryCell(in cell: ToDoEntryCell, makeFirstResponder: Bool){
         
+        User.shared().updateUserInfo(newInfo: ["streak": 3])
         
         
         guard let indexPath = ToDoTableView.indexPath(for: cell) else {
@@ -470,6 +479,7 @@ extension ToDoViewController: ToDoEntryDelegate {
         
         self.entries[Int(cell.toDoEntry!.order)].isCurrentTask = isCurrentTask//set current Task
         updateIsWorking()
+        //MARK: THIS IS WHERE TO IMPLEMENT HTE USER UPDATE METHOD. ALSO IMPLEMENT THE NOTIFICATION CENTER THING FOR INIT PROCESSnotes
         
     }
 }
@@ -749,7 +759,7 @@ extension ToDoViewController {//all helper funcs for organization
     
     //for initial firestore info (likesCount, streak)
     private func initFirestoreInfo() {
-        guard let uid = Auth.auth().currentUser?.uid else {return}
+        /*guard let uid = Auth.auth().currentUser?.uid else {return}
         let db = Firestore.firestore()
         let docRef = db.collection(Constants.FBase.collectionName).document(uid)
         
@@ -769,14 +779,19 @@ extension ToDoViewController {//all helper funcs for organization
                 print("Document does not exist")
                 fatalError("could not read user document, readUserDocument")
             }
-        }
+        }*/
+        //self.likesLabel.text = String(User.likesCount) + "👏"
+        //self.streakLabel.text = String(User.streak) + "🔥"
+        
     }
 }
 
 extension ToDoViewController: SettingsToDoViewControllerDelegate {
     
-    func refreshTableView() {
+    func refreshTableView() {//MARK: THIS ISN'T WORKING CORRECTLY. RETHINK THE LOADITEMS?
         loadItems()
         saveItems()
     }
 }
+
+
