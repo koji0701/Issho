@@ -14,7 +14,7 @@ protocol ToDoEntryDelegate {
     func commandOrderEntries()
     //toolbar stuff
     func updateDate(in cell: ToDoEntryCell, newDate: Date)
-    func updateToolbarAttributesExceptDate(in cell: ToDoEntryCell, isCurrentTask: Bool)
+    func updateIsCurrentTask(in cell: ToDoEntryCell, isCurrentTask: Bool)
 }
 
 
@@ -81,7 +81,7 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
             }
             toolbar.currentTaskCallBack = { [weak self] isCurrentTask in
                 guard let self = self else { return }
-                self.toDoEntryDelegate?.updateToolbarAttributesExceptDate(in: self, isCurrentTask: isCurrentTask)
+                self.toDoEntryDelegate?.updateIsCurrentTask(in: self, isCurrentTask: isCurrentTask)
                 self.styleTextView(isCurrent: isCurrentTask)
                 //self.toDoEntry?.isCurrentTask = isCurrentTask//rely on the didset to call the styling method
             }

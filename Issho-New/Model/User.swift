@@ -45,14 +45,7 @@ class User {
             if let document = document, document.exists {
                 print("was able to read document data")
                 self.uid = uID
-                /**
-                self.username = document["username"] as! String
-                self.progress = document["progress"] as! Float
-                self.isWorking = document["isWorking"] as! Bool
-                self.streak = document["streak"] as! Int
-                self.likesCount = document["likesCount"] as! Int
-                self.friendRequests = document["friendRequests"] as! [String]
-                self.friends = document["friends"] as! [String]**/
+                
                 
                 self.userInfo = [
                     "username": document["username"] as! String,
@@ -96,13 +89,15 @@ class User {
             
             //if the previous update of userinfo is not equal to the current userinfo
             if !(NSDictionary(dictionary: self.userInfo).isEqual(to: self.lastUpdateUserInfo)) {
+                print("pushing updates to firestore")
                 self.lastUpdateUserInfo = self.userInfo//set the last update to current userinfo
                 //push the update to firestoer
                 Firestore.updateUserInfo(uid: self.uid, fields: self.userInfo)
+                NotificationCenter.default.post(name: NSNotification.Name("userInfoUpdated"),
+                                                object: self.userInfo)
             }
             
-            NotificationCenter.default.post(name: NSNotification.Name("userInfoUpdated"),
-                                            object: self.userInfo)
+            
         }
         
         

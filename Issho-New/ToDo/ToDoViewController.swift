@@ -17,11 +17,11 @@ class ToDoViewController: UIViewController {
     var progress: Float = 0.0
     
     
-    private var updateProgressTimer: Timer?
+    /*private var updateProgressTimer: Timer?
     private var updateProgressShouldBeLastUpdatedFlag = false
     
     private var updateIsWorkingTimer: Timer?
-    private var userIsWorking: Bool = false
+    private var userIsWorking: Bool = false*/
     
     var uniqueDates: [DateComponents] = []
     
@@ -80,8 +80,6 @@ class ToDoViewController: UIViewController {
         
         updateUniqueDates()
         initProgressNoFirestore()
-        initFirestoreInfo()
-        //init userIsWorking flag
         
         
         //header
@@ -92,7 +90,7 @@ class ToDoViewController: UIViewController {
         
     
         //init userIsWorking flag
-        userIsWorking = {
+        /*userIsWorking = {
             for entry in entries {
                 if entry.isCurrentTask == true {
                     print("found an entry that isWorking = true")
@@ -100,8 +98,7 @@ class ToDoViewController: UIViewController {
                 }
             }
             return false
-        }()
-        //newDayUpdates()
+        }()*/
         //new day stuff
         Task {
             for await _ in NotificationCenter.default.notifications(named: .NSCalendarDayChanged) {
@@ -379,16 +376,13 @@ extension ToDoViewController: ToDoEntryDelegate {
         orderEntries()
         
         updateProgress()
-        if (deletion == false) {
-            updateProgressShouldBeLastUpdatedFlag = true
-        }
+        
         
     }
     
     
     func createNewToDoEntryCell(in cell: ToDoEntryCell, makeFirstResponder: Bool){
         
-        User.shared().updateUserInfo(newInfo: ["streak": 3])
         
         
         guard let indexPath = ToDoTableView.indexPath(for: cell) else {
@@ -474,12 +468,13 @@ extension ToDoViewController: ToDoEntryDelegate {
             
     }
     
-    func updateToolbarAttributesExceptDate(in cell: ToDoEntryCell, isCurrentTask: Bool) {
-        print("updateToolbarAttributesExceptDate working")
+    func updateIsCurrentTask(in cell: ToDoEntryCell, isCurrentTask: Bool) {
+        print("updateIsCurrentTask working")
         
         self.entries[Int(cell.toDoEntry!.order)].isCurrentTask = isCurrentTask//set current Task
+        
         updateIsWorking()
-        //MARK: THIS IS WHERE TO IMPLEMENT HTE USER UPDATE METHOD. ALSO IMPLEMENT THE NOTIFICATION CENTER THING FOR INIT PROCESSnotes
+        
         
     }
 }
@@ -487,33 +482,13 @@ extension ToDoViewController: ToDoEntryDelegate {
 extension ToDoViewController {//all helper funcs for organization
     
     private func updateIsWorking() {
-        updateIsWorkingTimer?.invalidate()//invalidate the timer if it is already running
-        updateIsWorkingTimer = Timer.scheduledTimer(withTimeInterval: 30.0, repeats: false) { [weak self] _ in
-            guard let uid = Auth.auth().currentUser?.uid else {
-                print("could not find uid for currentuser in the updateIsWorking")
-                return
-            }
-            print("updateIsWorkingTimer is running")
-            
-            
-            let workingStatusChanged: Bool = {
-                
-                let entryIsWorking: Bool = {
-                    for entry in self!.entries {
-                        if entry.isCurrentTask == true {
-                            print("found an entry that isWorking = true")
-                            return true
-                        }
-                    }
-                    return false
-                }()
-                print("all entries have isWorking = false")
-                return self!.userIsWorking == entryIsWorking
-            }()
-            if (workingStatusChanged) {
-                Firestore.updateUserInfo(uid: uid, fields: ["isWorking": !(self!.userIsWorking)])
-                self!.userIsWorking.toggle()//update the flag
-            }
+        let currentTasks = entries.filter { $0.isCurrentTask == true }
+        //currenttasks count > 0 means currently working
+        //isWorking == true means is working
+        //logic: if both are true, or both are false, then this code block will not run because I need to make sure that the updateUserInfo only happens when its needed
+        if (currentTasks.count > 0) != (User.shared().userInfo["isWorking"] as? Bool == true) {
+            print("updateIsCurrentTask: will update current task in the User")
+            User.shared().updateUserInfo(newInfo: ["isWorking": !(User.shared().userInfo["isWorking"] as? Bool ?? false)])
         }
     }
     
@@ -543,6 +518,7 @@ extension ToDoViewController {//all helper funcs for organization
 
     private func updateProgress() {
         
+        
         let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
         let fetchRequest: NSFetchRequest<ToDoEntry> = ToDoEntry.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "date <= %@", tomorrow as NSDate)
@@ -564,6 +540,10 @@ extension ToDoViewController {//all helper funcs for organization
         }
         percentageLabel.text = String(format: "%.f%%", progress * 100)
         progressBar.progress = progress
+        
+        User.shared().updateUserInfo(newInfo: ["progress": progress])
+        
+        /*
         
         // invalidate the timer if it's already running
         updateProgressTimer?.invalidate()
@@ -598,7 +578,7 @@ extension ToDoViewController {//all helper funcs for organization
             else {
                 Firestore.updateUserInfo(uid: uid, fields: ["progress": self.progress, "isWorking": entryIsWorking])
             }
-        }
+        }*/
     }
     
     private func updateUniqueDates() {
@@ -719,12 +699,6 @@ extension ToDoViewController {//all helper funcs for organization
         
         orderEntries()//new placeholder will be added back in here
         
-        
-        guard let uid = Auth.auth().currentUser?.uid else {
-            print("could not find uid for currentuser in the todoviewcontroller")
-            return
-        }
-        
         updateProgress()
         
         //for streak
@@ -732,11 +706,12 @@ extension ToDoViewController {//all helper funcs for organization
         let twoDaysAgo = calendar.date(byAdding: .day, value: -2, to: Date())!
         
         if (entries[0].date! <= twoDaysAgo) {//if the first entry's date is less than or equal to two days ago from the start of the new day
-            Firestore.updateUserInfo(uid: uid, fields: ["likes": [String](), "likesCount": 0, "streak": 0])
+            
+            User.shared().updateUserInfo(newInfo: ["likes": [String](), "likesCount": 0, "streak": 0, "progress": progress])
             
         }
         else {
-            Firestore.updateUserInfo(uid: uid, fields: ["likes": [String](), "likesCount": 0, "streak": FieldValue.increment(1.0)])
+            User.shared().updateUserInfo(newInfo: ["likes": [String](), "likesCount": 0, "streak": FieldValue.increment(1.0), "progress": progress])
             
         }
         
@@ -757,33 +732,7 @@ extension ToDoViewController {//all helper funcs for organization
         return rowCount
     }
     
-    //for initial firestore info (likesCount, streak)
-    private func initFirestoreInfo() {
-        /*guard let uid = Auth.auth().currentUser?.uid else {return}
-        let db = Firestore.firestore()
-        let docRef = db.collection(Constants.FBase.collectionName).document(uid)
-        
-        docRef.getDocument { (document, error) in
-            if let document = document, document.exists {
-                print("was able to read document data")
-                DispatchQueue.main.async {
-                    let likesCount = document["likesCount"] as! Int
-                    self.likesLabel.text = String(likesCount) + "👏"
-                    let streak = document["streak"] as! Int
-                    self.streakLabel.text = String(streak) + "🔥"
-                    
-                    
-                }
-                
-            } else {
-                print("Document does not exist")
-                fatalError("could not read user document, readUserDocument")
-            }
-        }*/
-        //self.likesLabel.text = String(User.likesCount) + "👏"
-        //self.streakLabel.text = String(User.streak) + "🔥"
-        
-    }
+   
 }
 
 extension ToDoViewController: SettingsToDoViewControllerDelegate {
