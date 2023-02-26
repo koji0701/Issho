@@ -17,11 +17,6 @@ class ToDoViewController: UIViewController {
     var progress: Float = 0.0
     
     
-    /*private var updateProgressTimer: Timer?
-    private var updateProgressShouldBeLastUpdatedFlag = false
-    
-    private var updateIsWorkingTimer: Timer?
-    private var userIsWorking: Bool = false*/
     
     var uniqueDates: [DateComponents] = []
     
@@ -30,6 +25,9 @@ class ToDoViewController: UIViewController {
     
     @IBOutlet weak var ToDoTableView: UITableView!
     
+    
+    @IBOutlet weak var headerView: UIView!
+    
     @IBOutlet weak var streakLabel: UILabel!
     
     //header outlets
@@ -37,15 +35,19 @@ class ToDoViewController: UIViewController {
         print("settings button clicked")
     }
     
+    
     @IBOutlet weak var likesLabel: UILabel!
     
     @IBOutlet weak var progressBar: UIProgressView!
     
     @IBOutlet weak var percentageLabel: UILabel!
     
+    
+    
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.setNavigationBarHidden(true, animated: true)
         tabBarController?.tabBar.isHidden = false
+        
         
     }
     
@@ -64,7 +66,7 @@ class ToDoViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-        NotificationCenter.default.addObserver(self, selector: #selector(userUpdate(_:)),name: NSNotification.Name ("userInfoUpdated"),                                           object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(userUpdate(_:)),name: NSNotification.Name ("userInfoUpdated"), object: nil)
         
         
         ToDoTableView.dataSource = self
@@ -733,7 +735,7 @@ extension ToDoViewController {//all helper funcs for organization
     }
     
    
-}
+}//helper funcs
 
 extension ToDoViewController: SettingsToDoViewControllerDelegate {
     

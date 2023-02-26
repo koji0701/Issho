@@ -19,8 +19,6 @@ class User {
         return user
     }()
     
-    
-    
     private let db = Firestore.firestore()
     private var dbUpdateTimer: Timer?
     

@@ -37,20 +37,22 @@ class SMPostCell: UITableViewCell {
         doubleTapToLike.numberOfTapsRequired = 2
         contentView.addGestureRecognizer(doubleTapToLike)
         
+        
+        //shadow cells
+        // add shadow on cell
+        backgroundColor = .clear // very important
+        layer.masksToBounds = false
+        layer.shadowOpacity = 0.3
+        layer.shadowRadius = 19
+        layer.shadowOffset = CGSize(width: 0, height: 0)
+        layer.shadowColor = UIColor.black.cgColor
+        // add corner radius on `contentView`
+        contentView.backgroundColor = .white
+        contentView.layer.cornerRadius = 20
+        
     }
 
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-        
-        // Configure the view for the selected state
-    }
     
-    override func layoutSubviews() {//round the edges
-        super.layoutSubviews()
-        contentView.layer.cornerRadius = 35
-        contentView.clipsToBounds = true
-        
-    }
     
     @objc func handleLike() {
         let postLiked = postDelegate?.likedPost(in: self)
@@ -67,7 +69,7 @@ class SMPostCell: UITableViewCell {
         //MARK: CONTINUE HERE. ANIMATION STUFF HERE, COPY DOWN THE LIKES ANIMATION FROM THE INSTAGRAM CLONE.
         print("like animation performed")
         
-        contentView.backgroundColor = .yellow//testing color
+        //contentView.backgroundColor = .yellow//testing color
         
     }
     

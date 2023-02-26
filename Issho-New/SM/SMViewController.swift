@@ -20,13 +20,12 @@ class SMViewController: UIViewController {
     
     let db = Firestore.firestore()
     
-    var posts = [Post]()
+    var posts = [UserInfo]()
     
     
     private func fetchPosts() {
-        guard let uid = Auth.auth().currentUser?.uid else {return}
         
-        db.collection(Constants.FBase.collectionName).whereField("friends", arrayContains: uid).getDocuments() { querySnapshot, error in
+        db.collection(Constants.FBase.collectionName).whereField("friends", arrayContains: User.shared().uid).getDocuments() { querySnapshot, error in
             self.posts = []
             print("found the friend")
             if let e = error {
@@ -34,25 +33,21 @@ class SMViewController: UIViewController {
             }
             else {
                 if let snapshotDocuments = querySnapshot?.documents {
-                    print("snapshot documents = querysnapshot? documents")
                     for doc in snapshotDocuments {
-                        print("found one doc")
                         let data = doc.data()
                         
                         
                         if let likesCount = data["likesCount"] as? Int, let streak = data["streak"] as? Int, let isWorking = data["isWorking"] as? Bool, let lastUpdated = data["lastUpdated"] as? Timestamp, let username = data["username"] as? String, let progress = data["progress"] as? Float, let likes = data["likes"] as? [String]{
                             print("got past the if let conditions")
-                            let isLiked = likes.contains(uid)//if likes contains uid, true its been liked
+                            let isLiked = likes.contains(User.shared().uid)//if likes contains uid, true its been liked
                             let dict: [String: Any] = ["likesCount": likesCount, "streak": streak, "isWorking": isWorking, "lastUpdated": lastUpdated.dateValue(), "username": username, "progress": progress, "isLiked": isLiked]
                             
                             
-                            let newPost = Post(uid: doc.documentID, dictionary: dict)
+                            let newPost = UserInfo(uid: doc.documentID, dictionary: dict)
                             self.posts.append(newPost)
-                            print(self.posts.count)
                             DispatchQueue.main.async {
                                 self.orderPosts()
                                 self.tableView.reloadData()
-                                print("posts are currently \(self.posts)")
                                 
                             }
                         }
@@ -76,7 +71,7 @@ class SMViewController: UIViewController {
     
     
     
-    private func updateLikeInFirestore(post: Post) {
+    private func updateLikeInFirestore(post: UserInfo) {
         
        
         guard let uid = Auth.auth().currentUser?.uid else {
@@ -100,7 +95,8 @@ class SMViewController: UIViewController {
         navigationController?.navigationBar.isHidden = true
         fetchPosts()
         tableView.dataSource = self
-        tableView.register(UINib(nibName: Constants.SM.nibName, bundle: nil), forCellReuseIdentifier: Constants.SM.reuseIdentifier)
+        tableView.register(UINib(nibName: Constants.SM.nibName, bundle: nil), forCellReuseIdentifier: "SMReusablePostCell")
+        tableView.delegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -111,27 +107,11 @@ class SMViewController: UIViewController {
     
 }
 
-extension SMViewController: UITableViewDataSource {
+extension SMViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return posts.count
     }
     
-    /**
-    //sections as spacers
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
-    }
-    func numberOfSections(in tableView: UITableView) -> Int {
-        
-        return posts.count
-    }
-    func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-        return " "
-    }
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        
-        return 10
-    }**/
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -149,9 +129,18 @@ extension SMViewController: UITableViewDataSource {
         cell.likes.text = String(posts[indexPath.row].likesCount) + "👏"
         cell.progressBar.progress = posts[indexPath.row].progress
         cell.progressPercentage.text = String(format: "%.0f", posts[indexPath.row].progress * 100) + "%"
-        cell.contentView.backgroundColor = (posts[indexPath.row].isLiked == true) ? .systemYellow : .systemGray6
+        //cell.contentView.backgroundColor = (posts[indexPath.row].isLiked == true) ? .systemYellow : .systemGray6
         
         return cell
+    }
+    
+    //shadow
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        // this will turn on `masksToBounds` just before showing the cell
+        cell.contentView.layer.masksToBounds = true
+        
+        let radius = cell.contentView.layer.cornerRadius
+        cell.layer.shadowPath = UIBezierPath(roundedRect: cell.bounds, cornerRadius: radius).cgPath
     }
 
 }

@@ -272,6 +272,7 @@ struct Constants {
         static let signupToLogin = "SignupToLogin"
         static let loginToTabBar = "LoginToTabBar"
         static let signupToTabBar = "SignupToTabBar"
+        static let addFriendsToUserProfile = "AddFriendsToUserProfile"
     }
     
     struct FBase {
