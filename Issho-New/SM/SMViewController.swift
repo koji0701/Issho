@@ -25,7 +25,7 @@ class SMViewController: UIViewController {
     
     private func fetchPosts() {
         
-        db.collection(Constants.FBase.collectionName).whereField("friends", arrayContains: User.shared().uid).getDocuments() { querySnapshot, error in
+        db.collection(Constants.FBase.collectionName).whereField("friends", arrayContains: User.shared().uid).addSnapshotListener() { querySnapshot, error in
             self.posts = []
             print("found the friend")
             if let e = error {
@@ -37,10 +37,10 @@ class SMViewController: UIViewController {
                         let data = doc.data()
                         
                         
-                        if let likesCount = data["likesCount"] as? Int, let streak = data["streak"] as? Int, let isWorking = data["isWorking"] as? Bool, let lastUpdated = data["lastUpdated"] as? Timestamp, let username = data["username"] as? String, let progress = data["progress"] as? Float, let likes = data["likes"] as? [String]{
+                        if let streak = data["streak"] as? Int, let isWorking = data["isWorking"] as? Bool, let lastUpdated = data["lastUpdated"] as? Timestamp, let username = data["username"] as? String, let progress = data["progress"] as? Float, let likes = data["likes"] as? [String], let friends = data["friends"] as? [String], let friendReq = data["friendRequests"] {
                             print("got past the if let conditions")
                             let isLiked = likes.contains(User.shared().uid)//if likes contains uid, true its been liked
-                            let dict: [String: Any] = ["likesCount": likesCount, "streak": streak, "isWorking": isWorking, "lastUpdated": lastUpdated.dateValue(), "username": username, "progress": progress, "isLiked": isLiked]
+                            let dict: [String: Any] = ["streak": streak, "isWorking": isWorking, "lastUpdated": lastUpdated.dateValue(), "username": username, "progress": progress, "isLiked": isLiked, "friends": friends, "friendRequests": friendReq]
                             
                             
                             let newPost = UserInfo(uid: doc.documentID, dictionary: dict)
@@ -59,14 +59,17 @@ class SMViewController: UIViewController {
     
     private func orderPosts() {
         posts.sort {
-            if ($0.isLiked != $1.isLiked) {
-                return $0.isLiked
+            var mutableFirst = $0
+            var mutableSecond = $1
+            if (mutableFirst.isLiked != mutableSecond.isLiked) {
+                return mutableFirst.isLiked
             }
             else {
-                return $0.lastUpdated > $1.lastUpdated
+                return mutableFirst.lastUpdated > mutableSecond.lastUpdated
             }
             
         }
+        
     }
     
     
@@ -80,8 +83,7 @@ class SMViewController: UIViewController {
         }
         let postUID = post.uid
         
-        Firestore.updateUserInfo(uid: postUID, fields: ["likesCount": FieldValue.increment(1.0), "likes": FieldValue.arrayUnion([uid])])
-        print("like is sent")
+        Firestore.updateUserInfo(uid: postUID, fields: ["likes": FieldValue.arrayUnion([uid])])
         
         
         
@@ -102,6 +104,15 @@ class SMViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.setNavigationBarHidden(true, animated: true)
         tabBarController?.tabBar.isHidden = false
+        navigationController?.navigationBar.backItem?.title = ""
+
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let userProfileVC = segue.destination as? UserProfileVC {
+            userProfileVC.user = sender as? UserInfo
+            print("userprofilevc user: ", userProfileVC.user)
+        }
     }
     
     
@@ -152,7 +163,7 @@ extension SMViewController: PostDelegate {
             return false
             
         }
-        let post = posts[indexPath.row]
+        var post = posts[indexPath.row]
         if (post.isLiked == false) {
             updateLikeInFirestore(post: post)
             return true
@@ -160,5 +171,14 @@ extension SMViewController: PostDelegate {
         else {
             return false
         }
+    }
+    func segueToUserProfile(in cell: SMPostCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else {
+            print("could not find cell in postdelegate likedpost")
+            return
+        }
+        
+        let info = posts[indexPath.row]
+        performSegue(withIdentifier: Constants.Segues.SMToUserProfile, sender: info)
     }
 }

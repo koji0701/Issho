@@ -45,18 +45,19 @@ class ToDoViewController: UIViewController {
     
     
     override func viewWillAppear(_ animated: Bool) {
+        print("navigation controller ", navigationController)
         navigationController?.setNavigationBarHidden(true, animated: true)
         tabBarController?.tabBar.isHidden = false
-        
-        
+        navigationController?.navigationBar.backItem?.title = ""
+
     }
     
     @objc private func userUpdate(_ notification: Notification) {
         print("user updated notification recieved", notification.object)
         //print(notification.object as? [String: Any] ?? [:])
-        let info = notification.object as? [String: Any]
-        let likesCount = info?["likesCount"] as? Int ?? 0
-        let streak = info?["streak"] as? Int ?? 0
+        var info = notification.object as? UserInfo
+        let likesCount = info?.likesCount as? Int ?? 0
+        let streak = info?.streak as? Int ?? 0
         likesLabel.text = String(likesCount) + "👏"
         streakLabel.text = String(streak) + "🔥"
     }
@@ -269,7 +270,7 @@ extension ToDoViewController: UITableViewDataSource, UITableViewDelegate {
         
         cell.toDoEntry = entries[totalIndexRow]
         cell.toDoEntryDelegate = self
-        cell.toolbar = ToDoEntryToolbar(setDate: entries[totalIndexRow].date!, isCurrentTask: entries[totalIndexRow].isCurrentTask)
+        //cell.toolbar = ToDoEntryToolbar(setDate: entries[totalIndexRow].date!, isCurrentTask: entries[totalIndexRow].isCurrentTask)
         cell.styleTextView(isCurrent: entries[totalIndexRow].isCurrentTask)
         cell.textView.font = Constants.Fonts.toDoEntryCellFont
 
@@ -709,11 +710,11 @@ extension ToDoViewController {//all helper funcs for organization
         
         if (entries[0].date! <= twoDaysAgo) {//if the first entry's date is less than or equal to two days ago from the start of the new day
             
-            User.shared().updateUserInfo(newInfo: ["likes": [String](), "likesCount": 0, "streak": 0, "progress": progress])
+            User.shared().updateUserInfo(newInfo: ["likes": [String](), "streak": 0, "progress": progress])
             
         }
         else {
-            User.shared().updateUserInfo(newInfo: ["likes": [String](), "likesCount": 0, "streak": FieldValue.increment(1.0), "progress": progress])
+            User.shared().updateUserInfo(newInfo: ["likes": [String](), "streak": FieldValue.increment(1.0), "progress": progress])
             
         }
         

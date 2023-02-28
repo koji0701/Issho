@@ -9,20 +9,22 @@ import UIKit
 
 protocol PostDelegate {
     func likedPost(in cell: SMPostCell) -> Bool
+    func segueToUserProfile(in cell: SMPostCell)
 }
 
 class SMPostCell: UITableViewCell {
 
     var postDelegate: PostDelegate!
 
-    @IBOutlet weak var profilePicView: UIImageView!
     
+    
+    @IBOutlet weak var profilePictureTapView: UIView!
     @IBOutlet weak var progressBar: UIProgressView!
     
     @IBOutlet weak var likes: UILabel!
     @IBOutlet weak var username: UILabel!
     @IBOutlet weak var streak: UILabel!
-    
+
     
     @IBOutlet weak var progressPercentage: UILabel!
     
@@ -31,13 +33,24 @@ class SMPostCell: UITableViewCell {
         super.awakeFromNib()
         // Initialization code
         // profilePicView set to image
-        profilePicView.layer.cornerRadius = profilePicView.frame.size.width / 2
-        profilePicView.clipsToBounds = true
-        let doubleTapToLike = UITapGestureRecognizer(target: self, action: #selector(handleLike))
+        
+        //profilePicView.layer.cornerRadius = profilePicView.frame.size.width / 2
+        //profilePicView.clipsToBounds = true
+        profilePictureTapView.isUserInteractionEnabled = true
+        username.isUserInteractionEnabled = true
+        
+        let profileTapToSegue = UITapGestureRecognizer(target: self, action: #selector(handleSegueAction(_:)))
+        let usernameTapToSegue = UITapGestureRecognizer(target: self, action: #selector(handleSegueAction(_:)))
+        
+        
+        profilePictureTapView.addGestureRecognizer(profileTapToSegue)
+        username.addGestureRecognizer(usernameTapToSegue)
+        
+        
+        let doubleTapToLike = UITapGestureRecognizer(target: self, action: #selector(handleLike(_:)))
         doubleTapToLike.numberOfTapsRequired = 2
         contentView.addGestureRecognizer(doubleTapToLike)
-        
-        
+
         //shadow cells
         // add shadow on cell
         backgroundColor = .clear // very important
@@ -54,13 +67,21 @@ class SMPostCell: UITableViewCell {
 
     
     
-    @objc func handleLike() {
+    @objc private func handleLike(_ gestureRecognizer: UITapGestureRecognizer) {
+        print("double tapped")
+        
+
         let postLiked = postDelegate?.likedPost(in: self)
         
         if postLiked == true {//able to like the post
             print("will perform like animation")
             performLikeAnimation()
         }
+    }
+    @objc private func handleSegueAction(_ gestureRecognizer: UITapGestureRecognizer)
+    {
+        print("clicked")
+        postDelegate?.segueToUserProfile(in: self)
     }
     
     
@@ -73,4 +94,14 @@ class SMPostCell: UITableViewCell {
         
     }
     
+    
+    
+    
 }
+/*
+extension SMPostCell {
+    override func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+            return true
+        }
+}
+*/

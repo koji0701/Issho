@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import FirebaseFirestore
 
 class UserProfileVC: UIViewController {
     
@@ -14,7 +15,15 @@ class UserProfileVC: UIViewController {
     
     
     override func viewWillAppear(_ animated: Bool) {
-        setUpUser()
+        DispatchQueue.main.async {
+            self.setUpUser()
+        }
+        button.isEnabled = true
+        navigationController?.setNavigationBarHidden(false, animated: true)
+        tabBarController?.tabBar.isHidden = false
+        
+        navigationController?.navigationBar.backItem?.title = ""
+
     }
     
     
@@ -24,27 +33,18 @@ class UserProfileVC: UIViewController {
     @IBOutlet weak var streakLabel: UILabel!
     
     
-    @IBOutlet weak var followButton: UIButton!
-    @IBOutlet weak var acceptRequestButton: UIButton!
-    @IBOutlet weak var friendsButton: UIButton!
-    @IBOutlet weak var editProfileButton: UIButton!
+    @IBOutlet weak var button: UIButton!
+    
+    /** different states of the button: Follow, Unfriend, Friends, Edit Profile, Accept Request, Request Sent **/
     
     private func setUpUser() {
-        guard let user = user else {
+        guard var user = user else {
             usernameLabel.text = User.shared().userInfo["username"] as? String
-            friendsCountLabel.text = User.shared().userInfo["friendsCount"] as? String
+            friendsCountLabel.text = (User.shared().userInfo["friends"] as! [String]).count as? String
             streakLabel.text = User.shared().userInfo["streak"] as? String
             
-            editProfileButton.isHidden = false
-            editProfileButton.isEnabled = true
+            button.setTitle("Edit Profile", for: .normal)
             
-            
-            followButton.isHidden = true
-            followButton.isEnabled = false
-            friendsButton.isHidden = true
-            friendsButton.isEnabled = false
-            acceptRequestButton.isHidden = true
-            acceptRequestButton.isEnabled = false
             return
             
         }
@@ -53,67 +53,87 @@ class UserProfileVC: UIViewController {
         friendsCountLabel.text = String(user.friendsCount)
         streakLabel.text = String(user.streak)
         
-        editProfileButton.isEnabled = false
-        editProfileButton.isHidden = true
         
-        
-        //set the follow/unfollow button
         if (user.friends.contains(User.shared().uid)) {
-            followButton.isHidden = true
-            followButton.isEnabled = false
-            
-            friendsButton.isHidden = false
-            friendsButton.isEnabled = true
-            
-            acceptRequestButton.isHidden = true
-            acceptRequestButton.isEnabled = false
-            
-            
+            button.setTitle("Friends", for: .normal)
+
         }
         else if (user.friendRequests.contains(User.shared().uid)) {
-            acceptRequestButton.isHidden = false
-            acceptRequestButton.isEnabled = true
-            
-            followButton.isHidden = true
-            followButton.isEnabled = false
-            
-            friendsButton.isHidden = true
-            friendsButton.isEnabled = false
+            button.setTitle("Accept Request", for: .normal)
+        }
+        else if ((User.shared().userInfo["friendRequests"] as! [String]).contains(user.uid)) {
+            button.setTitle("Request Sent", for: .normal)
+        }
+        else if (user.uid == User.shared().uid) {
+            button.setTitle("Edit Profile", for: .normal)
         }
         else {
-            followButton.isHidden = false
-            followButton.isEnabled = true
-            friendsButton.isHidden = false
-            friendsButton.isEnabled = true
-            acceptRequestButton.isHidden = true
-            acceptRequestButton.isEnabled = false
+            print("making it follow")
+            button.setTitle("Follow", for: .normal)
         }
     }
     
-    // TODO: follow button functionality
-    @IBAction func followButtonClicked(_ sender: Any) {
-        if (followButton.currentTitle == "Follow") {
-            followButton.setTitle("Request Sent", for: .normal)
-            print("follow button clicked")
+    
+    
+    @IBAction func buttonClicked(_ sender: Any) {
+        print("button clicked", button.currentTitle)
+        if (button.currentTitle == "Follow") {
+            button.setTitle("Request Sent", for: .normal)
+            var new = User.shared().userInfo["friendRequests"] as? [String] ?? []
+            new.append(user.uid)
+            User.shared().updateUserInfo(newInfo: [
+                "friendRequests": new
+            ])
+        }
+        
+        else if (button.currentTitle == "Accept Request") {
+            button.setTitle("Friends", for: .normal)
+            var new = User.shared().userInfo["friends"] as? [String] ?? []
+            new.append(user.uid)
+            User.shared().updateUserInfo(newInfo: [
+                "friends": new
+            ])
+            Firestore.updateUserInfo(uid: user.uid, fields: [
+                "friends": FieldValue.arrayUnion([User.shared().uid]),
+                "friendRequests": FieldValue.arrayRemove([User.shared().uid])
+            ])
+        }
+        
+        else if (button.currentTitle == "Request Sent") {
+            button.setTitle("Follow", for: .normal)
+            
+            var new = User.shared().userInfo["friendRequests"] as? [String] ?? []
+            new.removeAll(where: {$0 == user.uid})
+            User.shared().updateUserInfo(newInfo: [
+                "friendRequests": new
+            ])
+        }
+        
+        else if (button.currentTitle == "Friends") {
+            button.setTitle("Unfriend", for: .normal)
+            
+        }
+        
+        else if (button.currentTitle == "Unfriend") {
+            button.setTitle("Follow", for: .normal)
+            var new = User.shared().userInfo["friends"] as? [String] ?? []
+            new.removeAll(where: {$0 == user.uid})
+            User.shared().updateUserInfo(newInfo: [
+                "friends": new
+            ])
+            Firestore.updateUserInfo(uid: user.uid, fields: [
+                "friends": FieldValue.arrayRemove([User.shared().uid])
+            ])
+            
+        }
+        
+        else if (button.currentTitle == "Edit Profile") {
+            print("edit profile button clicked")
+            
+            // TODO: edit profile session, popup vc?
         }
     }
     
-    // TODO: friends/unfollow button functionality
-    @IBAction func friendsButtonClicked(_ sender: Any) {
-        
-    }
-    
-    
-    // TODO: accept request button
-    
-    @IBAction func acceptRequestButtonClicked(_ sender: Any) {
-        
-    }
-    // TODO: edit profile functionality
-    
-    @IBAction func editProfileButtonClicked(_ sender: Any) {
-        
-    }
     
 }
 

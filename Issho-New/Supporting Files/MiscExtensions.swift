@@ -15,6 +15,9 @@ extension String {//for backspace
   }
 }
 
+
+// MARK: REMOVE/UPDATE THESE
+
 extension UIView {
     func dropShadow(scale: Bool = true) {
         layer.masksToBounds = false
@@ -27,6 +30,8 @@ extension UIView {
         layer.cornerRadius = 8
     }
 }
+
+
 
 class RoundedShadowView: UIView {
 

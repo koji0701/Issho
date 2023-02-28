@@ -12,6 +12,7 @@
 		E50C7729298F3F6000D7717C /* NunitoSans-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E50C7728298F3F6000D7717C /* NunitoSans-Black.ttf */; };
 		E50E17B42992E8CD0034543C /* AddFriendsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50E17B32992E8CD0034543C /* AddFriendsViewController.swift */; };
 		E50E17B72992F8A20034543C /* MiscExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50E17B62992F8A20034543C /* MiscExtensions.swift */; };
+		E516286F29ADA76900454397 /* CustomNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E516286E29ADA76900454397 /* CustomNavigationController.swift */; };
 		E52FBCA8292F18D30053208C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FBCA7292F18D30053208C /* AppDelegate.swift */; };
 		E52FBCAA292F18D30053208C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FBCA9292F18D30053208C /* SceneDelegate.swift */; };
 		E52FBCB1292F18D40053208C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E52FBCB0292F18D40053208C /* Assets.xcassets */; };
@@ -69,6 +70,7 @@
 		E50C7728298F3F6000D7717C /* NunitoSans-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NunitoSans-Black.ttf"; sourceTree = "<group>"; };
 		E50E17B32992E8CD0034543C /* AddFriendsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendsViewController.swift; sourceTree = "<group>"; };
 		E50E17B62992F8A20034543C /* MiscExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiscExtensions.swift; sourceTree = "<group>"; };
+		E516286E29ADA76900454397 /* CustomNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationController.swift; sourceTree = "<group>"; };
 		E52FBCA4292F18D30053208C /* Issho-New.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Issho-New.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E52FBCA7292F18D30053208C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E52FBCA9292F18D30053208C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -140,6 +142,7 @@
 				E52FBCA9292F18D30053208C /* SceneDelegate.swift */,
 				E58B01DA29691492007061D0 /* FirebaseUtilities.swift */,
 				E50E17B62992F8A20034543C /* MiscExtensions.swift */,
+				E516286E29ADA76900454397 /* CustomNavigationController.swift */,
 				E52FBCB0292F18D40053208C /* Assets.xcassets */,
 				E58245C2296622EF0093E0D5 /* GoogleService-Info.plist */,
 			);
@@ -425,6 +428,7 @@
 				E58DED4E292F19B200F1EF0C /* UserInfo.swift in Sources */,
 				E52FBCA8292F18D30053208C /* AppDelegate.swift in Sources */,
 				E58DED42292F198400F1EF0C /* ToDoEntryCell.swift in Sources */,
+				E516286F29ADA76900454397 /* CustomNavigationController.swift in Sources */,
 				E58DED50292F19FF00F1EF0C /* Constants.swift in Sources */,
 				E54887392994309300EC4A5B /* AddFriendsCell.swift in Sources */,
 				E5A5166C2958D329002BC2B3 /* ToDoEntryData.xcdatamodeld in Sources */,

@@ -50,9 +50,10 @@ class User {
                     "progress": document["progress"] as! Float,
                     "isWorking": document["isWorking"] as! Bool,
                     "streak": document["streak"] as! Int,
-                    "likesCount": document["likesCount"] as! Int,
+                    "likes": document["likes"] as! [String],
                     "friendRequests": document["friendRequests"] as! [String],
-                    "friends": document["friends"] as! [String]
+                    "friends": document["friends"] as! [String],
+                    "lastUpdated": document["lastUpdated"] as? Date ?? Date()
                 ]
                 self.lastUpdateUserInfo = self.userInfo
                 print("user info in the init", self.userInfo)
@@ -76,9 +77,11 @@ class User {
             "progress": newInfo["progress"] as? Float ?? userInfo["progress"]!,
             "isWorking": newInfo["isWorking"] as? Bool ?? userInfo["isWorking"]!,
             "streak": newInfo["streak"] as? Int ?? userInfo["streak"]!,
-            "likesCount": newInfo["likesCount"] as? Int ?? userInfo["likesCount"]!,
+            "likes": newInfo["likes"] as? Int ?? userInfo["likes"]!,
             "friendRequests": newInfo["friendRequests"] as? [String] ?? userInfo["friendRequests"]!,
-            "friends": newInfo["friends"] as? [String] ?? userInfo["friends"]!
+            "friends": newInfo["friends"] as? [String] ?? userInfo["friends"]!,
+            "lastUpdated": newInfo["lastUpdated"] as? [String] ?? userInfo["lastUpdated"]!
+
         ]
         
         dbUpdateTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { [weak self] _ in
@@ -92,7 +95,7 @@ class User {
                 //push the update to firestoer
                 Firestore.updateUserInfo(uid: self.uid, fields: self.userInfo)
                 NotificationCenter.default.post(name: NSNotification.Name("userInfoUpdated"),
-                                                object: self.userInfo)
+                                                object: UserInfo(dictionary: self.userInfo))
             }
             
             

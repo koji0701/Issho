@@ -66,7 +66,7 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
     
     
     var textViewCallBack: ((String) -> ())?
-    var toolbar: ToDoEntryToolbar! {
+    lazy var toolbar: ToDoEntryToolbar! = ToDoEntryToolbar(setDate: toDoEntry?.date ?? Date(), isCurrentTask: toDoEntry?.isCurrentTask ?? false) {
         didSet {
             print("toolbar set")
             //toolbar
@@ -174,12 +174,22 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
     func textViewDidBeginEditing(_ textView: UITextView) {
         //set to the checkbox phase if its the last cell
         textView.becomeFirstResponder()
+        
+
+        
         if (toDoEntry?.isPlaceholder == true) {
             addButton.isHidden = true
             checkboxButton.isHidden = false
             checkboxButton.isEnabled = true
             addButton.isEnabled = false
         }
+    }
+    
+    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
+        toolbar = ToDoEntryToolbar(setDate: toDoEntry?.date ?? Date(), isCurrentTask: toDoEntry?.isCurrentTask ?? false)
+        textView.inputAccessoryView = toolbar
+        
+        return true
     }
     
     private var resignedOnEnter = false

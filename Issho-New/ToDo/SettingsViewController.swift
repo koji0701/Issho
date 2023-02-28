@@ -21,16 +21,21 @@ class SettingsViewController: UIViewController {
     @IBOutlet weak var completedTasksButton: UIButton!
     
     @IBOutlet weak var displayModeButton: UIButton!
-
+    
+    
+    @IBOutlet weak var profileView: UIView!
+    
     var settingsToDoViewControllerDelegate: SettingsToDoViewControllerDelegate!
     
     override func viewDidLoad() {
         
         setCompletedTasksButtonDisplay(mode: Constants.Settings.showCompletedEntries)
         
-        //MARK: CONTINUE
-        /**
-        QUICK FIX:
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(profileViewTapped))
+        profileView.addGestureRecognizer(tapGesture)
+        
+        
+        /* TODO:
             
          - CREATE ANIMATION FUNC W/ EXTENSIONS TO UIBUTTON AND APPLY. TAKE IN PARAMTERS FOR MODE/COLORSPACES 
          
@@ -40,6 +45,7 @@ class SettingsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.setNavigationBarHidden(false, animated: true)
         tabBarController?.tabBar.isHidden = true
+        navigationController?.navigationBar.backItem?.title = ""
     }
     
     
@@ -76,6 +82,19 @@ class SettingsViewController: UIViewController {
         }
         else {
             completedTasksButton.setTitle("No", for: .normal)
+        }
+    }
+    
+    @objc private func profileViewTapped() {
+        print("profile view tapped")
+        let info = UserInfo(dictionary: User.shared().userInfo)
+        performSegue(withIdentifier: Constants.Segues.settingsToUserProfile, sender: info)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let userProfileVC = segue.destination as? UserProfileVC {
+            userProfileVC.user = sender as? UserInfo
+            print("userprofilevc user: ", userProfileVC.user)
         }
     }
     

@@ -8,22 +8,32 @@
 import Foundation
 import UIKit
 import FirebaseFirestore
+import IQKeyboardManagerSwift
 
 class AddFriendsViewController: UIViewController {
     
+    
+    
+    @IBOutlet weak var searchBar: UISearchBar!
+    
     @IBOutlet weak var tableView: UITableView!
     
-    var requests = [UserInfo]()
+    var requests = [UserInfo]()//just for storing the requests
+    var displayItems = [UserInfo]()
     
+    var displayIsShowingRequests = true
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.setNavigationBarHidden(false, animated: true)
         tabBarController?.tabBar.isHidden = true
+        navigationController?.navigationBar.backItem?.title = ""
+
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let userProfileVC = segue.destination as? UserProfileVC {
-            userProfileVC.user = sender as! UserInfo
+            userProfileVC.user = sender as? UserInfo
+            print("userprofilevc user: ", userProfileVC.user)
         }
     }
     
@@ -44,10 +54,10 @@ class AddFriendsViewController: UIViewController {
                         print("found one doc")
                         let data = doc.data()
                         
-                        if let likesCount = data["likesCount"] as? Int, let streak = data["streak"] as? Int, let isWorking = data["isWorking"] as? Bool, let lastUpdated = data["lastUpdated"] as? Timestamp, let username = data["username"] as? String, let progress = data["progress"] as? Float, let likes = data["likes"] as? [String], let friends = data["friends"] as? [String] {
+                        if let streak = data["streak"] as? Int, let isWorking = data["isWorking"] as? Bool, let lastUpdated = data["lastUpdated"] as? Timestamp, let username = data["username"] as? String, let progress = data["progress"] as? Float, let likes = data["likes"] as? [String], let friends = data["friends"] as? [String], let friendRq = data["friendRequests"] as? [String] {
                             print("got past the if let conditions")
-                            let isLiked = likes.contains(User.shared().uid)//if likes contains uid, true its been liked
-                            let dict: [String: Any] = ["likesCount": likesCount, "streak": streak, "isWorking": isWorking, "lastUpdated": lastUpdated.dateValue(), "username": username, "progress": progress, "isLiked": isLiked, "friends": friends]
+                            
+                            let dict: [String: Any] = ["streak": streak, "isWorking": isWorking, "lastUpdated": lastUpdated.dateValue(), "username": username, "progress": progress, "friends": friends, "friendRequests": friendRq, "likes": likes]
                             
                             
                             let friendReq = UserInfo(uid: doc.documentID, dictionary: dict)
@@ -55,6 +65,7 @@ class AddFriendsViewController: UIViewController {
                             print("requests: ", self.requests)
                             DispatchQueue.main.async {
                                 self.tableView.reloadData()
+                                self.displayItems = self.requests
                                 
                             }
                         }
@@ -63,6 +74,7 @@ class AddFriendsViewController: UIViewController {
                         
                     }
         }
+        
     }
     
     override func viewDidLoad() {
@@ -72,19 +84,34 @@ class AddFriendsViewController: UIViewController {
         fetchFriendRequests()
         tableView.dataSource = self
         tableView.register(UINib(nibName: Constants.SM.addFriendsNibName, bundle: nil), forCellReuseIdentifier: Constants.SM.addFriendsReuseIdentifier)
+        
+        searchBar.delegate = self
     }
 }
 
 extension AddFriendsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return requests.count
+        return displayItems.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.SM.addFriendsReuseIdentifier, for: indexPath) as! AddFriendsCell
         cell.addFriendsCellDelegate = self
-        cell.usernameButton.setTitle(requests[indexPath.row].username, for: .normal)
+        cell.usernameLabel.text = displayItems[indexPath.row].username
+        
+        if (displayIsShowingRequests) {
+            cell.addButton.isEnabled = false
+            cell.addButton.isHidden = true
+            
+            cell.requestsView.isHidden = false
+        }
+        else {
+            cell.addButton.isEnabled = true
+            cell.addButton.isHidden = false
+            
+            cell.requestsView.isHidden = true
+        }
         
         return cell
     }
@@ -103,7 +130,7 @@ extension AddFriendsViewController: AddFriendsCellDelegate {
         
         // remove from the array
         requests.remove(at: indexPath.row)
-        
+        displayItems.remove(at: indexPath.row)
         tableView.endUpdates()
     }
     
@@ -120,16 +147,116 @@ extension AddFriendsViewController: AddFriendsCellDelegate {
         
         // remove from the array
         requests.remove(at: indexPath.row)
-        
+        displayItems.remove(at: indexPath.row)
+
         tableView.endUpdates()
     }
     
     func viewProfile(in cell: AddFriendsCell) {
         guard let indexPath = tableView.indexPath(for: cell) else {return}
         
-        performSegue(withIdentifier: Constants.Segues.addFriendsToUserProfile, sender: requests[indexPath.row])
+        performSegue(withIdentifier: Constants.Segues.addFriendsToUserProfile, sender: displayItems[indexPath.row])
     }
     
     
 }
 
+extension AddFriendsViewController: UISearchBarDelegate {
+    /* TODO:
+     - when the search bar is clicked, clear display var and clear the tableview
+     - when search bar is off clicked, or enter clicked, then load tableview with results
+     - when search bar off clicked + blank or cancel button clicked, reload in the requests that were fetched. just save it into a variable so that theres a var for requests and a var for the tableview display
+      - just use the wherefield query for firestore
+     */
+    
+    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+        displayItems = [UserInfo]()
+        displayIsShowingRequests = false
+        tableView.reloadData()
+        return true
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        
+        fetchSearchResults(name: searchBar.text ?? "")
+        
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if text == "\n" {
+            
+            fetchSearchResults(name: searchBar.text ?? "")
+            print("enter key clicked, should resign keyboard")
+            searchBar.resignFirstResponder()
+            return false
+        }
+        
+        return true
+    }
+    
+    func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
+        if let searchText = searchBar.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+            .trimmingCharacters(in: .punctuationCharacters)
+            .trimmingCharacters(in: .symbols) {
+
+            if searchText.isEmpty {
+                // Search text is empty
+                displayItems = requests
+                displayIsShowingRequests = true
+                tableView.reloadData()
+                
+                searchBar.text = ""
+            }
+        }
+        
+        
+        return true
+    }
+    
+    
+    //search function
+    private func fetchSearchResults(name: String) {
+        if (name.trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: .punctuationCharacters).trimmingCharacters(in: .symbols).isEmpty) {
+            displayIsShowingRequests = true
+            displayItems = requests
+            tableView.reloadData()
+            searchBar.text = ""
+            return
+        }
+        
+        let db = Firestore.firestore()
+        db.collection(Constants.FBase.collectionName)
+            .whereField("username", isGreaterThanOrEqualTo: name)
+            .whereField("username", isLessThanOrEqualTo: name + "\u{f8ff}")
+            .whereField("username", isNotEqualTo: User.shared().userInfo["username"] as! String).limit(to: 4).getDocuments()
+        { querySnapshot, error in
+            self.displayItems = []
+            print("found some usernames, found some documents")
+            if let e = error {
+                print("There was an issue retrieving data from Firestore. \(e)")
+            }
+            else {
+                if let snapshotDocuments = querySnapshot?.documents {
+                    for doc in snapshotDocuments {
+                        let data = doc.data()
+                        
+                        
+                        if let streak = data["streak"] as? Int, let isWorking = data["isWorking"] as? Bool, let lastUpdated = data["lastUpdated"] as? Timestamp, let username = data["username"] as? String, let progress = data["progress"] as? Float, let likes = data["likes"] as? [String], let friends = data["friends"] as? [String], let friendReq = data["friendRequests"] {
+                            print("got past the if let conditions")
+                            
+                            let dict: [String: Any] = ["streak": streak, "isWorking": isWorking, "lastUpdated": lastUpdated.dateValue(), "username": username, "progress": progress, "friends": friends, "friendRequests": friendReq]
+                            
+                            let newPerson = UserInfo(uid: doc.documentID, dictionary: dict)
+                            self.displayItems.append(newPerson)
+                            DispatchQueue.main.async {
+                                
+                                self.tableView.reloadData()
+                                
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
