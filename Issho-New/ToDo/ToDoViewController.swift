@@ -30,10 +30,6 @@ class ToDoViewController: UIViewController {
     
     @IBOutlet weak var streakLabel: UILabel!
     
-    //header outlets
-    @IBAction func settingsButtonClicked(_ sender: Any) {
-        print("settings button clicked")
-    }
     
     
     @IBOutlet weak var likesLabel: UILabel!
@@ -91,12 +87,14 @@ class ToDoViewController: UIViewController {
         
         
         //header
-        streakLabel.font = Constants.Fonts.toDoEntrySectionHeaderFont
-        likesLabel.font = Constants.Fonts.toDoEntrySectionHeaderFont
+        streakLabel.font = Constants.Fonts.navigationBarTitleFont
+        likesLabel.font = Constants.Fonts.navigationBarTitleFont
+        percentageLabel.font = Constants.Fonts.toDoEntrySectionHeaderFont
         streakLabel.text = "0🔥"
         likesLabel.text = "0👏"
         
-        
+        progressBar.layer.cornerRadius = 8.0 // adjust the value to suit your needs
+        progressBar.layer.masksToBounds = true
     }
     
     

@@ -22,6 +22,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         print("scene willconnect to is running")
         
+        
+            
         Auth.auth().addStateDidChangeListener { auth, user in
           if user != nil {
             // User is signed in. Show home screen

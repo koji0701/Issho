@@ -272,9 +272,12 @@ struct Constants {
         static let signupToLogin = "SignupToLogin"
         static let loginToTabBar = "LoginToTabBar"
         static let signupToTabBar = "SignupToTabBar"
+        
         static let addFriendsToUserProfile = "AddFriendsToUserProfile"
-        static let settingsToUserProfile = "SettingsToUserProfile"
         static let SMToUserProfile = "SMToUserProfile"
+        
+        static let profileToSettings = "profileToSettings"
+        static let profileToAddFriends = "profileToAddFriends"
     }
     
     struct FBase {
@@ -290,7 +293,9 @@ struct Constants {
     struct Fonts {
         static let toDoEntryCellFont = UIFont(name: "NunitoSans-Regular", size: 16)
         static let toDoEntrySectionHeaderFont = UIFont(name: "NunitoSans-ExtraBold", size: 20)
-        static let navigationBarTitleFont = UIFont(name: "NunitoSans-ExtraBold", size: 20)
+        static let navigationBarTitleFont = UIFont(name: "NunitoSans-ExtraBold", size: 23)
+        
+        
         
     }
     
