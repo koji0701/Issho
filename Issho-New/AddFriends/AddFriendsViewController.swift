@@ -105,6 +105,20 @@ extension AddFriendsViewController: UITableViewDataSource {
             cell.addButton.isHidden = true
             
             cell.requestsView.isHidden = false
+            cell.acceptButton.isHidden = false
+            cell.acceptButton.isEnabled = true
+            cell.deleteButton.isHidden = false
+            cell.deleteButton.isEnabled = true
+        }
+        else if (displayItems[indexPath.row].friendRequests.contains(User.shared().uid)) {
+            cell.addButton.isEnabled = false
+            cell.addButton.isHidden = true
+            
+            cell.requestsView.isHidden = false
+            cell.acceptButton.isHidden = false
+            cell.acceptButton.isEnabled = true
+            cell.deleteButton.isHidden = false
+            cell.deleteButton.isEnabled = true
         }
         else {
             cell.addButton.isEnabled = true
@@ -213,6 +227,14 @@ extension AddFriendsViewController: UISearchBarDelegate {
         return true
     }
     
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        displayItems = requests
+        displayIsShowingRequests = true
+        tableView.reloadData()
+        
+        searchBar.text = ""
+    }
+    
     
     //search function
     private func fetchSearchResults(name: String) {
@@ -228,7 +250,8 @@ extension AddFriendsViewController: UISearchBarDelegate {
         db.collection(Constants.FBase.collectionName)
             .whereField("username", isGreaterThanOrEqualTo: name)
             .whereField("username", isLessThanOrEqualTo: name + "\u{f8ff}")
-            .whereField("username", isNotEqualTo: User.shared().userInfo["username"] as! String).limit(to: 4).getDocuments()
+            .whereField("username", isNotEqualTo: User.shared().userInfo["username"] as! String)
+            .limit(to: 4).getDocuments()
         { querySnapshot, error in
             self.displayItems = []
             print("found some usernames, found some documents")
@@ -244,7 +267,7 @@ extension AddFriendsViewController: UISearchBarDelegate {
                         if let streak = data["streak"] as? Int, let isWorking = data["isWorking"] as? Bool, let lastUpdated = data["lastUpdated"] as? Timestamp, let username = data["username"] as? String, let progress = data["progress"] as? Float, let likes = data["likes"] as? [String], let friends = data["friends"] as? [String], let friendReq = data["friendRequests"] {
                             print("got past the if let conditions")
                             
-                            let dict: [String: Any] = ["streak": streak, "isWorking": isWorking, "lastUpdated": lastUpdated.dateValue(), "username": username, "progress": progress, "friends": friends, "friendRequests": friendReq]
+                            let dict: [String: Any] = ["streak": streak, "isWorking": isWorking, "lastUpdated": lastUpdated.dateValue(), "username": username, "progress": progress, "friends": friends, "friendRequests": friendReq, "likes": likes]
                             
                             let newPerson = UserInfo(uid: doc.documentID, dictionary: dict)
                             self.displayItems.append(newPerson)

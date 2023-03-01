@@ -27,8 +27,10 @@ class AddFriendsCell: UITableViewCell {
     
     @IBOutlet weak var addButton: UIButton!
     
+    @IBOutlet weak var deleteButton: UIButton!
     @IBOutlet weak var requestsView: UIView!
     
+    @IBOutlet weak var acceptButton: UIButton!
     
     @IBAction func deleteButtonClicked(_ sender: Any) {
         addFriendsCellDelegate?.deleteRequest(in: self)

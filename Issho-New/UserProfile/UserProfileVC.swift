@@ -20,7 +20,7 @@ class UserProfileVC: UIViewController {
         }
         button.isEnabled = true
         navigationController?.setNavigationBarHidden(false, animated: true)
-        tabBarController?.tabBar.isHidden = false
+        tabBarController?.tabBar.isHidden = true
         
         navigationController?.navigationBar.backItem?.title = ""
 
@@ -30,8 +30,8 @@ class UserProfileVC: UIViewController {
     
     @IBOutlet weak var usernameLabel: UILabel!
     @IBOutlet weak var friendsCountLabel: UILabel!
-    @IBOutlet weak var streakLabel: UILabel!
     
+    @IBOutlet weak var streakLabel: UILabel!
     
     @IBOutlet weak var button: UIButton!
     
@@ -39,9 +39,12 @@ class UserProfileVC: UIViewController {
     
     private func setUpUser() {
         guard var user = user else {
-            usernameLabel.text = User.shared().userInfo["username"] as? String
-            friendsCountLabel.text = (User.shared().userInfo["friends"] as! [String]).count as? String
-            streakLabel.text = User.shared().userInfo["streak"] as? String
+            let username = User.shared().userInfo["username"] as? String ?? "Username"
+            let streak = User.shared().userInfo["streak"]
+            streakLabel.text = "\(String(describing: streak))"
+            usernameLabel.text = username
+            friendsCountLabel.text = String((User.shared().userInfo["friends"] as? [String])?.count ?? 0)
+
             
             button.setTitle("Edit Profile", for: .normal)
             
@@ -50,8 +53,8 @@ class UserProfileVC: UIViewController {
         }
         //set all the labels
         usernameLabel.text = user.username
+        streakLabel.text = "\(user.streak)"
         friendsCountLabel.text = String(user.friendsCount)
-        streakLabel.text = String(user.streak)
         
         
         if (user.friends.contains(User.shared().uid)) {

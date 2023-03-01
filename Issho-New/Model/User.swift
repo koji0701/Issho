@@ -73,7 +73,7 @@ class User {
 
         
         userInfo = [
-            "username": newInfo["username"] as? String ?? userInfo["username"]!,
+            "username": newInfo["username"] as? String ?? userInfo["username"] ?? lastUpdateUserInfo["username"] ?? "",
             "progress": newInfo["progress"] as? Float ?? userInfo["progress"]!,
             "isWorking": newInfo["isWorking"] as? Bool ?? userInfo["isWorking"]!,
             "streak": newInfo["streak"] as? Int ?? userInfo["streak"]!,

@@ -47,9 +47,12 @@ class ToDoViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         print("navigation controller ", navigationController)
         navigationController?.setNavigationBarHidden(true, animated: true)
-        tabBarController?.tabBar.isHidden = false
+        tabBarController?.tabBar.isHidden = true
         navigationController?.navigationBar.backItem?.title = ""
-
+        navigationController?.navigationBar.barTintColor = .clear
+        navigationController?.navigationBar.isHidden = true
+        navigationController?.navigationBar.isTranslucent = true
+        
     }
     
     @objc private func userUpdate(_ notification: Notification) {
@@ -60,6 +63,8 @@ class ToDoViewController: UIViewController {
         let streak = info?.streak as? Int ?? 0
         likesLabel.text = String(likesCount) + "👏"
         streakLabel.text = String(streak) + "🔥"
+        
+        
     }
     
     override func viewDidLoad() {
@@ -91,24 +96,7 @@ class ToDoViewController: UIViewController {
         streakLabel.text = "0🔥"
         likesLabel.text = "0👏"
         
-    
-        //init userIsWorking flag
-        /*userIsWorking = {
-            for entry in entries {
-                if entry.isCurrentTask == true {
-                    print("found an entry that isWorking = true")
-                    return true
-                }
-            }
-            return false
-        }()*/
-        //new day stuff
-        Task {
-            for await _ in NotificationCenter.default.notifications(named: .NSCalendarDayChanged) {
-                print("day did change")
-                newDayUpdates()
-            }
-        }
+        
     }
     
     
