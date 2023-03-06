@@ -278,6 +278,9 @@ struct Constants {
         
         static let profileToSettings = "profileToSettings"
         static let profileToAddFriends = "profileToAddFriends"
+        
+        static let settingsToEditProfile = "settingsToEditProfile"
+        static let editProfileToPhotoSelector = "editProfileToPhotoSelector"
     }
     
     struct FBase {

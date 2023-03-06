@@ -32,7 +32,7 @@ class SignupViewController: UIViewController {
                 else {
                     guard let uid = authResult?.user.uid else {return}
                     print("signed up")
-                    Firestore.initializeUser(uid: uid, username: username)
+                    Firestore.initializeUser(uid: uid, username: username, image: "")//MARK: NEEDS IMAGE 
                     self.performSegue(withIdentifier: Constants.Segues.signupToTabBar, sender: self)
                     
                 }

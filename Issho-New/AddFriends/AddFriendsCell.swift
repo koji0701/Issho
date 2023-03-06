@@ -23,7 +23,8 @@ class AddFriendsCell: UITableViewCell {
 
     @IBOutlet weak var usernameLabel: UILabel!
     
-    @IBOutlet weak var profilePic: UIView!
+    @IBOutlet weak var profilePic: CustomImageView!
+    @IBOutlet weak var profilePicTapView: UIView!
     
     @IBOutlet weak var addButton: UIButton!
     
@@ -45,11 +46,13 @@ class AddFriendsCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        
+        profilePic.image = profilePic.image?.resize(to: CGSize(width: profilePic.frame.width, height: profilePic.frame.height))
         usernameLabel.isUserInteractionEnabled = true
         let profilePicTapToSegue = UITapGestureRecognizer(target: self, action: #selector(handleSegueAction(_:)))
         let usernameTapToSegue = UITapGestureRecognizer(target: self, action: #selector(handleSegueAction(_:)))
         
-        profilePic.addGestureRecognizer(profilePicTapToSegue)
+        profilePicTapView.addGestureRecognizer(profilePicTapToSegue)
         usernameLabel
             .addGestureRecognizer(usernameTapToSegue)
     }

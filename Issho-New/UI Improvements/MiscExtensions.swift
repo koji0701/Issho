@@ -8,6 +8,70 @@
 import Foundation
 import UIKit
 
+extension UIView {
+    
+    enum SeparatorPosition {
+        case top
+        case bottom
+        case left
+        case right
+    }
+
+    @discardableResult
+    func addSeparator(at position: SeparatorPosition, color: UIColor, weight: CGFloat = 1.0 / UIScreen.main.scale, insets: UIEdgeInsets = .zero) -> UIView {
+        let view = UIView()
+        view.backgroundColor = color
+        view.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(view)
+        
+        switch position {
+        case .top:
+            view.topAnchor.constraint(equalTo: self.topAnchor, constant: insets.top).isActive = true
+            view.leftAnchor.constraint(equalTo: self.leftAnchor, constant: insets.left).isActive = true
+            view.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -insets.right).isActive = true
+            view.heightAnchor.constraint(equalToConstant: weight).isActive = true
+            
+        case .bottom:
+            view.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -insets.bottom).isActive = true
+            view.leftAnchor.constraint(equalTo: self.leftAnchor, constant: insets.left).isActive = true
+            view.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -insets.right).isActive = true
+            view.heightAnchor.constraint(equalToConstant: weight).isActive = true
+            
+        case .left:
+            view.topAnchor.constraint(equalTo: self.topAnchor, constant: insets.top).isActive = true
+            view.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -insets.bottom).isActive = true
+            view.leftAnchor.constraint(equalTo: self.leftAnchor, constant: insets.left).isActive = true
+            view.widthAnchor.constraint(equalToConstant: weight).isActive = true
+            
+        case .right:
+            view.topAnchor.constraint(equalTo: self.topAnchor, constant: insets.top).isActive = true
+            view.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -insets.bottom).isActive = true
+            view.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -insets.right).isActive = true
+            view.widthAnchor.constraint(equalToConstant: weight).isActive = true
+        }
+        
+        return view
+    }
+    
+}
+extension UIImage {
+    func resize(to newSize: CGSize) -> UIImage? {
+        let widthRatio = newSize.width / size.width
+        let heightRatio = newSize.height / size.height
+        let scaleFactor = min(widthRatio, heightRatio)
+        let scaledSize = CGSize(width: size.width * scaleFactor, height: size.height * scaleFactor)
+
+        UIGraphicsBeginImageContextWithOptions(scaledSize, false, 0.0)
+        draw(in: CGRect(origin: .zero, size: scaledSize))
+        let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+
+        return scaledImage
+    }
+}
+
+
+
 extension String {//for backspace
   var isBackspace: Bool {
     let char = self.cString(using: String.Encoding.utf8)!

@@ -22,7 +22,7 @@ extension Firestore {
     
     
     
-    static func initializeUser(uid: String, username: String) {
+    static func initializeUser(uid: String, username: String, image: String) {
         db.collection(Constants.FBase.collectionName).document(uid).setData([
             "username": username,
             "streak": 0,
@@ -32,7 +32,7 @@ extension Firestore {
             "friends": [String](),
             "likes": [String](),
             "friendRequests": [String](),
-            
+            "image": image
             
         ])
         User.shared().initUserInfo()

@@ -37,10 +37,10 @@ class SMViewController: UIViewController {
                         let data = doc.data()
                         
                         
-                        if let streak = data["streak"] as? Int, let isWorking = data["isWorking"] as? Bool, let lastUpdated = data["lastUpdated"] as? Timestamp, let username = data["username"] as? String, let progress = data["progress"] as? Float, let likes = data["likes"] as? [String], let friends = data["friends"] as? [String], let friendReq = data["friendRequests"] {
+                        if let streak = data["streak"] as? Int, let isWorking = data["isWorking"] as? Bool, let lastUpdated = data["lastUpdated"] as? Timestamp, let username = data["username"] as? String, let progress = data["progress"] as? Float, let likes = data["likes"] as? [String], let friends = data["friends"] as? [String], let friendReq = data["friendRequests"], let image = data["image"] {
                             print("got past the if let conditions")
                             let isLiked = likes.contains(User.shared().uid)//if likes contains uid, true its been liked
-                            let dict: [String: Any] = ["streak": streak, "isWorking": isWorking, "lastUpdated": lastUpdated.dateValue(), "username": username, "progress": progress, "isLiked": isLiked, "friends": friends, "friendRequests": friendReq]
+                            let dict: [String: Any] = ["streak": streak, "isWorking": isWorking, "lastUpdated": lastUpdated.dateValue(), "username": username, "progress": progress, "isLiked": isLiked, "friends": friends, "friendRequests": friendReq, "image": image]
                             
                             
                             let newPost = UserInfo(uid: doc.documentID, dictionary: dict)
@@ -138,6 +138,11 @@ extension SMViewController: UITableViewDataSource, UITableViewDelegate {
             cell.username.text = posts[indexPath.row].username
         }
         
+        
+        cell.likesView.isHidden = posts[indexPath.row].isLiked
+        
+        
+        cell.profilePicture.loadImage(urlString: posts[indexPath.row].image)
         cell.streak.text = String(posts[indexPath.row].streak) + "🔥"
         cell.likes.text = String(posts[indexPath.row].likesCount) + "👏"
         cell.progressBar.progress = posts[indexPath.row].progress

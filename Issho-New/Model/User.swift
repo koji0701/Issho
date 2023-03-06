@@ -8,6 +8,7 @@
 import Foundation
 import FirebaseFirestore
 import FirebaseAuth
+import UIKit
 
 
 
@@ -23,6 +24,7 @@ class User {
     private var dbUpdateTimer: Timer?
     
     var uid: String = ""
+    var image: CustomImageView = CustomImageView()
     var userInfo = [String: Any]()
     private var lastUpdateUserInfo = [String: Any]()
     
@@ -53,9 +55,12 @@ class User {
                     "likes": document["likes"] as! [String],
                     "friendRequests": document["friendRequests"] as! [String],
                     "friends": document["friends"] as! [String],
-                    "lastUpdated": document["lastUpdated"] as? Date ?? Date()
+                    "lastUpdated": document["lastUpdated"] as? Date ?? Date(),
+                    "image": document["image"] as? String ?? "default"
                 ]
                 self.lastUpdateUserInfo = self.userInfo
+                self.image.loadImage(urlString: self.userInfo["image"] as! String)
+                
                 print("user info in the init", self.userInfo)
                 NotificationCenter.default.post(name: NSNotification.Name("userInfoUpdated"),
                                                 object: self.userInfo)
@@ -70,7 +75,12 @@ class User {
         print("update user info call, previous userInfo", userInfo)
         
         dbUpdateTimer?.invalidate()//invalidate the timer if it is already running
-
+        
+        if let newImage = newInfo["image"] as? String {
+            if newImage != (userInfo["image"] as! String) {
+                image.loadImage(urlString: newImage)
+            }
+        }
         
         userInfo = [
             "username": newInfo["username"] as? String ?? userInfo["username"] ?? lastUpdateUserInfo["username"] ?? "",
@@ -80,8 +90,9 @@ class User {
             "likes": newInfo["likes"] as? Int ?? userInfo["likes"]!,
             "friendRequests": newInfo["friendRequests"] as? [String] ?? userInfo["friendRequests"]!,
             "friends": newInfo["friends"] as? [String] ?? userInfo["friends"]!,
-            "lastUpdated": newInfo["lastUpdated"] as? [String] ?? userInfo["lastUpdated"]!
-
+            "lastUpdated": newInfo["lastUpdated"] as? [String] ?? userInfo["lastUpdated"]!,
+            "image": newInfo["image"] as? String ?? userInfo["image"] ?? lastUpdateUserInfo["image"]
+            
         ]
         
         dbUpdateTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { [weak self] _ in

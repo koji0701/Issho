@@ -24,6 +24,10 @@ class SettingsViewController: UIViewController {
     
     
     
+    @IBAction func editProfileButtonClicked(_ sender: Any) {
+        performSegue(withIdentifier: Constants.Segues.settingsToEditProfile, sender: nil)
+    }
+    
     var settingsToDoViewControllerDelegate: SettingsToDoViewControllerDelegate!
     
     override func viewDidLoad() {
@@ -80,14 +84,6 @@ class SettingsViewController: UIViewController {
         }
     }
     
-
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let userProfileVC = segue.destination as? UserProfileVC {
-            userProfileVC.user = sender as? UserInfo
-            print("userprofilevc user: ", userProfileVC.user)
-        }
-    }
     
     
     

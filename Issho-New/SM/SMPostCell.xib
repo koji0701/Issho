@@ -10,17 +10,17 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="SMReusablePostCell" rowHeight="144" id="KGk-i7-Jjw" customClass="SMPostCell" customModule="Issho_New" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="414" height="144"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="SMReusablePostCell" rowHeight="142" id="KGk-i7-Jjw" customClass="SMPostCell" customModule="Issho_New" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="142"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <rect key="frame" x="0.0" y="0.0" width="414" height="144"/>
+                <rect key="frame" x="0.0" y="0.0" width="414" height="142"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9sX-xQ-Eak" userLabel="ProfilePicView">
                         <rect key="frame" x="16" y="32" width="80" height="80"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="paperplane.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="RS0-Gj-MUZ" userLabel="ProfilePicImageView">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="paperplane.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="RS0-Gj-MUZ" userLabel="ProfilePicImageView" customClass="CustomImageView" customModule="Issho_New" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.5" width="80" height="79.5"/>
                                 <gestureRecognizers/>
                                 <constraints>
@@ -120,29 +120,54 @@
                             <constraint firstItem="cVD-qO-rZD" firstAttribute="leading" secondItem="WMo-cD-yNf" secondAttribute="leading" id="MwS-0D-G1H"/>
                         </constraints>
                     </stackView>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Q0-pz-T3a" userLabel="LikesView">
+                        <rect key="frame" x="0.0" y="112" width="414" height="30"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tpU-WZ-maz" userLabel="LikesButton">
+                                <rect key="frame" x="192" y="2.5" width="30" height="25"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="30" id="4V5-yU-AEb"/>
+                                    <constraint firstAttribute="height" constant="25" id="eBh-9g-2gL"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain"/>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="tpU-WZ-maz" firstAttribute="centerX" secondItem="4Q0-pz-T3a" secondAttribute="centerX" id="b9K-QL-1Fj"/>
+                            <constraint firstItem="tpU-WZ-maz" firstAttribute="centerY" secondItem="4Q0-pz-T3a" secondAttribute="centerY" id="n2C-UQ-rly"/>
+                            <constraint firstAttribute="height" constant="30" id="zmz-u8-0gs"/>
+                        </constraints>
+                    </view>
                 </subviews>
                 <constraints>
                     <constraint firstItem="WMo-cD-yNf" firstAttribute="leading" secondItem="9sX-xQ-Eak" secondAttribute="trailing" constant="8" symbolic="YES" id="4DH-07-7OI"/>
-                    <constraint firstAttribute="bottomMargin" secondItem="9sX-xQ-Eak" secondAttribute="bottom" constant="21" id="EAl-5a-a59"/>
+                    <constraint firstAttribute="trailing" secondItem="4Q0-pz-T3a" secondAttribute="trailing" id="N1w-ym-KH3"/>
+                    <constraint firstItem="4Q0-pz-T3a" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="Rne-J8-JJy"/>
                     <constraint firstItem="9sX-xQ-Eak" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="21" id="TJY-pz-wyp"/>
                     <constraint firstItem="9sX-xQ-Eak" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="Tzk-L2-YLc"/>
+                    <constraint firstItem="WMo-cD-yNf" firstAttribute="centerY" secondItem="9sX-xQ-Eak" secondAttribute="centerY" id="ZNu-B4-Nq4"/>
                     <constraint firstAttribute="trailing" secondItem="WMo-cD-yNf" secondAttribute="trailing" constant="20" id="agX-3f-QRF"/>
-                    <constraint firstItem="WMo-cD-yNf" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="gXd-QJ-BWy"/>
-                    <constraint firstAttribute="bottom" secondItem="9sX-xQ-Eak" secondAttribute="bottom" constant="32" id="lsS-4F-0Up"/>
+                    <constraint firstAttribute="bottom" secondItem="4Q0-pz-T3a" secondAttribute="bottom" id="qLB-ZO-Uao"/>
                     <constraint firstItem="9sX-xQ-Eak" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="tPa-8d-niI"/>
+                    <constraint firstItem="4Q0-pz-T3a" firstAttribute="top" secondItem="9sX-xQ-Eak" secondAttribute="bottom" id="zJ9-it-eyt"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <gestureRecognizers/>
             <connections>
                 <outlet property="likes" destination="CU5-vK-jnA" id="HCY-a5-h30"/>
+                <outlet property="likesButton" destination="tpU-WZ-maz" id="DA6-sJ-YBG"/>
+                <outlet property="likesView" destination="4Q0-pz-T3a" id="xkC-Jx-GSb"/>
+                <outlet property="profilePicture" destination="RS0-Gj-MUZ" id="Nkh-bs-fKK"/>
                 <outlet property="profilePictureTapView" destination="9sX-xQ-Eak" id="KI2-AK-6WS"/>
                 <outlet property="progressBar" destination="SOe-Z7-gLc" id="Lz5-TS-vGx"/>
                 <outlet property="progressPercentage" destination="VXT-Mp-QlW" id="EXu-EF-T6M"/>
                 <outlet property="streak" destination="hco-Jk-Qz9" id="g8A-mY-Eb6"/>
                 <outlet property="username" destination="vAr-vB-nHD" id="bmU-i9-oqE"/>
             </connections>
-            <point key="canvasLocation" x="137.68115942028987" y="95.089285714285708"/>
+            <point key="canvasLocation" x="136.875" y="93.75"/>
         </tableViewCell>
     </objects>
     <resources>

@@ -5,6 +5,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -62,9 +63,21 @@
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lqt-33-xy5" userLabel="Edit profile button">
+                                <rect key="frame" x="160.33333333333334" y="171" width="93.666666666666657" height="31"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Edit profile"/>
+                                <connections>
+                                    <action selector="editProfileButtonClicked:" destination="FW2-v1-mGQ" eventType="touchUpInside" id="6wa-lC-2td"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="7xE-F4-T7B"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Lqt-33-xy5" firstAttribute="centerX" secondItem="EuJ-H6-hiA" secondAttribute="centerX" id="9xS-PC-aVa"/>
+                            <constraint firstItem="Lqt-33-xy5" firstAttribute="top" secondItem="7xE-F4-T7B" secondAttribute="top" constant="83" id="Gac-YV-kmg"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Settings" id="9Nn-Kg-csi"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics"/>
@@ -72,11 +85,94 @@
                     <connections>
                         <outlet property="completedTasksButton" destination="e9y-vr-2p4" id="dmp-oQ-h13"/>
                         <outlet property="displayModeButton" destination="pzU-bh-ftZ" id="kbn-OA-ncu"/>
+                        <segue destination="cqz-CR-Xti" kind="show" identifier="settingsToEditProfile" id="Lsa-XU-xzN"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RUW-qG-Rek" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2833" y="80"/>
+            <point key="canvasLocation" x="2831.8840579710145" y="79.6875"/>
+        </scene>
+        <!--Edit Profile-->
+        <scene sceneID="CwR-5p-KwA">
+            <objects>
+                <viewController id="cqz-CR-Xti" customClass="EditProfileVC" customModule="Issho_New" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Ifb-SY-ONc">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SdO-Fp-4pn" userLabel="EditProfilePicButton">
+                                <rect key="frame" x="158" y="175" width="98" height="98"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="98" id="5By-Kn-FYF"/>
+                                    <constraint firstAttribute="width" constant="98" id="ePw-Jo-Snf"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="gray" title="+"/>
+                                <connections>
+                                    <action selector="picButtonClicked:" destination="cqz-CR-Xti" eventType="touchUpInside" id="XQg-Vn-yFf"/>
+                                </connections>
+                            </button>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Username" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="2sL-hF-eTN">
+                                <rect key="frame" x="160" y="289" width="94" height="34"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="Oa7-P0-yiM"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="SdO-Fp-4pn" firstAttribute="centerX" secondItem="Ifb-SY-ONc" secondAttribute="centerX" id="Ah0-PX-58c"/>
+                            <constraint firstItem="SdO-Fp-4pn" firstAttribute="top" secondItem="Oa7-P0-yiM" secondAttribute="top" constant="87" id="X0X-MG-8g8"/>
+                            <constraint firstItem="2sL-hF-eTN" firstAttribute="centerX" secondItem="Ifb-SY-ONc" secondAttribute="centerX" id="ZJ3-DG-O5r"/>
+                            <constraint firstItem="2sL-hF-eTN" firstAttribute="top" secondItem="SdO-Fp-4pn" secondAttribute="bottom" constant="16" id="cZV-rK-TJv"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Edit Profile" id="2bg-dw-gRF"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics"/>
+                    <connections>
+                        <outlet property="picButton" destination="SdO-Fp-4pn" id="xOB-MS-1od"/>
+                        <outlet property="username" destination="2sL-hF-eTN" id="JzF-OH-cYk"/>
+                        <segue destination="BPX-D8-344" kind="show" identifier="editProfileToPhotoSelector" id="uUT-dU-6yE"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7ES-fl-gYt" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2427.536231884058" y="829.6875"/>
+        </scene>
+        <!--Photo Selector Controller-->
+        <scene sceneID="Ezz-2z-FgF">
+            <objects>
+                <collectionViewController id="BPX-D8-344" customClass="PhotoSelectorController" customModule="Issho_New" customModuleProvider="target" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="nFQ-2J-Ajc">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="aUH-U2-hiy">
+                            <size key="itemSize" width="128" height="128"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="E8J-ag-AWv">
+                                <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="BYD-wK-9Gn">
+                                    <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </collectionViewCellContentView>
+                            </collectionViewCell>
+                        </cells>
+                        <connections>
+                            <outlet property="dataSource" destination="BPX-D8-344" id="Xfn-y7-nam"/>
+                            <outlet property="delegate" destination="BPX-D8-344" id="7cK-jL-r1i"/>
+                        </connections>
+                    </collectionView>
+                    <navigationItem key="navigationItem" id="d6E-hU-Kmm"/>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="A3d-XH-gbQ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3494" y="757"/>
         </scene>
         <!--ToDoList-->
         <scene sceneID="tne-QT-ifu">
@@ -407,7 +503,7 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5UW-9A-OrN">
                                                 <rect key="frame" x="45" y="0.0" width="138" height="182.33333333333334"/>
                                                 <subviews>
-                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pencil.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="crU-5I-wJV" userLabel="ProfilePic">
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pencil.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="crU-5I-wJV" userLabel="ProfilePic" customClass="CustomImageView" customModule="Issho_New" customModuleProvider="target">
                                                         <rect key="frame" x="20" y="21.000000000000007" width="98" height="96.666666666666686"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="98" id="5Yd-Ww-gef"/>
@@ -523,46 +619,32 @@
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" largeTitleDisplayMode="never" id="a44-VI-ceL">
-                        <rightBarButtonItems>
-                            <barButtonItem style="plain" id="LtI-NM-IKd">
-                                <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="jhl-hS-bCF" userLabel="Settings Button">
-                                    <rect key="frame" x="350" y="0.0" width="44" height="44"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <state key="normal" title="Button"/>
-                                    <buttonConfiguration key="configuration" style="plain" title="">
-                                        <backgroundConfiguration key="background" image="settings"/>
-                                    </buttonConfiguration>
-                                    <connections>
-                                        <action selector="settingsClicked:" destination="RdK-Zf-Ors" eventType="touchUpInside" id="60l-mQ-rfN"/>
-                                    </connections>
-                                </button>
-                            </barButtonItem>
-                            <barButtonItem style="plain" id="uHs-xq-hVl">
-                                <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="SMT-iR-feR" userLabel="Add Friends Button">
-                                    <rect key="frame" x="299" y="2" width="43" height="40"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <state key="normal" title="Button"/>
-                                    <buttonConfiguration key="configuration" style="plain">
-                                        <backgroundConfiguration key="background" image="addFriends"/>
-                                    </buttonConfiguration>
-                                    <connections>
-                                        <action selector="addFriendsClicked:" destination="RdK-Zf-Ors" eventType="touchUpInside" id="dqm-Ao-oj6"/>
-                                    </connections>
-                                </button>
-                            </barButtonItem>
-                        </rightBarButtonItems>
+                        <barButtonItem key="rightBarButtonItem" style="plain" id="LtI-NM-IKd">
+                            <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="jhl-hS-bCF" userLabel="Settings Button">
+                                <rect key="frame" x="350" y="0.0" width="44" height="44"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="">
+                                    <backgroundConfiguration key="background" image="settings"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="settingsClicked:" destination="RdK-Zf-Ors" eventType="touchUpInside" id="60l-mQ-rfN"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="addFriendsButton" destination="SMT-iR-feR" id="8hQ-89-mxI"/>
                         <outlet property="button" destination="xYV-Og-tvw" id="S69-h4-RwB"/>
                         <outlet property="friendsCountLabel" destination="IcC-LS-EMQ" id="Um8-6Z-5n6"/>
+                        <outlet property="profilePicImage" destination="crU-5I-wJV" id="tNg-m4-pw3"/>
                         <outlet property="settingsButton" destination="jhl-hS-bCF" id="Ij5-ZJ-CDL"/>
                         <outlet property="streakLabel" destination="z6U-0d-J4b" id="Txq-nV-yFZ"/>
                         <outlet property="usernameLabel" destination="vO8-JK-r3W" id="FYq-by-C11"/>
                         <segue destination="FW2-v1-mGQ" kind="show" identifier="profileToSettings" id="E0h-xQ-OBQ"/>
                         <segue destination="3nZ-oY-oBF" kind="show" identifier="profileToAddFriends" id="Br5-n4-AWA"/>
+                        <segue destination="3nZ-oY-oBF" kind="show" identifier="profileToAddFriends" id="sFr-pL-dSo"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7kl-92-JwJ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -571,12 +653,11 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="Sa1-mP-SU3"/>
-        <segue reference="Br5-n4-AWA"/>
+        <segue reference="dTI-Bl-88Y"/>
+        <segue reference="sFr-pL-dSo"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="add friends" width="50" height="50"/>
-        <image name="addFriends" width="250.66667175292969" height="250.66667175292969"/>
         <image name="pencil.circle.fill" catalog="system" width="128" height="121"/>
         <image name="settings" width="250.66667175292969" height="250.66667175292969"/>
         <systemColor name="systemBackgroundColor">

@@ -18,6 +18,7 @@
 		E511A00029AEF6EF00A00930 /* Photo Selector Header.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5119FFF29AEF6EF00A00930 /* Photo Selector Header.swift */; };
 		E511A00229AEF70300A00930 /* Photo Selector Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = E511A00129AEF70300A00930 /* Photo Selector Controller.swift */; };
 		E511A00429AEF71500A00930 /* MosaicLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E511A00329AEF71500A00930 /* MosaicLayout.swift */; };
+		E511A00629AFBFF600A00930 /* CustomImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E511A00529AFBFF500A00930 /* CustomImageView.swift */; };
 		E516286F29ADA76900454397 /* CustomNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E516286E29ADA76900454397 /* CustomNavigationController.swift */; };
 		E52FBCA8292F18D30053208C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FBCA7292F18D30053208C /* AppDelegate.swift */; };
 		E52FBCAA292F18D30053208C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FBCA9292F18D30053208C /* SceneDelegate.swift */; };
@@ -51,6 +52,8 @@
 		E5A5166C2958D329002BC2B3 /* ToDoEntryData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E5A5166A2958D329002BC2B3 /* ToDoEntryData.xcdatamodeld */; };
 		E5A8B1D3295E2BC900D5E684 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E5A8B1D2295E2BC900D5E684 /* IQKeyboardManagerSwift */; };
 		E5A8B1D7295E535C00D5E684 /* ToDoEntryToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A8B1D6295E535C00D5E684 /* ToDoEntryToolbar.swift */; };
+		E5B6676629B12D690090AB89 /* Photos Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B6676529B12D690090AB89 /* Photos Auth.swift */; };
+		E5B6676829B147C90090AB89 /* EditProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B6676729B147C90090AB89 /* EditProfileVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,6 +85,7 @@
 		E5119FFF29AEF6EF00A00930 /* Photo Selector Header.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Photo Selector Header.swift"; sourceTree = "<group>"; };
 		E511A00129AEF70300A00930 /* Photo Selector Controller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Photo Selector Controller.swift"; sourceTree = "<group>"; };
 		E511A00329AEF71500A00930 /* MosaicLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicLayout.swift; sourceTree = "<group>"; };
+		E511A00529AFBFF500A00930 /* CustomImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomImageView.swift; sourceTree = "<group>"; };
 		E516286E29ADA76900454397 /* CustomNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationController.swift; sourceTree = "<group>"; };
 		E52FBCA4292F18D30053208C /* Issho-New.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Issho-New.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E52FBCA7292F18D30053208C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -115,6 +119,8 @@
 		E595D11129A375AD00A53594 /* UserProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileVC.swift; sourceTree = "<group>"; };
 		E5A5166B2958D329002BC2B3 /* ToDoEntryData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ToDoEntryData.xcdatamodel; sourceTree = "<group>"; };
 		E5A8B1D6295E535C00D5E684 /* ToDoEntryToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoEntryToolbar.swift; sourceTree = "<group>"; };
+		E5B6676529B12D690090AB89 /* Photos Auth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Photos Auth.swift"; sourceTree = "<group>"; };
+		E5B6676729B147C90090AB89 /* EditProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileVC.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -174,6 +180,7 @@
 				E5119FF629AEE52300A00930 /* Custom Tab Bar */,
 				E50E17B62992F8A20034543C /* MiscExtensions.swift */,
 				E516286E29ADA76900454397 /* CustomNavigationController.swift */,
+				E511A00529AFBFF500A00930 /* CustomImageView.swift */,
 			);
 			path = "UI Improvements";
 			sourceTree = "<group>";
@@ -184,6 +191,7 @@
 				E5119FFD29AEF6D900A00930 /* Photo Selector Cell.swift */,
 				E5119FFF29AEF6EF00A00930 /* Photo Selector Header.swift */,
 				E511A00129AEF70300A00930 /* Photo Selector Controller.swift */,
+				E5B6676529B12D690090AB89 /* Photos Auth.swift */,
 				E511A00329AEF71500A00930 /* MosaicLayout.swift */,
 			);
 			path = PhotoSelector;
@@ -239,6 +247,7 @@
 				E58245CB296634930093E0D5 /* Welcome */,
 				E521803A29415A7400925BAC /* Model */,
 				E58DED51292F1AD000F1EF0C /* Main.storyboard */,
+				E537219F296F7ECF00AD0BF7 /* SettingsViewController.swift */,
 				E58DED54292F265800F1EF0C /* ToDo */,
 				E58DED53292F263000F1EF0C /* SM */,
 				E595D11029A3759B00A53594 /* UserProfile */,
@@ -293,7 +302,6 @@
 				E58DED41292F198400F1EF0C /* ToDoEntryCell.swift */,
 				E5A8B1D6295E535C00D5E684 /* ToDoEntryToolbar.swift */,
 				E58DED45292F19A300F1EF0C /* ToDoViewController.swift */,
-				E537219F296F7ECF00AD0BF7 /* SettingsViewController.swift */,
 			);
 			path = ToDo;
 			sourceTree = "<group>";
@@ -312,6 +320,7 @@
 			isa = PBXGroup;
 			children = (
 				E595D11129A375AD00A53594 /* UserProfileVC.swift */,
+				E5B6676729B147C90090AB89 /* EditProfileVC.swift */,
 			);
 			path = UserProfile;
 			sourceTree = "<group>";
@@ -467,7 +476,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				E58DED4D292F19B200F1EF0C /* SMViewController.swift in Sources */,
+				E5B6676829B147C90090AB89 /* EditProfileVC.swift in Sources */,
+				E511A00629AFBFF600A00930 /* CustomImageView.swift in Sources */,
 				E5119FFE29AEF6D900A00930 /* Photo Selector Cell.swift in Sources */,
+				E5B6676629B12D690090AB89 /* Photos Auth.swift in Sources */,
 				E511A00029AEF6EF00A00930 /* Photo Selector Header.swift in Sources */,
 				E58DED4E292F19B200F1EF0C /* UserInfo.swift in Sources */,
 				E5119FF929AEE56700A00930 /* FloatingBarView.swift in Sources */,

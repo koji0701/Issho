@@ -17,24 +17,20 @@ class UserProfileVC: UIViewController {
     @IBOutlet weak var usernameLabel: UILabel!
     @IBOutlet weak var friendsCountLabel: UILabel!
     
+    @IBOutlet weak var profilePicImage: CustomImageView!
     
     @IBOutlet weak var streakLabel: UILabel!
     
     @IBOutlet weak var button: UIButton!
     
-    /** different states of the button: Follow, Unfriend, Friends, Edit Profile, Accept Request, Request Sent **/
+    /** different states of the button: Follow, Unfriend, Friends, Add Friends, Accept Request, Request Sent **/
     
-    @IBAction func addFriendsClicked(_ sender: Any) {
-        print("add friends clicked")
-        performSegue(withIdentifier: Constants.Segues.profileToAddFriends, sender: nil)
-    }
     
     
     
     
     @IBOutlet weak var settingsButton: UIButton!
     
-    @IBOutlet weak var addFriendsButton: UIButton!
     
     
     @IBAction func settingsClicked(_ sender: Any) {
@@ -60,6 +56,7 @@ class UserProfileVC: UIViewController {
     
     
     private func setUpUser() {
+        
         guard var user = user else {
             let username = User.shared().userInfo["username"] as? String ?? "Username"
             let streak = User.shared().userInfo["streak"] as? String ?? "0"
@@ -67,21 +64,22 @@ class UserProfileVC: UIViewController {
             usernameLabel.text = username
             friendsCountLabel.text = String((User.shared().userInfo["friends"] as? [String])?.count ?? 0)
             
+            profilePicImage.loadImage(urlString: User.shared().userInfo["image"] as! String)
             
-            button.setTitle("Edit Profile", for: .normal)
+            button.setTitle("Add Friends", for: .normal)
             
             
-            addFriendsButton.isHidden = false
             settingsButton.isHidden = false
             return
             
         }
+        profilePicImage.loadImage(urlString: user.image)
+        
         //set all the labels
         usernameLabel.text = user.username
         streakLabel.text = "\(user.streak)"
         friendsCountLabel.text = String(user.friendsCount)
         
-        addFriendsButton.isHidden = true
         settingsButton.isHidden = true
         if (user.friends.contains(User.shared().uid)) {
             button.setTitle("Friends", for: .normal)
@@ -94,7 +92,7 @@ class UserProfileVC: UIViewController {
             button.setTitle("Request Sent", for: .normal)
         }
         else if (user.uid == User.shared().uid) {
-            button.setTitle("Edit Profile", for: .normal)
+            button.setTitle("Add Friends", for: .normal)
         }
         else {
             print("making it follow")
@@ -156,12 +154,13 @@ class UserProfileVC: UIViewController {
             
         }
         
-        else if (button.currentTitle == "Edit Profile") {
-            print("edit profile button clicked")
-            
+        else if (button.currentTitle == "Add Friends") {
+            print("add friends button clicked")
+            performSegue(withIdentifier: Constants.Segues.profileToAddFriends, sender: nil)
             
         }
     }
+    
     
     
 }

@@ -54,18 +54,19 @@ class AddFriendsViewController: UIViewController {
                         print("found one doc")
                         let data = doc.data()
                         
-                        if let streak = data["streak"] as? Int, let isWorking = data["isWorking"] as? Bool, let lastUpdated = data["lastUpdated"] as? Timestamp, let username = data["username"] as? String, let progress = data["progress"] as? Float, let likes = data["likes"] as? [String], let friends = data["friends"] as? [String], let friendRq = data["friendRequests"] as? [String] {
+                        if let streak = data["streak"] as? Int, let isWorking = data["isWorking"] as? Bool, let lastUpdated = data["lastUpdated"] as? Timestamp, let username = data["username"] as? String, let progress = data["progress"] as? Float, let likes = data["likes"] as? [String], let friends = data["friends"] as? [String], let friendRq = data["friendRequests"] as? [String], let image = data["image"] {
                             print("got past the if let conditions")
                             
-                            let dict: [String: Any] = ["streak": streak, "isWorking": isWorking, "lastUpdated": lastUpdated.dateValue(), "username": username, "progress": progress, "friends": friends, "friendRequests": friendRq, "likes": likes]
+                            let dict: [String: Any] = ["streak": streak, "isWorking": isWorking, "lastUpdated": lastUpdated.dateValue(), "username": username, "progress": progress, "friends": friends, "friendRequests": friendRq, "likes": likes, "image": image]
                             
                             
                             let friendReq = UserInfo(uid: doc.documentID, dictionary: dict)
                             self.requests.append(friendReq)
                             print("requests: ", self.requests)
                             DispatchQueue.main.async {
-                                self.tableView.reloadData()
                                 self.displayItems = self.requests
+
+                                self.tableView.reloadData()
                                 
                             }
                         }
@@ -97,7 +98,9 @@ extension AddFriendsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.SM.addFriendsReuseIdentifier, for: indexPath) as! AddFriendsCell
+        
         cell.addFriendsCellDelegate = self
+        cell.profilePic.loadImage(urlString: displayItems[indexPath.row].image)
         cell.usernameLabel.text = displayItems[indexPath.row].username
         
         if (displayIsShowingRequests) {
@@ -264,10 +267,10 @@ extension AddFriendsViewController: UISearchBarDelegate {
                         let data = doc.data()
                         
                         
-                        if let streak = data["streak"] as? Int, let isWorking = data["isWorking"] as? Bool, let lastUpdated = data["lastUpdated"] as? Timestamp, let username = data["username"] as? String, let progress = data["progress"] as? Float, let likes = data["likes"] as? [String], let friends = data["friends"] as? [String], let friendReq = data["friendRequests"] {
+                        if let streak = data["streak"] as? Int, let isWorking = data["isWorking"] as? Bool, let lastUpdated = data["lastUpdated"] as? Timestamp, let username = data["username"] as? String, let progress = data["progress"] as? Float, let likes = data["likes"] as? [String], let friends = data["friends"] as? [String], let friendReq = data["friendRequests"], let image = data["image"] {
                             print("got past the if let conditions")
                             
-                            let dict: [String: Any] = ["streak": streak, "isWorking": isWorking, "lastUpdated": lastUpdated.dateValue(), "username": username, "progress": progress, "friends": friends, "friendRequests": friendReq, "likes": likes]
+                            let dict: [String: Any] = ["streak": streak, "isWorking": isWorking, "lastUpdated": lastUpdated.dateValue(), "username": username, "progress": progress, "friends": friends, "friendRequests": friendReq, "likes": likes, "image": image]
                             
                             let newPerson = UserInfo(uid: doc.documentID, dictionary: dict)
                             self.displayItems.append(newPerson)

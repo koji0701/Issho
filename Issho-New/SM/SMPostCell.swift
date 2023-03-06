@@ -17,6 +17,7 @@ class SMPostCell: UITableViewCell {
     var postDelegate: PostDelegate!
 
     
+    @IBOutlet weak var profilePicture: CustomImageView!
     
     @IBOutlet weak var profilePictureTapView: UIView!
     @IBOutlet weak var progressBar: UIProgressView!
@@ -29,15 +30,34 @@ class SMPostCell: UITableViewCell {
     @IBOutlet weak var progressPercentage: UILabel!
     
     
+    @IBOutlet weak var likesView: UIView!
+    
+    @IBOutlet weak var likesButton: UIButton!
+    
+    
+    
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
-        // profilePicView set to image
-        
-        //profilePicView.layer.cornerRadius = profilePicView.frame.size.width / 2
         //profilePicView.clipsToBounds = true
+        
+        likesView.addSeparator(at: .top, color: .lightGray, weight: 1.5, insets: UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20))
+        let symbolConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .bold, scale: .medium)
+        
+        likesButton.clipsToBounds = true
+
+        /*let pic = UIImage(systemNam: "party.popper")!.withConfiguration(symbolConfig)
+        likesButton.setImage(pic, for: .normal)*/
+        
+        if let pic = UIImage(systemName: "party.popper")?.withConfiguration(symbolConfig)  {
+            likesButton.setImage(pic, for: .normal)
+        }
+        else {
+            print("could not find pic")
+        }
+
         profilePictureTapView.isUserInteractionEnabled = true
         username.isUserInteractionEnabled = true
+        profilePicture.image = profilePicture.image?.resize(to: CGSize(width: profilePicture.frame.width, height: profilePicture.frame.height))
         
         let profileTapToSegue = UITapGestureRecognizer(target: self, action: #selector(handleSegueAction(_:)))
         let usernameTapToSegue = UITapGestureRecognizer(target: self, action: #selector(handleSegueAction(_:)))
@@ -47,9 +67,11 @@ class SMPostCell: UITableViewCell {
         username.addGestureRecognizer(usernameTapToSegue)
         
         
-        let doubleTapToLike = UITapGestureRecognizer(target: self, action: #selector(handleLike(_:)))
+        let doubleTapToLike = UITapGestureRecognizer(target: self, action: #selector(handleLike))
         doubleTapToLike.numberOfTapsRequired = 2
         contentView.addGestureRecognizer(doubleTapToLike)
+        likesButton.addTarget(self, action: #selector(handleLike), for: .touchUpInside)
+
 
         //shadow cells
         // add shadow on cell
@@ -67,8 +89,7 @@ class SMPostCell: UITableViewCell {
 
     
     
-    @objc private func handleLike(_ gestureRecognizer: UITapGestureRecognizer) {
-        print("double tapped")
+    @objc private func handleLike() {
         
 
         let postLiked = postDelegate?.likedPost(in: self)
