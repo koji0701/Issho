@@ -25,7 +25,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="55" height="70"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AEn-yb-h53">
-                                        <rect key="frame" x="23" y="23" width="24" height="24"/>
+                                        <rect key="frame" x="23" y="18" width="24" height="24"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="24" id="UBX-tr-dq8"/>
                                             <constraint firstAttribute="height" constant="24" id="jcv-Ns-KhN"/>
@@ -41,7 +41,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cEu-FX-gj0">
-                                        <rect key="frame" x="23" y="23" width="24" height="24"/>
+                                        <rect key="frame" x="23" y="18" width="24" height="24"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="24" id="67z-ZS-DfP"/>
                                             <constraint firstAttribute="height" constant="24" id="TtQ-bI-PYh"/>
@@ -59,29 +59,30 @@
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
-                                    <constraint firstItem="AEn-yb-h53" firstAttribute="top" secondItem="nr4-QR-eA0" secondAttribute="top" constant="23" id="A7q-NJ-Dk3"/>
+                                    <constraint firstItem="AEn-yb-h53" firstAttribute="top" secondItem="nr4-QR-eA0" secondAttribute="top" constant="18" id="A7q-NJ-Dk3"/>
                                     <constraint firstItem="AEn-yb-h53" firstAttribute="leading" secondItem="nr4-QR-eA0" secondAttribute="leading" constant="23" id="Hy9-vT-lBY"/>
                                     <constraint firstItem="cEu-FX-gj0" firstAttribute="leading" secondItem="nr4-QR-eA0" secondAttribute="leading" constant="23" id="K95-G6-nmg"/>
-                                    <constraint firstItem="cEu-FX-gj0" firstAttribute="top" secondItem="nr4-QR-eA0" secondAttribute="top" constant="23" id="cA6-Kr-mK3"/>
+                                    <constraint firstItem="cEu-FX-gj0" firstAttribute="top" secondItem="nr4-QR-eA0" secondAttribute="top" constant="18" id="cA6-Kr-mK3"/>
                                     <constraint firstAttribute="width" constant="55" id="lF6-Qt-1Ct"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9WG-z9-Hxl" userLabel="TextViewBox">
                                 <rect key="frame" x="55" y="0.0" width="359" height="70"/>
                                 <subviews>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" keyboardDismissMode="interactive" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1d4-RH-f8P" userLabel="TextView">
-                                        <rect key="frame" x="0.0" y="16.5" width="342" height="30"/>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" keyboardDismissMode="interactive" usesAttributedText="YES" findInteractionEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1d4-RH-f8P" userLabel="TextView">
+                                        <rect key="frame" x="0.0" y="11.5" width="342" height="40"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <attributedString key="attributedText"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                        <dataDetectorType key="dataDetectorTypes" link="YES"/>
                                     </textView>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstItem="1d4-RH-f8P" firstAttribute="leading" secondItem="9WG-z9-Hxl" secondAttribute="leading" id="4XK-Zt-BtN" userLabel="TextView.leading = leading "/>
-                                    <constraint firstAttribute="bottom" secondItem="1d4-RH-f8P" secondAttribute="bottom" constant="23.5" id="hkt-NM-vdk"/>
+                                    <constraint firstAttribute="bottom" secondItem="1d4-RH-f8P" secondAttribute="bottom" constant="18.5" id="hkt-NM-vdk"/>
                                     <constraint firstAttribute="trailing" secondItem="1d4-RH-f8P" secondAttribute="trailing" constant="17" id="jpI-q6-owF"/>
-                                    <constraint firstItem="1d4-RH-f8P" firstAttribute="top" secondItem="9WG-z9-Hxl" secondAttribute="top" constant="16.25" id="xZv-0S-PwO"/>
+                                    <constraint firstItem="1d4-RH-f8P" firstAttribute="top" secondItem="9WG-z9-Hxl" secondAttribute="top" constant="11.25" id="xZv-0S-PwO"/>
                                 </constraints>
                             </view>
                         </subviews>

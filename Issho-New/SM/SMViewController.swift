@@ -22,7 +22,7 @@ class SMViewController: UIViewController {
     
     private func fetchPosts() {
         
-        db.collection(Constants.FBase.collectionName).whereField("friends", arrayContains: User.shared().uid).addSnapshotListener() { querySnapshot, error in
+        db.collection(Constants.FBase.collectionName).whereField("friends", arrayContains: User.shared().uid).getDocuments() { querySnapshot, error in
             self.posts = []
             print("found the friend")
             if let e = error {
@@ -45,7 +45,6 @@ class SMViewController: UIViewController {
                             DispatchQueue.main.async {
                                 self.orderPosts()
                                 self.tableView.reloadData()
-                                
                             }
                         }
                     }
@@ -103,9 +102,6 @@ class SMViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.setNavigationBarHidden(false, animated: false)
         tabBarController?.tabBar.isHidden = true
-        navigationController?.navigationBar.backItem?.title = ""
-
-
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -144,7 +140,7 @@ extension SMViewController: UITableViewDataSource, UITableViewDelegate {
         
         cell.profilePicture.loadImage(urlString: posts[indexPath.row].image)
         cell.streak.text = String(posts[indexPath.row].streak) + "🔥"
-        cell.likes.text = String(posts[indexPath.row].likesCount) + "👏"
+        cell.likes.text = String(posts[indexPath.row].likesCount) + "🎉"
         cell.progressBar.progress = posts[indexPath.row].progress
         cell.progressPercentage.text = String(format: "%.0f", posts[indexPath.row].progress * 100) + "%"
         //cell.contentView.backgroundColor = (posts[indexPath.row].isLiked == true) ? .systemYellow : .systemGray6

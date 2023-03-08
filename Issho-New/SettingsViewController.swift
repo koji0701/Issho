@@ -42,6 +42,7 @@ class SettingsViewController: UIViewController {
         
     }
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
         navigationController?.setNavigationBarHidden(false, animated: true)
         tabBarController?.tabBar.isHidden = true
         navigationController?.navigationBar.backItem?.title = ""

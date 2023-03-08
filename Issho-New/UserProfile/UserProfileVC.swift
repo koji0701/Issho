@@ -42,15 +42,19 @@ class UserProfileVC: UIViewController {
     
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
         DispatchQueue.main.async {
             self.setUpUser()
         }
         button.isEnabled = true
-        //navigationController?.setNavigationBarHidden(false, animated: true)
+        navigationController?.setNavigationBarHidden(false, animated: false)
         tabBarController?.tabBar.isHidden = true
         
-        navigationController?.navigationBar.backItem?.title = ""
 
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
     }
     
     
@@ -58,7 +62,6 @@ class UserProfileVC: UIViewController {
     private func setUpUser() {
         
         guard var user = user else {
-            navigationController?.setNavigationBarHidden(true, animated: false)
             let username = User.shared().userInfo["username"] as? String ?? "Username"
             let streak = User.shared().userInfo["streak"] as? String ?? "0"
             streakLabel.text = streak
@@ -74,7 +77,6 @@ class UserProfileVC: UIViewController {
             return
             
         }
-        navigationController?.setNavigationBarHidden((user.uid != User.shared().uid), animated: false)
         
         profilePicImage.loadImage(urlString: user.image)
         
@@ -146,10 +148,14 @@ class UserProfileVC: UIViewController {
         
         else if (button.currentTitle == "Unfriend") {
             button.setTitle("Follow", for: .normal)
+            /*
             var new = User.shared().userInfo["friends"] as? [String] ?? []
             new.removeAll(where: {$0 == user.uid})
             User.shared().updateUserInfo(newInfo: [
                 "friends": new
+            ])*/
+            Firestore.updateUserInfo(uid: User.shared().uid, fields: [
+                "friends": FieldValue.arrayRemove([user.uid])
             ])
             Firestore.updateUserInfo(uid: user.uid, fields: [
                 "friends": FieldValue.arrayRemove([User.shared().uid])

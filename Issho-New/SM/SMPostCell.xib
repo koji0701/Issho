@@ -54,7 +54,7 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="293" height="21"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" ambiguous="YES" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JEF-eL-ozf" userLabel="Username">
-                                                                <rect key="frame" x="0.0" y="0.0" width="177.33333333333334" height="21"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="45" height="21"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="21" id="iC2-dl-O66"/>
                                                                 </constraints>
@@ -63,10 +63,10 @@
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="10" ambiguous="YES" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="gJG-ei-s6e">
-                                                                <rect key="frame" x="185.33333333333331" y="0.0" width="107.66666666666669" height="21"/>
+                                                                <rect key="frame" x="53" y="0.0" width="240" height="21"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="100🔥" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="heb-HY-KHh" userLabel="Streak">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="51.333333333333336" height="21"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="183.66666666666666" height="21"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="height" constant="21" id="kES-oy-juo"/>
                                                                         </constraints>
@@ -74,8 +74,8 @@
                                                                         <nil key="textColor"/>
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
-                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="253" verticalHuggingPriority="251" ambiguous="YES" text="101👏" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SnC-ZZ-UZY" userLabel="Likes">
-                                                                        <rect key="frame" x="59.333333333333371" y="0.0" width="48.333333333333343" height="21"/>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="253" verticalHuggingPriority="251" ambiguous="YES" text="101🎉" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SnC-ZZ-UZY" userLabel="Likes">
+                                                                        <rect key="frame" x="191.66666666666669" y="0.0" width="48.333333333333343" height="21"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="height" constant="21" id="5Kh-nu-U4U"/>
                                                                         </constraints>

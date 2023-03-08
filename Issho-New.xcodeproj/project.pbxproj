@@ -28,6 +28,12 @@
 		E52FBCC9292F18D40053208C /* Issho_NewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FBCC8292F18D40053208C /* Issho_NewUITests.swift */; };
 		E52FBCCB292F18D40053208C /* Issho_NewUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52FBCCA292F18D40053208C /* Issho_NewUITestsLaunchTests.swift */; };
 		E53721A0296F7ECF00AD0BF7 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E537219F296F7ECF00AD0BF7 /* SettingsViewController.swift */; };
+		E538861529B828DB00C38D9A /* NunitoSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E538861429B828DB00C38D9A /* NunitoSans-SemiBold.ttf */; };
+		E538861629B828DB00C38D9A /* NunitoSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E538861429B828DB00C38D9A /* NunitoSans-SemiBold.ttf */; };
+		E538861729B828DB00C38D9A /* NunitoSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E538861429B828DB00C38D9A /* NunitoSans-SemiBold.ttf */; };
+		E538861929B8656E00C38D9A /* ToDoVCLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = E538861829B8656E00C38D9A /* ToDoVCLogic.swift */; };
+		E538861A29B8656E00C38D9A /* ToDoVCLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = E538861829B8656E00C38D9A /* ToDoVCLogic.swift */; };
+		E538861B29B8656E00C38D9A /* ToDoVCLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = E538861829B8656E00C38D9A /* ToDoVCLogic.swift */; };
 		E539DD172963B3970034E1E5 /* SignupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E539DD162963B3970034E1E5 /* SignupViewController.swift */; };
 		E53AED922963B801000AF59D /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53AED912963B801000AF59D /* LoginViewController.swift */; };
 		E54887392994309300EC4A5B /* AddFriendsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54887382994309300EC4A5B /* AddFriendsCell.swift */; };
@@ -99,6 +105,8 @@
 		E52FBCC8292F18D40053208C /* Issho_NewUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Issho_NewUITests.swift; sourceTree = "<group>"; };
 		E52FBCCA292F18D40053208C /* Issho_NewUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Issho_NewUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		E537219F296F7ECF00AD0BF7 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		E538861429B828DB00C38D9A /* NunitoSans-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NunitoSans-SemiBold.ttf"; sourceTree = "<group>"; };
+		E538861829B8656E00C38D9A /* ToDoVCLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoVCLogic.swift; sourceTree = "<group>"; };
 		E539DD162963B3970034E1E5 /* SignupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupViewController.swift; sourceTree = "<group>"; };
 		E53AED912963B801000AF59D /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		E54887382994309300EC4A5B /* AddFriendsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendsCell.swift; sourceTree = "<group>"; };
@@ -202,6 +210,7 @@
 			children = (
 				E50C7728298F3F6000D7717C /* NunitoSans-Black.ttf */,
 				E50C7726298F3F5500D7717C /* NunitoSans-ExtraBold.ttf */,
+				E538861429B828DB00C38D9A /* NunitoSans-SemiBold.ttf */,
 				E50C7724298F3F2A00D7717C /* NunitoSans-Regular.ttf */,
 			);
 			path = Fonts;
@@ -302,6 +311,7 @@
 				E58DED41292F198400F1EF0C /* ToDoEntryCell.swift */,
 				E5A8B1D6295E535C00D5E684 /* ToDoEntryToolbar.swift */,
 				E58DED45292F19A300F1EF0C /* ToDoViewController.swift */,
+				E538861829B8656E00C38D9A /* ToDoVCLogic.swift */,
 			);
 			path = ToDo;
 			sourceTree = "<group>";
@@ -449,6 +459,7 @@
 				E58DED40292F196E00F1EF0C /* ToDoEntryCell.xib in Resources */,
 				E58DED4B292F19B200F1EF0C /* SMPostCell.xib in Resources */,
 				E548873B2994339300EC4A5B /* AddFriendsCell.xib in Resources */,
+				E538861529B828DB00C38D9A /* NunitoSans-SemiBold.ttf in Resources */,
 				E58245C3296622EF0093E0D5 /* GoogleService-Info.plist in Resources */,
 				E58245CA296633BB0093E0D5 /* Welcome.storyboard in Resources */,
 			);
@@ -458,6 +469,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E538861629B828DB00C38D9A /* NunitoSans-SemiBold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -465,6 +477,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E538861729B828DB00C38D9A /* NunitoSans-SemiBold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -480,6 +493,7 @@
 				E511A00629AFBFF600A00930 /* CustomImageView.swift in Sources */,
 				E5119FFE29AEF6D900A00930 /* Photo Selector Cell.swift in Sources */,
 				E5B6676629B12D690090AB89 /* Photos Auth.swift in Sources */,
+				E538861929B8656E00C38D9A /* ToDoVCLogic.swift in Sources */,
 				E511A00029AEF6EF00A00930 /* Photo Selector Header.swift in Sources */,
 				E58DED4E292F19B200F1EF0C /* UserInfo.swift in Sources */,
 				E5119FF929AEE56700A00930 /* FloatingBarView.swift in Sources */,
@@ -512,6 +526,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E52FBCBF292F18D40053208C /* Issho_NewTests.swift in Sources */,
+				E538861A29B8656E00C38D9A /* ToDoVCLogic.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -521,6 +536,7 @@
 			files = (
 				E52FBCCB292F18D40053208C /* Issho_NewUITestsLaunchTests.swift in Sources */,
 				E52FBCC9292F18D40053208C /* Issho_NewUITests.swift in Sources */,
+				E538861B29B8656E00C38D9A /* ToDoVCLogic.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

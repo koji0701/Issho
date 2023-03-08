@@ -9,6 +9,7 @@
 		<string>NunitoSans-Black.ttf</string>
 		<string>NunitoSans-ExtraBold.ttf</string>
 		<string>NunitoSans-Regular.ttf</string>
+		<string>NunitoSans-SemiBold.ttf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>

@@ -34,26 +34,28 @@ class SMPostCell: UITableViewCell {
     
     @IBOutlet weak var likesButton: UIButton!
     
+    private let unlikedLikeImage = (UIImage(named: "party.popper") ?? UIImage(systemName: "suit.heart")!).withConfiguration(UIImage.SymbolConfiguration(pointSize: 20, weight: .bold, scale: .medium))
+    private let likedLikeImage = (UIImage(named: "party.popper.fill") ?? UIImage(systemName: "suit.heart.fill")!).withConfiguration(UIImage.SymbolConfiguration(pointSize: 20, weight: .bold, scale: .medium))
     
     
     override func awakeFromNib() {
         super.awakeFromNib()
         //profilePicView.clipsToBounds = true
-        username.font = Constants.Fonts.toDoEntrySectionHeaderFont
-        progressPercentage.font = Constants.Fonts.toDoEntrySectionHeaderFont
-        likes.font = Constants.Fonts.toDoEntrySectionHeaderFont
-        streak.font = Constants.Fonts.toDoEntrySectionHeaderFont
+        username.font = Constants.Fonts.smUsernameFont
+        progressPercentage.font = Constants.Fonts.progressBarFont
+        likes.font = Constants.Fonts.smUsernameFont
+        streak.font = Constants.Fonts.smUsernameFont
+        
         likes.textColor = .gray
         streak.textColor = .gray
         
         likesView.addSeparator(at: .top, color: .lightGray, weight: 1.5, insets: UIEdgeInsets(top: 0, left: 35, bottom: 0, right: 35))
-        let symbolConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .bold, scale: .medium)
+        
         
         likesButton.clipsToBounds = true
         
-        
-        let pic = Constants.Images.unlikedLikeImage.withConfiguration(symbolConfig)
-        likesButton.setImage(pic, for: .normal)
+        likesButton.setImage(unlikedLikeImage, for: .normal)
+        likesButton.setImage(likedLikeImage, for: .selected)
         likesButton.tintColor = .gray
         
         
@@ -110,12 +112,12 @@ class SMPostCell: UITableViewCell {
     
     
     private func performLikeAnimation() {
-        //MARK: LIKE ANIMATION NOT DONE
-        //MARK: CONTINUE HERE. ANIMATION STUFF HERE, COPY DOWN THE LIKES ANIMATION FROM THE INSTAGRAM CLONE.
+        
         print("like animation performed")
+        likesButton.setImage(likedLikeImage, for: .normal)
+        likesButton.tintColor = .black
         
-        //contentView.backgroundColor = .yellow//testing color
-        
+        likesButton.pulse()
     }
     
     

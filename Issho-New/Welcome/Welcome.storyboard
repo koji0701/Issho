@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Nu9-hC-VjX">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
@@ -22,7 +21,7 @@
             <objects>
                 <viewController title="Signup" id="RVl-Hw-g52" customClass="SignupViewController" customModule="Issho_New" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ty1-JA-c4k">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7Ew-P5-Hzo" userLabel="WelcomeView">
@@ -96,7 +95,7 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TkF-Pw-7HH" userLabel="LoginSwitchView">
-                                <rect key="frame" x="17" y="778" width="380" height="84"/>
+                                <rect key="frame" x="17" y="516" width="566" height="84"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="I'm already a member, " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FhM-LJ-uip" userLabel="LoginSwitchLabel">
                                         <rect key="frame" x="8" y="29" width="221" height="21"/>
@@ -149,14 +148,14 @@
             <objects>
                 <viewController title="Login" id="H0E-2Q-UJf" customClass="LoginViewController" customModule="Issho_New" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="v2D-E0-OXy">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wqw-kV-Bhn" userLabel="EmailView">
-                                <rect key="frame" x="47" y="244" width="320" height="84"/>
+                                <rect key="frame" x="47" y="196" width="506" height="0.0"/>
                                 <subviews>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="iphone11pro@testing.com" borderStyle="roundedRect" placeholder="Email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="KZo-dr-ik1" userLabel="EmailTextField">
-                                        <rect key="frame" x="41" y="47" width="200" height="38"/>
+                                        <rect key="frame" x="41" y="47" width="386" height="40"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="25"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
@@ -169,10 +168,10 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6AM-KU-wL8" userLabel="PasswordView">
-                                <rect key="frame" x="47" y="384" width="320" height="128"/>
+                                <rect key="frame" x="47" y="252" width="506" height="96"/>
                                 <subviews>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="buddies" borderStyle="roundedRect" placeholder="Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="0LZ-DH-ka7" userLabel="PasswordTextField">
-                                        <rect key="frame" x="41" y="47" width="202" height="39.5"/>
+                                        <rect key="frame" x="41" y="47" width="388" height="7.6666666666666643"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="25"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
@@ -186,10 +185,10 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="L5V-Kw-5Lz" userLabel="LoginView">
-                                <rect key="frame" x="87" y="600" width="240" height="128"/>
+                                <rect key="frame" x="87" y="436" width="426" height="30"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="thu-Hm-6VE" userLabel="Login">
-                                        <rect key="frame" x="87" y="46.5" width="66" height="35"/>
+                                        <rect key="frame" x="180" y="-2.3333333333333144" width="66" height="35"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="Login"/>
                                         <connections>
@@ -237,7 +236,7 @@
                 <navigationController storyboardIdentifier="Welcome" automaticallyAdjustsScrollViewInsets="NO" id="Nu9-hC-VjX" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="VEA-2S-xKG">
-                        <rect key="frame" x="0.0" y="48" width="414" height="44"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -288,7 +287,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="290" height="21"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" ambiguous="YES" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zwS-Qc-TJW" userLabel="Username">
-                                                <rect key="frame" x="0.0" y="0.0" width="174" height="21"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="197.33333333333334" height="21"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="21" id="J91-Xq-ECd"/>
                                                 </constraints>
@@ -297,10 +296,10 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <stackView opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="10" ambiguous="YES" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="vy1-cL-ZhB">
-                                                <rect key="frame" x="182" y="0.0" width="108" height="21"/>
+                                                <rect key="frame" x="205.33333333333331" y="0.0" width="84.666666666666686" height="21"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="100🔥" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DPR-66-KB4" userLabel="Streak">
-                                                        <rect key="frame" x="0.0" y="0.0" width="51.5" height="21"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="51.333333333333336" height="21"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="21" id="cuU-gk-hXl"/>
                                                         </constraints>
@@ -308,8 +307,8 @@
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="253" verticalHuggingPriority="251" ambiguous="YES" text="101👏" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ac5-nn-QHM" userLabel="Likes">
-                                                        <rect key="frame" x="59.5" y="0.0" width="48.5" height="21"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="253" verticalHuggingPriority="251" ambiguous="YES" text="101" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ac5-nn-QHM" userLabel="Likes">
+                                                        <rect key="frame" x="59.333333333333378" y="0.0" width="25.333333333333336" height="21"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="21" id="rB8-lK-De2"/>
                                                         </constraints>
@@ -340,7 +339,7 @@
                                                 <color key="progressTintColor" red="0.47684186699999997" green="0.50480759139999998" blue="1" alpha="0.80499793050000001" colorSpace="custom" customColorSpace="sRGB"/>
                                             </progressView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ban-u1-oTE" userLabel="Percentage">
-                                                <rect key="frame" x="15" y="-0.5" width="41.5" height="21"/>
+                                                <rect key="frame" x="15.000000000000004" y="-0.3333333333333286" width="41.333333333333343" height="21"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="21" id="96p-yo-EYf"/>
                                                 </constraints>
@@ -369,7 +368,7 @@
                                 <rect key="frame" x="0.0" y="120" width="414" height="35"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TT4-vw-9Fj" userLabel="LikesButton">
-                                        <rect key="frame" x="189.5" y="0.0" width="35" height="35"/>
+                                        <rect key="frame" x="189.66666666666666" y="0.0" width="35" height="35"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="35" id="CCh-bH-3hX"/>
                                             <constraint firstAttribute="height" constant="35" id="SMI-xQ-Mf9"/>

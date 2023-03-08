@@ -76,7 +76,7 @@ struct Constants {
             "🎯",
             "🪀",
             "🪁",
-            "🎱",
+            
             "🔮",
             "🪄",
             "🧿",
@@ -236,9 +236,9 @@ struct Constants {
             "🌸",
             "💮",
             "🏵️",
-
+            
             "🌹",
-            "🥀",
+            "🎱",
             "🌺",
             "🌻",
             "🌼",
@@ -299,10 +299,10 @@ struct Constants {
         static let navigationBarTitleFont = UIFont(name: "NunitoSans-ExtraBold", size: 23)
         
         
+        static let progressBarFont = UIFont(name: "NunitoSans-ExtraBold", size: 20)
+        
+        static let smUsernameFont = UIFont(name: "NunitoSans-ExtraBold", size: 18)
         
     }
     
-    struct Images {
-        static let unlikedLikeImage = UIImage(named: "party.popper") ?? UIImage(systemName: "suit.heart")!
-    }
 }

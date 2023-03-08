@@ -42,6 +42,7 @@ class ToDoViewController: UIViewController {
     
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
         print("navigation controller ", navigationController)
         navigationController?.setNavigationBarHidden(true, animated: true)
         tabBarController?.tabBar.isHidden = true
@@ -56,7 +57,7 @@ class ToDoViewController: UIViewController {
         var info = notification.object as? UserInfo
         let likesCount = info?.likesCount as? Int ?? 0
         let streak = info?.streak as? Int ?? 0
-        likesLabel.text = String(likesCount) + "👏"
+        likesLabel.text = String(likesCount) + "🎉"
         streakLabel.text = String(streak) + "🔥"
         
         
@@ -90,7 +91,7 @@ class ToDoViewController: UIViewController {
         percentageLabel.font = Constants.Fonts.toDoEntrySectionHeaderFont
         greeting.font = Constants.Fonts.navigationBarTitleFont
         streakLabel.text = "0🔥"
-        likesLabel.text = "0👏"
+        likesLabel.text = "0"
         
         setGreetingMessage()
         
@@ -127,7 +128,7 @@ extension ToDoViewController: UITableViewDataSource, UITableViewDelegate {
         
         
         var sectionTitle = ""
-        
+        /*
         sectionTitle = {
             let year2022 = calendar.date(from: DateComponents(year: 2022))!
             let numberOfDaysSince2022 = calendar.dateComponents([.day], from: year2022, to: date).day!
@@ -137,7 +138,7 @@ extension ToDoViewController: UITableViewDataSource, UITableViewDelegate {
             return Constants.ToDo.emojis[adjustedNum] + " "
             //days since particular date with the modulo
             //then put emojis
-        }()
+        }()*/
         if (calendar.isDate(Date(), equalTo: date, toGranularity: .day)) {
             
             sectionTitle += "TODAY"
@@ -193,13 +194,16 @@ extension ToDoViewController: UITableViewDataSource, UITableViewDelegate {
 
             let startIndex = text.distance(from: text.startIndex, to: rangeOfSecondSpace)
 
-            //attributedString.addAttribute(NSAttributedString.Key.font, value: Constants.Fonts.toDoEntrySectionHeaderFont, range: NSRange(location: 0, length: startIndex))
             
-            //attributedString.addAttribute(NSAttributedString.Key.font, value: UIFont.boldSystemFont(ofSize: 18), range: NSRange(location: startIndex, length: text.count - startIndex + 1))
             
-            attributedString.addAttribute(NSAttributedString.Key.font, value: Constants.Fonts.toDoEntrySectionHeaderFont, range: NSRange(location: 0, length: text.count+1))
+            //MARK: THIS IS THE EMOJI THING
+            //attributedString.addAttribute(NSAttributedString.Key.font, value: Constants.Fonts.toDoEntrySectionHeaderFont, range: NSRange(location: 0, length: text.count+1))
             
-            attributedString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.gray, range: NSRange(location: startIndex, length: text.count - startIndex + 1))
+            //attributedString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.gray, range: NSRange(location: startIndex, length: text.count - startIndex + 1))
+            
+            attributedString.addAttribute(NSAttributedString.Key.font, value: Constants.Fonts.toDoEntrySectionHeaderFont, range: NSRange(location: 0, length: text.count))
+            
+            attributedString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.gray, range: NSRange(location: startIndex, length: text.count - startIndex ))
 
             
             myLabel.attributedText = attributedString
@@ -333,6 +337,8 @@ extension ToDoViewController: ToDoEntryDelegate {
         
         
         let totalIndexRow = returnPositionForThisIndexPath(indexPath: indexPath, insideThisTable: tableView)
+        
+        
         if (cell.toDoEntry?.isCurrentTask == true) {//if deleting a current task, then make sure to set it to false and update the is working
             entries[totalIndexRow].isCurrentTask = false
             updateIsWorking()
