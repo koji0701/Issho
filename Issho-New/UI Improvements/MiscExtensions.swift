@@ -22,6 +22,7 @@ extension UIView {
         let view = UIView()
         view.backgroundColor = color
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 10
         self.addSubview(view)
         
         switch position {

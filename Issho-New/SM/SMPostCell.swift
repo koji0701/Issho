@@ -39,21 +39,24 @@ class SMPostCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         //profilePicView.clipsToBounds = true
+        username.font = Constants.Fonts.toDoEntrySectionHeaderFont
+        progressPercentage.font = Constants.Fonts.toDoEntrySectionHeaderFont
+        likes.font = Constants.Fonts.toDoEntrySectionHeaderFont
+        streak.font = Constants.Fonts.toDoEntrySectionHeaderFont
+        likes.textColor = .gray
+        streak.textColor = .gray
         
-        likesView.addSeparator(at: .top, color: .lightGray, weight: 1.5, insets: UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20))
+        likesView.addSeparator(at: .top, color: .lightGray, weight: 1.5, insets: UIEdgeInsets(top: 0, left: 35, bottom: 0, right: 35))
         let symbolConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .bold, scale: .medium)
         
         likesButton.clipsToBounds = true
-
-        /*let pic = UIImage(systemNam: "party.popper")!.withConfiguration(symbolConfig)
-        likesButton.setImage(pic, for: .normal)*/
         
-        if let pic = UIImage(systemName: "party.popper")?.withConfiguration(symbolConfig)  {
-            likesButton.setImage(pic, for: .normal)
-        }
-        else {
-            print("could not find pic")
-        }
+        
+        let pic = Constants.Images.unlikedLikeImage.withConfiguration(symbolConfig)
+        likesButton.setImage(pic, for: .normal)
+        likesButton.tintColor = .gray
+        
+        
 
         profilePictureTapView.isUserInteractionEnabled = true
         username.isUserInteractionEnabled = true
@@ -78,7 +81,7 @@ class SMPostCell: UITableViewCell {
         backgroundColor = .clear // very important
         layer.masksToBounds = false
         layer.shadowOpacity = 0.3
-        layer.shadowRadius = 19
+        layer.shadowRadius = 14
         layer.shadowOffset = CGSize(width: 0, height: 0)
         layer.shadowColor = UIColor.black.cgColor
         // add corner radius on `contentView`

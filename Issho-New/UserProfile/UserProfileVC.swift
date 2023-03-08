@@ -46,7 +46,7 @@ class UserProfileVC: UIViewController {
             self.setUpUser()
         }
         button.isEnabled = true
-        navigationController?.setNavigationBarHidden(false, animated: true)
+        //navigationController?.setNavigationBarHidden(false, animated: true)
         tabBarController?.tabBar.isHidden = true
         
         navigationController?.navigationBar.backItem?.title = ""
@@ -58,6 +58,7 @@ class UserProfileVC: UIViewController {
     private func setUpUser() {
         
         guard var user = user else {
+            navigationController?.setNavigationBarHidden(true, animated: false)
             let username = User.shared().userInfo["username"] as? String ?? "Username"
             let streak = User.shared().userInfo["streak"] as? String ?? "0"
             streakLabel.text = streak
@@ -73,6 +74,8 @@ class UserProfileVC: UIViewController {
             return
             
         }
+        navigationController?.setNavigationBarHidden((user.uid != User.shared().uid), animated: false)
+        
         profilePicImage.loadImage(urlString: user.image)
         
         //set all the labels

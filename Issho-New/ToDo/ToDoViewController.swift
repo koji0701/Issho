@@ -22,8 +22,9 @@ class ToDoViewController: UIViewController {
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext //context globally for this
     
+    @IBOutlet weak var greeting: UILabel!
     
-    @IBOutlet weak var ToDoTableView: UITableView!
+    @IBOutlet weak var tableView: UITableView!
     
     
     @IBOutlet weak var headerView: UIView!
@@ -46,8 +47,6 @@ class ToDoViewController: UIViewController {
         tabBarController?.tabBar.isHidden = true
         navigationController?.navigationBar.backItem?.title = ""
         navigationController?.navigationBar.barTintColor = .clear
-        navigationController?.navigationBar.isHidden = true
-        navigationController?.navigationBar.isTranslucent = true
         
     }
     
@@ -71,13 +70,12 @@ class ToDoViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(userUpdate(_:)),name: NSNotification.Name ("userInfoUpdated"), object: nil)
         
         
-        ToDoTableView.dataSource = self
-        ToDoTableView.delegate = self
+        tableView.dataSource = self
+        tableView.delegate = self
         
-        navigationController?.navigationBar.isHidden = true
-        ToDoTableView.register(UINib(nibName: Constants.ToDo.nibName, bundle: nil), forCellReuseIdentifier: Constants.ToDo.reuseIdentifier)
+        tableView.register(UINib(nibName: Constants.ToDo.nibName, bundle: nil), forCellReuseIdentifier: Constants.ToDo.reuseIdentifier)
 
-        ToDoTableView.separatorStyle = .none
+        tableView.separatorStyle = .none
         
         
         loadItems()
@@ -90,8 +88,11 @@ class ToDoViewController: UIViewController {
         streakLabel.font = Constants.Fonts.navigationBarTitleFont
         likesLabel.font = Constants.Fonts.navigationBarTitleFont
         percentageLabel.font = Constants.Fonts.toDoEntrySectionHeaderFont
+        greeting.font = Constants.Fonts.navigationBarTitleFont
         streakLabel.text = "0🔥"
         likesLabel.text = "0👏"
+        
+        setGreetingMessage()
         
         progressBar.layer.cornerRadius = 8.0 // adjust the value to suit your needs
         progressBar.layer.masksToBounds = true
@@ -234,7 +235,7 @@ extension ToDoViewController: UITableViewDataSource, UITableViewDelegate {
         }
         
         if (sectionEntries.count == 0) {
-            let index = returnPositionForThisIndexPath(indexPath: IndexPath(row: sectionEntries.count, section: section), insideThisTable: ToDoTableView)
+            let index = returnPositionForThisIndexPath(indexPath: IndexPath(row: sectionEntries.count, section: section), insideThisTable: tableView)
             let newToDoEntry = ToDoEntry(context: self.context)
             initializeToDoEntry(newEntry: newToDoEntry, order: 0, isPlaceholder: true)
             entries.insert(newToDoEntry, at: index)
@@ -251,7 +252,7 @@ extension ToDoViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.ToDo.reuseIdentifier, for: indexPath) as! ToDoEntryCell
-        let totalIndexRow = returnPositionForThisIndexPath(indexPath: indexPath, insideThisTable: ToDoTableView)
+        let totalIndexRow = returnPositionForThisIndexPath(indexPath: indexPath, insideThisTable: tableView)
         
         
         cell.toDoEntry = entries[totalIndexRow]
@@ -294,7 +295,7 @@ extension ToDoViewController: UITableViewDataSource, UITableViewDelegate {
         }
         updateUniqueDates()
         //updateProgress()
-        ToDoTableView.reloadData()
+        tableView.reloadData()
         
     }
     
@@ -326,12 +327,12 @@ extension ToDoViewController: ToDoEntryDelegate {
     
     //deletion of todo cell
     func checkBoxPressed(in cell: ToDoEntryCell, deletion: Bool) {
-        guard let indexPath = ToDoTableView.indexPath(for: cell) else {
+        guard let indexPath = tableView.indexPath(for: cell) else {
                 return
             }
         
         
-        let totalIndexRow = returnPositionForThisIndexPath(indexPath: indexPath, insideThisTable: ToDoTableView)
+        let totalIndexRow = returnPositionForThisIndexPath(indexPath: indexPath, insideThisTable: tableView)
         if (cell.toDoEntry?.isCurrentTask == true) {//if deleting a current task, then make sure to set it to false and update the is working
             entries[totalIndexRow].isCurrentTask = false
             updateIsWorking()
@@ -374,7 +375,7 @@ extension ToDoViewController: ToDoEntryDelegate {
         
         
         
-        guard let indexPath = ToDoTableView.indexPath(for: cell) else {
+        guard let indexPath = tableView.indexPath(for: cell) else {
             print("error in the createNewToDoEntryCell func in the ToDoViewController")
             return
         }
@@ -403,7 +404,7 @@ extension ToDoViewController: ToDoEntryDelegate {
         
         
         if (isPlaceholder == true) {
-            let totalIndexPath = returnPositionForThisIndexPath(indexPath: indexPath, insideThisTable: ToDoTableView)
+            let totalIndexPath = returnPositionForThisIndexPath(indexPath: indexPath, insideThisTable: tableView)
             entries[totalIndexPath].isPlaceholder = false
             if (Constants.Settings.showCompletedEntries == true) {
                 initializeToDoEntry(newEntry: newToDoEntry, date: date, order: order - 1, isPlaceholder: true)
@@ -427,7 +428,7 @@ extension ToDoViewController: ToDoEntryDelegate {
         
         self.saveItems()
         
-        guard let nextCell = ToDoTableView.cellForRow(at: nextIndexPath) as? ToDoEntryCell else {
+        guard let nextCell = tableView.cellForRow(at: nextIndexPath) as? ToDoEntryCell else {
             print("error in the creating a new todoentry creating the next cell cellforrow")
             return
         }
@@ -469,6 +470,26 @@ extension ToDoViewController: ToDoEntryDelegate {
 }
 
 extension ToDoViewController {//all helper funcs for organization
+    
+    private func setGreetingMessage() {
+        let calendar = Calendar.current
+        let hour = calendar.component(.hour, from: Date())
+        let messages = ["🌞 Good morning!", "🌅 Rise and shine!", "👋 Hello there!", "☀️ Good afternoon!", "👋 Hi there!", "🌃 Good evening!", "🌙 Sweet dreams!"]
+        switch hour {
+            case 4..<12:
+            greeting.text = messages[Int.random(in: 0...2)]
+            case 12..<18:
+            greeting.text = messages[Int.random(in: 3...4)]
+            case 18..<24:
+            greeting.text = messages[Int.random(in: 5...6)]
+            case 0..<4:
+            greeting.text = messages[Int.random(in: 5...6)]
+            
+            default:
+            greeting.text = "👋 Hello there!"
+        }
+        
+    }
     
     private func updateIsWorking() {
         let currentTasks = entries.filter { $0.isCurrentTask == true }

@@ -14,9 +14,6 @@ class SMViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
     
-    @IBAction func addFriendsButtonClicked(_ sender: Any) {
-        print("add friends button clicked")
-    }
     
     let db = Firestore.firestore()
     
@@ -40,7 +37,7 @@ class SMViewController: UIViewController {
                         if let streak = data["streak"] as? Int, let isWorking = data["isWorking"] as? Bool, let lastUpdated = data["lastUpdated"] as? Timestamp, let username = data["username"] as? String, let progress = data["progress"] as? Float, let likes = data["likes"] as? [String], let friends = data["friends"] as? [String], let friendReq = data["friendRequests"], let image = data["image"] {
                             print("got past the if let conditions")
                             let isLiked = likes.contains(User.shared().uid)//if likes contains uid, true its been liked
-                            let dict: [String: Any] = ["streak": streak, "isWorking": isWorking, "lastUpdated": lastUpdated.dateValue(), "username": username, "progress": progress, "isLiked": isLiked, "friends": friends, "friendRequests": friendReq, "image": image]
+                            let dict: [String: Any] = ["streak": streak, "isWorking": isWorking, "lastUpdated": lastUpdated.dateValue(), "username": username, "progress": progress, "isLiked": isLiked, "friends": friends, "friendRequests": friendReq, "image": image, "likes": likes]
                             
                             
                             let newPost = UserInfo(uid: doc.documentID, dictionary: dict)
@@ -61,12 +58,15 @@ class SMViewController: UIViewController {
         posts.sort {
             var mutableFirst = $0
             var mutableSecond = $1
+        
             if (mutableFirst.isLiked != mutableSecond.isLiked) {
-                return mutableFirst.isLiked
+                return mutableSecond.isLiked
             }
             else {
                 return mutableFirst.lastUpdated > mutableSecond.lastUpdated
             }
+            
+            
             
         }
         
@@ -94,7 +94,6 @@ class SMViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        navigationController?.navigationBar.isHidden = true
         fetchPosts()
         tableView.dataSource = self
         tableView.register(UINib(nibName: Constants.SM.nibName, bundle: nil), forCellReuseIdentifier: "SMReusablePostCell")
@@ -102,10 +101,9 @@ class SMViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        navigationController?.setNavigationBarHidden(true, animated: true)
+        navigationController?.setNavigationBarHidden(false, animated: false)
         tabBarController?.tabBar.isHidden = true
         navigationController?.navigationBar.backItem?.title = ""
-        navigationController?.navigationBar.barTintColor = .clear
 
 
     }
@@ -114,6 +112,7 @@ class SMViewController: UIViewController {
         if let userProfileVC = segue.destination as? UserProfileVC {
             userProfileVC.user = sender as? UserInfo
             print("userprofilevc user: ", userProfileVC.user)
+            //navigationController?.setNavigationBarHidden(false, animated: false)
         }
     }
     
@@ -140,7 +139,8 @@ extension SMViewController: UITableViewDataSource, UITableViewDelegate {
         
         
         cell.likesView.isHidden = posts[indexPath.row].isLiked
-        
+        print(posts[indexPath.row])
+        print(posts[indexPath.row].isLiked)
         
         cell.profilePicture.loadImage(urlString: posts[indexPath.row].image)
         cell.streak.text = String(posts[indexPath.row].streak) + "🔥"

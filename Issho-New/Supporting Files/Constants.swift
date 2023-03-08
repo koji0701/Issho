@@ -302,5 +302,7 @@ struct Constants {
         
     }
     
-    
+    struct Images {
+        static let unlikedLikeImage = UIImage(named: "party.popper") ?? UIImage(systemName: "suit.heart")!
+    }
 }

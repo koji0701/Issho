@@ -36,7 +36,7 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
 
             textView.text = toDoEntry?.text
 
-            //MARK: CONTINUE HERE. DETERMINE THE FONTS, THEN CHANGE THE FONTS. ALSO KEEP FONTS IN THE CONSTANTS FILE
+            
             if (toDoEntry?.isChecked == true) {
                 checkboxButton.setImage(UIImage(systemName: "checkmark.circle.fill"), for: .normal)
                 print("ischecked is true")
@@ -139,18 +139,12 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
         textView.textContainer.widthTracksTextView = true
         //textView.textContainer.size = textView.frame.size
         
+        addButton.tintColor = .darkGray
         
     }
     
     
-    override func layoutSubviews() {//round the edges
-        super.layoutSubviews()
-        contentView.layer.cornerRadius = 10
-        contentView.clipsToBounds = true
-        
-        
-
-    }
+    
     
     
     

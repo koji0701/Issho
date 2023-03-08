@@ -16,7 +16,7 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     
     @IBAction func loginButtonPressed(_ sender: Any) {
-        
+        print("login")
         if let email = emailTextField.text, let password = passwordTextField.text {
             Auth.auth().signIn(withEmail: email, password: password) { [weak self] authResult, error in
                 guard let strongSelf = self else { return }

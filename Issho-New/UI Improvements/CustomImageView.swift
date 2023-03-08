@@ -79,8 +79,6 @@ return}
         super.awakeFromNib()
         layer.cornerRadius = layer.bounds.height / 2
         layer.masksToBounds = true
-        layer.borderWidth = 1.5
-        layer.borderColor = UIColor.lightGray.cgColor
     }
 
 }

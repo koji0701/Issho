@@ -13,8 +13,9 @@ class CustomNavigationBar: UINavigationBar {
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        isTranslucent = true
-        
+        //isTranslucent = true
+        isOpaque = true
+        //MARK: Contiue FIND OUT WHY THE TOP BAR ISNT APPEARING SOMETIMES
         backIndicatorImage = UIImage(named: "back")
         backIndicatorTransitionMaskImage = UIImage(named: "back")
         titleTextAttributes = [
