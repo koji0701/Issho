@@ -9,10 +9,11 @@ import Foundation
 import UIKit
 import FirebaseFirestore
 
+
+
 class UserProfileVC: UIViewController {
     
     var user: UserInfo!
-    
     
     @IBOutlet weak var usernameLabel: UILabel!
     @IBOutlet weak var friendsCountLabel: UILabel!
@@ -77,6 +78,8 @@ class UserProfileVC: UIViewController {
             return
             
         }
+
+        button.removeBadge()
         
         profilePicImage.loadImage(urlString: user.image)
         
@@ -98,6 +101,13 @@ class UserProfileVC: UIViewController {
         }
         else if (user.uid == User.shared().uid) {
             button.setTitle("Add Friends", for: .normal)
+            
+            //also set up the badge if necessary
+            let friendReqs = User.shared().userInfo["friendRequests"] as! [String]
+            
+            if (friendReqs.count > 0) {
+                button.addBadge(number: friendReqs.count)
+            }
         }
         else {
             print("making it follow")

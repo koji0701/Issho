@@ -9,12 +9,13 @@ import UIKit
 import IQKeyboardManagerSwift
 
 protocol ToDoEntryDelegate {
-    func checkBoxPressed(in cell: ToDoEntryCell, deletion: Bool)
-    func createNewToDoEntryCell(in cell: ToDoEntryCell, makeFirstResponder: Bool)
+    func checkBoxPressed(in cell: ToDoEntryCell, deletionInContext: Bool)
+    func createNewToDoEntryCell(in cell: ToDoEntryCell)
     func commandOrderEntries()
     //toolbar stuff
     func updateDate(in cell: ToDoEntryCell, newDate: Date)
     func updateIsCurrentTask(in cell: ToDoEntryCell, isCurrentTask: Bool)
+    func updateText(in cell: ToDoEntryCell, newText: String)
 }
 
 
@@ -65,7 +66,7 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
     
     
     
-    var textViewCallBack: ((String) -> ())?
+    //var textViewCallBack: ((String) -> ())?
     lazy var toolbar: ToDoEntryToolbar! = ToDoEntryToolbar(setDate: toDoEntry?.date ?? Date(), isCurrentTask: toDoEntry?.isCurrentTask ?? false) {
         didSet {
             print("toolbar set")
@@ -151,7 +152,22 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
     
     
     @IBAction func checkboxPressed(_ sender: Any) {
-        self.toDoEntryDelegate?.checkBoxPressed(in: self, deletion: false)
+        
+        if textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
+            .trimmingCharacters(in: .punctuationCharacters)
+            .trimmingCharacters(in: .symbols).isEmpty {
+            
+            //MARK: account for double deletion situation. When ending editing and pressing at the same time, double deletion
+            if !textView.isFirstResponder {
+                self.toDoEntryDelegate?.checkBoxPressed(in: self, deletionInContext: true)
+            }
+            
+        }
+        else {
+            self.toDoEntryDelegate?.checkBoxPressed(in: self, deletionInContext: false)
+        }
+        
+        
         
     }
     
@@ -190,8 +206,9 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
     
     func textViewDidEndEditing(_ textView: UITextView) {
 
-        
-        if (textView.text == "" || textView.text == "⚡️: ") {//if textview is still blank after done editing
+        if textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
+            .trimmingCharacters(in: .punctuationCharacters)
+            .trimmingCharacters(in: .symbols).isEmpty {//if textview is still blank after done editing
             
             if (toDoEntry?.isPlaceholder == true) {//if its the placeholder cell, go back to the "add" phase
                 addButton.isHidden = false
@@ -208,29 +225,31 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
                         IQKeyboardManager.shared.goPrevious()
                     }**/
                     IQKeyboardManager.shared.goPrevious()
+                    
                     resignedOnBackspace = false
                 }
                 
-                self.toDoEntryDelegate?.checkBoxPressed(in: self, deletion: true)//delete the cell if its still blank after editing
+                self.toDoEntryDelegate?.checkBoxPressed(in: self, deletionInContext: true)
             }
         }
         else {
             if (resignedOnEnter) {
                 if (toDoEntry?.isPlaceholder == false) {
-                    self.toDoEntryDelegate?.createNewToDoEntryCell(in: self, makeFirstResponder: true)
+                    self.toDoEntryDelegate?.createNewToDoEntryCell(in: self)
                     resignedOnEnter = false
                 }
                 else if (Constants.Settings.showCompletedEntries == false) {
-                    self.toDoEntryDelegate?.createNewToDoEntryCell(in: self, makeFirstResponder: true)
+                    self.toDoEntryDelegate?.createNewToDoEntryCell(in: self)
                     resignedOnEnter = false
                 }
                 else if (Constants.Settings.showCompletedEntries == true) {
-                    self.toDoEntryDelegate?.createNewToDoEntryCell(in: self, makeFirstResponder: true)
+                    self.toDoEntryDelegate?.createNewToDoEntryCell(in: self)
                     IQKeyboardManager.shared.goPrevious()
                     resignedOnEnter = false
                 }
             }
             else {
+                
                 toDoEntryDelegate?.commandOrderEntries()//if theres stuff in there still, but i gesture tap off then re order entries. 
             }
             
@@ -244,7 +263,8 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
         
         let str = textView.text ?? ""
         print(Constants.Fonts.toDoEntryCellFont?.lineHeight)
-        textViewCallBack?(str)
+        //textViewCallBack?(str)
+        toDoEntryDelegate?.updateText(in: self, newText: str)
     }
     
     private var resignedOnBackspace = false

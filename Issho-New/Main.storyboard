@@ -194,25 +194,25 @@
                                             <rect key="frame" x="15" y="51.999999999999993" width="384" height="82.333333333333314"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pfB-6f-1s2" userLabel="horiz top stack">
-                                                    <rect key="frame" x="0.0" y="0.0" width="384" height="20.333333333333332"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="384" height="40.333333333333336"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Good Morning!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kWc-Kn-Yac" userLabel="Greeting">
-                                                            <rect key="frame" x="0.0" y="0.0" width="290.66666666666669" height="20.333333333333332"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="290.66666666666669" height="40.333333333333336"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="8Em-I4-60H" userLabel="Streaks+likes stack">
-                                                            <rect key="frame" x="290.66666666666669" y="0.0" width="93.333333333333314" height="20.333333333333332"/>
+                                                            <rect key="frame" x="290.66666666666669" y="0.0" width="93.333333333333314" height="40.333333333333336"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Streak" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sl4-FF-SqK" userLabel="Streak">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="49" height="20.333333333333332"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="49" height="40.333333333333336"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                     <nil key="textColor"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Likes" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rNE-qY-S1P" userLabel="Likes">
-                                                                    <rect key="frame" x="54" y="0.0" width="39.333333333333343" height="20.333333333333332"/>
+                                                                    <rect key="frame" x="54" y="0.0" width="39.333333333333343" height="40.333333333333336"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                     <nil key="textColor"/>
                                                                     <nil key="highlightedColor"/>
@@ -235,17 +235,25 @@
                                                     </constraints>
                                                 </stackView>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Swe-tX-ps0" userLabel="ProgressView">
-                                                    <rect key="frame" x="0.0" y="37.333333333333329" width="384" height="45"/>
+                                                    <rect key="frame" x="0.0" y="57.333333333333329" width="384" height="25"/>
                                                     <subviews>
-                                                        <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="68M-v8-6uS" userLabel="ProgressBar">
-                                                            <rect key="frame" x="0.0" y="10" width="384" height="25"/>
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="l4m-bH-woa" userLabel="CustomProgressBar" customClass="GradientHorizontalProgressBar" customModule="Issho_New" customModuleProvider="target">
+                                                            <rect key="frame" x="0.0" y="0.0" width="384" height="25"/>
+                                                            <color key="backgroundColor" systemColor="opaqueSeparatorColor"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="height" constant="25" id="a9j-W1-kPj"/>
+                                                                <constraint firstAttribute="height" constant="25" id="CvZ-ZQ-e82"/>
                                                             </constraints>
-                                                            <color key="progressTintColor" red="0.47684186699999997" green="0.50480759139999998" blue="1" alpha="0.80499793046357615" colorSpace="custom" customColorSpace="sRGB"/>
-                                                        </progressView>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="color" keyPath="gradientColor">
+                                                                    <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                                <userDefinedRuntimeAttribute type="color" keyPath="color">
+                                                                    <color key="value" red="0.47684186699999997" green="0.50480759139999998" blue="1" alpha="0.80499793050000001" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                </userDefinedRuntimeAttribute>
+                                                            </userDefinedRuntimeAttributes>
+                                                        </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9jk-sx-6m6" userLabel="Percentage">
-                                                            <rect key="frame" x="15.000000000000004" y="12" width="41.333333333333343" height="21"/>
+                                                            <rect key="frame" x="15.000000000000004" y="2" width="41.333333333333343" height="21"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="21" id="lgp-ZJ-6c7"/>
                                                             </constraints>
@@ -256,16 +264,18 @@
                                                     </subviews>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="trailing" secondItem="68M-v8-6uS" secondAttribute="trailing" id="1v3-dE-7hU"/>
-                                                        <constraint firstItem="68M-v8-6uS" firstAttribute="centerY" secondItem="Swe-tX-ps0" secondAttribute="centerY" id="8nS-Cu-jya"/>
-                                                        <constraint firstItem="68M-v8-6uS" firstAttribute="leading" secondItem="Swe-tX-ps0" secondAttribute="leading" id="Ije-5i-JxV"/>
+                                                        <constraint firstAttribute="height" constant="25" id="4Dj-jF-25Q"/>
+                                                        <constraint firstItem="l4m-bH-woa" firstAttribute="leading" secondItem="Swe-tX-ps0" secondAttribute="leading" id="6Bx-xo-WQ4"/>
+                                                        <constraint firstAttribute="trailing" secondItem="l4m-bH-woa" secondAttribute="trailing" id="nl0-Kf-ZaI"/>
                                                         <constraint firstItem="9jk-sx-6m6" firstAttribute="centerY" secondItem="Swe-tX-ps0" secondAttribute="centerY" id="uNt-og-n8l"/>
                                                         <constraint firstItem="9jk-sx-6m6" firstAttribute="leading" secondItem="Swe-tX-ps0" secondAttribute="leading" constant="15" id="xgV-lC-m72"/>
+                                                        <constraint firstItem="l4m-bH-woa" firstAttribute="centerY" secondItem="Swe-tX-ps0" secondAttribute="centerY" id="y7v-3v-0xN"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstAttribute="bottom" secondItem="Swe-tX-ps0" secondAttribute="bottom" id="Ieg-yc-3ka"/>
+                                                <constraint firstItem="Swe-tX-ps0" firstAttribute="centerY" secondItem="Sw9-yY-y0Q" secondAttribute="centerY" id="KvX-qB-hkS"/>
                                                 <constraint firstAttribute="trailing" secondItem="pfB-6f-1s2" secondAttribute="trailing" id="W7b-Q0-1oF"/>
                                                 <constraint firstItem="Swe-tX-ps0" firstAttribute="centerX" secondItem="Sw9-yY-y0Q" secondAttribute="centerX" id="eFu-ir-BUf"/>
                                                 <constraint firstItem="pfB-6f-1s2" firstAttribute="leading" secondItem="Sw9-yY-y0Q" secondAttribute="leading" id="i6r-PA-mfe"/>
@@ -296,11 +306,11 @@
                     <nil key="simulatedTopBarMetrics"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="customProgressBar" destination="l4m-bH-woa" id="XoM-no-9yD"/>
                         <outlet property="greeting" destination="kWc-Kn-Yac" id="818-cW-IoY"/>
                         <outlet property="headerView" destination="wXt-9J-wQh" id="JfU-9r-NO0"/>
                         <outlet property="likesLabel" destination="rNE-qY-S1P" id="Ldg-jr-pRn"/>
                         <outlet property="percentageLabel" destination="9jk-sx-6m6" id="kWY-B5-Kmb"/>
-                        <outlet property="progressBar" destination="68M-v8-6uS" id="8ME-zo-Df2"/>
                         <outlet property="streakLabel" destination="sl4-FF-SqK" id="jHH-cs-IK8"/>
                         <outlet property="tableView" destination="7np-CV-0J4" id="na8-qr-MX1"/>
                     </connections>
@@ -658,6 +668,9 @@
     <resources>
         <image name="pencil.circle.fill" catalog="system" width="128" height="123"/>
         <image name="settings" width="250.66667175292969" height="250.66667175292969"/>
+        <systemColor name="opaqueSeparatorColor">
+            <color red="0.77647058823529413" green="0.77647058823529413" blue="0.78431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

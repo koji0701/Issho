@@ -9,12 +9,19 @@ import UIKit
 import CoreData
 import FirebaseFirestore
 import FirebaseAuth
+import IQKeyboardManagerSwift
 
 
 class ToDoViewController: UIViewController {
 
     var entries = [ToDoEntry]()
-    var progress: Float = 0.0
+    var progress: Float = 0.0 {
+        didSet {
+            customProgressBar.progress = CGFloat(progress)
+        }
+    }
+    //MARK: There are some issues with the pulsing and the flow animation with the current. its mostly with the current working thing. when date change, it doesn't update correctly. make sure that this updates correctly. also, switch current from a text base thing to a switching the ui of the checkbox.
+    //error num 2: error for the placeholder where if the placeholder has text in it, it just resets. needs to make a new one. this also happens with the current
     
     
     
@@ -32,10 +39,10 @@ class ToDoViewController: UIViewController {
     @IBOutlet weak var streakLabel: UILabel!
     
     
+    @IBOutlet weak var customProgressBar: GradientHorizontalProgressBar!
     
     @IBOutlet weak var likesLabel: UILabel!
     
-    @IBOutlet weak var progressBar: UIProgressView!
     
     @IBOutlet weak var percentageLabel: UILabel!
     
@@ -78,8 +85,8 @@ class ToDoViewController: UIViewController {
 
         tableView.separatorStyle = .none
         
-        
         loadItems()
+        orderEntries()
         
         updateUniqueDates()
         initProgressNoFirestore()
@@ -94,9 +101,10 @@ class ToDoViewController: UIViewController {
         likesLabel.text = "0"
         
         setGreetingMessage()
+        initProgressBarFlowAnimation()
         
-        progressBar.layer.cornerRadius = 8.0 // adjust the value to suit your needs
-        progressBar.layer.masksToBounds = true
+        
+        
     }
     
     
@@ -238,13 +246,21 @@ extension ToDoViewController: UITableViewDataSource, UITableViewDelegate {
             return sectionEntries.count
         }
         
-        if (sectionEntries.count == 0) {
-            let index = returnPositionForThisIndexPath(indexPath: IndexPath(row: sectionEntries.count, section: section), insideThisTable: tableView)
+        if (sectionEntries.count == 0 || !sectionEntries.contains(where: {$0.isPlaceholder == true})) {
+            let index = returnPositionForThisIndexPath(indexPath: IndexPath(row: sectionEntries.count, section: section))
             let newToDoEntry = ToDoEntry(context: self.context)
             initializeToDoEntry(newEntry: newToDoEntry, order: 0, isPlaceholder: true)
-            entries.insert(newToDoEntry, at: index)
+            
+            if (Constants.Settings.showCompletedEntries == true) {
+                entries.insert(newToDoEntry, at: 0)
+            }
+            else {
+                entries.insert(newToDoEntry, at: index)
+            }
             resetOrder()
             saveItems()
+            tableView.reloadData()
+
             return sectionEntries.count
         }
         
@@ -256,7 +272,7 @@ extension ToDoViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.ToDo.reuseIdentifier, for: indexPath) as! ToDoEntryCell
-        let totalIndexRow = returnPositionForThisIndexPath(indexPath: indexPath, insideThisTable: tableView)
+        let totalIndexRow = returnPositionForThisIndexPath(indexPath: indexPath)
         
         
         cell.toDoEntry = entries[totalIndexRow]
@@ -266,19 +282,26 @@ extension ToDoViewController: UITableViewDataSource, UITableViewDelegate {
         cell.textView.font = Constants.Fonts.toDoEntryCellFont
 
         // set the closure
+        /*
         weak var tv = tableView
+        
         cell.textViewCallBack = { [weak self] str in
-            guard let self = self, let tv = tv else { return }
+            guard let self = self, let tv = tv, let iP = tableView.indexPath(for: cell) else { return }
             
             // update our data with the edited string
-            let totalIndexRow = self.returnPositionForThisIndexPath(indexPath: indexPath, insideThisTable: tv)
-            self.entries[totalIndexRow].text = str//
-            // we don't need to do anything else here
+            let totalIndexRow = self.returnPositionForThisIndexPath(indexPath: iP)
+            if  totalIndexRow < self.entries.count - 1 {//safety func
+                self.entries[totalIndexRow].text = str//
+                // we don't need to do anything else here
+                print("saving the new text")
+            }
             // this will force the table to recalculate row heights
+
             tv.beginUpdates()
             tv.endUpdates()//height recalculation
             
-        }
+            
+        }*/
         return cell
 
     }
@@ -299,7 +322,7 @@ extension ToDoViewController: UITableViewDataSource, UITableViewDelegate {
         }
         updateUniqueDates()
         //updateProgress()
-        tableView.reloadData()
+        //tableView.reloadData()
         
     }
     
@@ -324,60 +347,139 @@ extension ToDoViewController: UITableViewDataSource, UITableViewDelegate {
 
 //MARK: TODOENTRY DELEGATE
 extension ToDoViewController: ToDoEntryDelegate {
+    func updateText(in cell: ToDoEntryCell, newText: String) {
+        guard let indexPath = tableView.indexPath(for: cell) else {return}
+        let totalIndexRow = returnPositionForThisIndexPath(indexPath: indexPath)
+        
+        entries[totalIndexRow].text = newText//
+        print("text saved")
+        // this will force the table to recalculate row heights
+        tableView.beginUpdates()
+        tableView.endUpdates()//height recalculation
+    }
+    
     //command order entries
     func commandOrderEntries() {
         orderEntries()
+        //tableView.reloadData()
     }
     
     //deletion of todo cell
-    func checkBoxPressed(in cell: ToDoEntryCell, deletion: Bool) {
+    func checkBoxPressed(in cell: ToDoEntryCell, deletionInContext: Bool) {
         guard let indexPath = tableView.indexPath(for: cell) else {
                 return
             }
+        // MARK: don't let the placeholder cell do it
+        if (cell.toDoEntry?.isPlaceholder == true) {
+            return
+        }
         
-        
-        let totalIndexRow = returnPositionForThisIndexPath(indexPath: indexPath, insideThisTable: tableView)
+        let totalIndexRow = returnPositionForThisIndexPath(indexPath: indexPath)
         
         
         if (cell.toDoEntry?.isCurrentTask == true) {//if deleting a current task, then make sure to set it to false and update the is working
             entries[totalIndexRow].isCurrentTask = false
             updateIsWorking()
         }
-        if (deletion) {
+        
+        tableView.beginUpdates()
+        
+        if (deletionInContext) {
+            tableView.deleteRows(at: [indexPath], with: .fade)
             
-            if totalIndexRow < entries.count {
-                
-                context.delete(entries[totalIndexRow])
-                entries.remove(at: totalIndexRow)
-                
-            }
-            else {
-                print("error in checkbox pressed, most likely due to the double deletion case where the blank cell and the checkbox of a different cell are both pressed")
+            context.delete(entries[totalIndexRow])
+            entries.remove(at: totalIndexRow)
+            if (tableView.numberOfRows(inSection: indexPath.section) == 1) {
+                tableView.deleteSections([indexPath.section], with: .fade)
             }
         }
         else {
-            entries[totalIndexRow].isPlaceholder = false//assure that the placeholder is false
+            entries[totalIndexRow].isPlaceholder = false
+            entries[totalIndexRow].isChecked.toggle()
+
+            
             if (Constants.Settings.showCompletedEntries == true) {
-                entries[totalIndexRow].isChecked.toggle()
+                let calendar = Calendar.current
+                
+                if (entries[totalIndexRow].isChecked == true) { // after the toggle, is it checked?
+                    if let lastIndex = entries.lastIndex(where: { calendar.isDate($0.date!, equalTo: entries[totalIndexRow].date!, toGranularity: .day) }) {
+                        
+                        /*
+                        if (lastIndex == entries.count - 1) {
+                            entries.append(entries[totalIndexRow])
+                        }
+                        else {
+                            entries.insert(entries[totalIndexRow], at: lastIndex + 1)
+                        }*/
+                        smartInsertEntry(newEntry: entries[totalIndexRow], newPos: lastIndex + 1)
+                        
+                        
+
+                        entries.remove(at: totalIndexRow)
+                        
+                        let newRow = tableView.numberOfRows(inSection: indexPath.section) - 1
+                        tableView.insertRows(at: [IndexPath(row: newRow, section: indexPath.section)], with: .fade)
+
+                        tableView.deleteRows(at: [indexPath], with: .fade)
+                        
+                    }
+                }
+                else {
+                    
+                    guard let lastIndex = entries.lastIndex(where: { calendar.isDate($0.date!, equalTo: entries[totalIndexRow].date!, toGranularity: .day) && $0.isChecked == false}) ?? entries.lastIndex(where: { calendar.isDate($0.date!, equalTo: entries[totalIndexRow].date!, toGranularity: .day)}) else {return}
+                    
+                    smartInsertEntry(newEntry: entries[totalIndexRow], newPos: lastIndex + 1)
+                    /*
+                    if (lastIndex == entries.count - 1) {
+                        entries.append(entries[totalIndexRow])
+                    }
+                    else {
+                        entries.insert(entries[totalIndexRow], at: lastIndex + 1)
+                    }*/
+                    entries.remove(at: totalIndexRow)
+                    
+                    let newRow = lastIndex - returnPositionForThisIndexPath(indexPath: IndexPath(row: 0, section: indexPath.section))
+                    
+                    //tableView.moveRow(at: [indexPath], to: [IndexPath(row: newRow, section: indexPath.section)])
+                    tableView.insertRows(at: [IndexPath(row: newRow, section: indexPath.section)], with: .fade)
+                    tableView.deleteRows(at: [indexPath], with: .fade)
+                    resetOrder()
+                    orderEntries()
+                    tableView.reloadData()
+                    
+                }
+
+                
             }
             else {
-                //in the context, change attribute isChecked to true for this object
-                entries[totalIndexRow].isChecked = true
+                // delete from the tableview
+                // delete from the entries array
+                // keep in the context
+                
+                tableView.deleteRows(at: [indexPath], with: .fade)
+                
                 entries.remove(at: totalIndexRow)
+                if (tableView.numberOfRows(inSection: indexPath.section) == 1) {
+                    tableView.deleteSections([indexPath.section], with: .fade)
+                }
             }
-            
-            
+        }
+        resetOrder()
+        saveItems()
+        
+        //update the progress updateProgress() - check the method on how this is done
+        updateProgress()
+        if (deletionInContext == false) {
+            taskCompleted()
         }
         
-        orderEntries()
+        tableView.endUpdates()
         
-        updateProgress()
-        
-        
+
     }
     
     
-    func createNewToDoEntryCell(in cell: ToDoEntryCell, makeFirstResponder: Bool){
+    func createNewToDoEntryCell(in cell: ToDoEntryCell){
         
         
         
@@ -386,31 +488,68 @@ extension ToDoViewController: ToDoEntryDelegate {
             return
         }
         
-        guard let order = cell.toDoEntry?.order else {
-            print("couldn't find order in the createNewToDoEntryCell func in the ToDoViewController")
-            return
-        }
-        
-        guard let isPlaceholder = cell.toDoEntry?.isPlaceholder else {
-            print("couldn't find isplaceholder in createnewtodoentrycell func in todoviewcontroller")
-            return
-        }
-        
-        let nextIndexPath = IndexPath(row: indexPath.row+1, section: indexPath.section)
-        
+        let totalIndexPath = returnPositionForThisIndexPath(indexPath: indexPath)
+        let isPlaceholder = entries[totalIndexPath].isPlaceholder
+                
         
         
         let newToDoEntry = ToDoEntry(context: self.context)
-        let dateComponents = uniqueDates[nextIndexPath.section]
+        
+        let newIndexPath: IndexPath
+        
+        //let date = calendar.date(from: dateComponents)!
+        tableView.beginUpdates()
+
+        if (isPlaceholder == true) {
+            initializeToDoEntry(newEntry: newToDoEntry, date: entries[totalIndexPath].date!, isPlaceholder: true)
+
+            entries[totalIndexPath].isPlaceholder = false
+            cell.toDoEntry?.isPlaceholder = false
+            if (Constants.Settings.showCompletedEntries == true) { //placeholder is at the top, insert a row directly above it
+                
+                newIndexPath = IndexPath(row: indexPath.row, section: indexPath.section)
+                tableView.insertRows(at: [newIndexPath], with: .fade)
+                entries.insert(newToDoEntry, at: totalIndexPath )
+                
+            }
+            else {//placeholder is at the bottom, insert directly below
+                newIndexPath = IndexPath(row: indexPath.row + 1, section: indexPath.section)
+                tableView.insertRows(at: [newIndexPath], with: .fade)
+                
+                smartInsertEntry(newEntry: newToDoEntry, newPos: totalIndexPath + 1)
+
+                //entries.insert(newToDoEntry, at: totalIndexPath + 1)
+            }
+            
+        }
+        else {//insert directly below
+            initializeToDoEntry(newEntry: newToDoEntry, date: entries[totalIndexPath].date!, isPlaceholder: false)
+            newIndexPath = IndexPath(row: indexPath.row + 1, section: indexPath.section)
+
+            tableView.insertRows(at: [newIndexPath], with: .fade)
+            smartInsertEntry(newEntry: newToDoEntry, newPos: totalIndexPath + 1)
+
+        }
+        
+        resetOrder()
+        saveItems()
+        //tableView.reloadData()
+        tableView.endUpdates()
+        updateProgress()
+        
+        let nextCell = tableView.cellForRow(at: newIndexPath) as! ToDoEntryCell
+        nextCell.textView.becomeFirstResponder()
+        tableView.scrollToRow(at: newIndexPath, at: .top, animated: true)
         
         
-        let calendar = Calendar.current
-        let date = calendar.date(from: dateComponents)!
         
         
+       //MARK: CONTINEU HERE. I THINK THE NEW ABOVE AND BELOW IS WORKING FINE.
+        
+        /*
         
         if (isPlaceholder == true) {
-            let totalIndexPath = returnPositionForThisIndexPath(indexPath: indexPath, insideThisTable: tableView)
+            let totalIndexPath = returnPositionForThisIndexPath(indexPath: indexPath)
             entries[totalIndexPath].isPlaceholder = false
             if (Constants.Settings.showCompletedEntries == true) {
                 initializeToDoEntry(newEntry: newToDoEntry, date: date, order: order - 1, isPlaceholder: true)
@@ -433,7 +572,7 @@ extension ToDoViewController: ToDoEntryDelegate {
         updateProgress()
         
         self.saveItems()
-        
+        tableView.reloadData()
         guard let nextCell = tableView.cellForRow(at: nextIndexPath) as? ToDoEntryCell else {
             print("error in the creating a new todoentry creating the next cell cellforrow")
             return
@@ -444,9 +583,136 @@ extension ToDoViewController: ToDoEntryDelegate {
         else {
             nextCell.textView.resignFirstResponder()
             
-        }
+        }*/
     }
     
+    /*
+    
+    func updateDate(in cell: ToDoEntryCell, newDate: Date) {
+        
+        guard let indexPath = tableView.indexPath(for: cell) else {return}
+        
+        
+        let currentEntry = entries[returnPositionForThisIndexPath(indexPath: indexPath)]
+        
+        currentEntry.date = newDate//set new date
+        
+        currentEntry.order = 999
+        let calendar = Calendar.current
+        let dayDate = calendar.dateComponents([.day, .month, .year], from: newDate)
+        
+        tableView.beginUpdates()
+
+        if (!uniqueDates.contains(where: {$0 == dayDate})) {
+            print("unique dates doesn't contain, insert a new section")
+            updateUniqueDates()
+
+            tableView.insertSections([uniqueDates.firstIndex(of: dayDate)!], with: .fade)
+        }
+        if (tableView.numberOfRows(inSection: indexPath.section) == 1) {
+            tableView.deleteSections([indexPath.section], with: .fade)
+            updateUniqueDates()
+        }
+        
+        let newSection = uniqueDates.firstIndex(of: dayDate)!
+        
+        let newRow: Int
+        
+        
+        if Constants.Settings.showCompletedEntries == true {
+            newRow = entries.filter({
+                calendar.dateComponents([.day, .month, .year], from: $0.date!) == dayDate
+                && $0.isChecked == false
+            }).count - 1
+        }
+        else {
+            let filteredEntries = entries.filter({
+                calendar.dateComponents([.day, .month, .year], from: $0.date!) == dayDate
+                && $0.isChecked == false
+            })
+            
+            newRow = filteredEntries.count - filteredEntries.filter({$0.isPlaceholder == true}).count - 1
+            
+        }
+        /*
+        let newTotalIndexRow = entries.lastIndex(where: {
+            calendar.dateComponents([.day, .month, .year], from: $0.date!) == dayDate
+            && $0 != currentEntry
+            && $0.isChecked == false
+            
+        }) ?? entries.firstIndex(where: {currentEntry.date! < $0.date!}) ?? 0
+        
+        //let newIndexPath = IndexPath(row: returnIndexPathForTotalPos(pos: newTotalIndexRow).row, section: newSection)
+        
+        
+        let totalIndexRow = returnPositionForThisIndexPath(indexPath: indexPath)
+        let newIndexPath = IndexPath(row: newRow, section: newSection)
+        print("totalIndexRow:", totalIndexRow)
+        print("newTotalIndexRow:", newTotalIndexRow)
+
+        print("indexPath:", indexPath)
+        print("newIndexpath:", newIndexPath)
+        
+         */
+        let newIndexPath = IndexPath(row: newRow, section: newSection)
+        
+        /*
+        if (tableView.numberOfRows(inSection: indexPath.section) == 1) {
+            tableView.deleteSections([indexPath.section], with: .fade)
+            
+            if (newIndexPath.section > indexPath.section) {
+                tableView.insertRows(at: [IndexPath(row: newIndexPath.row, section: newIndexPath.section - 1)], with: .fade)
+                tableView.deleteRows(at: [indexPath], with: .fade)
+            }
+            else {
+                tableView.insertRows(at: [IndexPath(row: newIndexPath.row, section: newIndexPath.section )], with: .fade)
+                tableView.deleteRows(at: [indexPath], with: .fade)
+            }
+        }
+        else {
+            tableView.insertRows(at: [IndexPath(row: newIndexPath.row, section: newIndexPath.section)], with: .fade)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        }*/
+        /*
+        if (currentEntry.isPlaceholder == true) {
+            currentEntry.isPlaceholder = false
+            
+            /*
+            let newPlaceholder = ToDoEntry(context: self.context)
+            initializeToDoEntry(newEntry: newPlaceholder, date: Date(), isPlaceholder: true)
+            
+            smartInsertEntry(newEntry: newPlaceholder, newPos: Int(cell.toDoEntry!.order))
+            tableView.insertRows(at: [indexPath], with: .left)*/
+            
+            //MARK: EVERYTHING WORKS EXCEPT THE PLACEHOLDER STUFF. LOTS OF ERRORS WITH THE PLACEHOLDER IN RE ORDERING. MAYBE DO LIKE A IF PLACEHOLDER DON'T DELETE THE ROW? SEPERATE FLOW FOR PLACEHOLDER AND NONPLACEHOLDER?
+            //MARK: ALSO CONSIDER SETTING THE toDoEntry of the cell to be the entries at that pos to avoid reloading, currently i am trying the reloadrows at thing and it seems to be working fine
+        }
+        */
+        
+        tableView.insertRows(at: [IndexPath(row: newIndexPath.row, section: newIndexPath.section)], with: .left)
+        tableView.deleteRows(at: [indexPath], with: .right)
+        
+        tableView.reloadRows(at: [newIndexPath], with: .none)
+        /*
+        smartInsertEntry(newEntry: currentEntry, newPos: newTotalIndexRow)
+        entries.remove(at: totalIndexRow)*/
+                                   
+        //resetOrder()
+        //saveItems()
+        tableView.endUpdates()
+        resetOrder()
+        orderEntries()
+        updateProgress()
+        saveItems()
+        /*
+        
+        self.entries[Int(cell.toDoEntry!.order)].order = Int16(self.entries.count) //set order to max so that it'll go to the back of each section
+        self.orderEntries()
+            
+        self.updateProgress()*/
+            
+            
+    }*/
     
     
     func updateDate(in cell: ToDoEntryCell, newDate: Date) {
@@ -460,7 +726,8 @@ extension ToDoViewController: ToDoEntryDelegate {
         self.orderEntries()
             
         self.updateProgress()
-            
+        saveItems()
+        tableView.reloadData()
             
     }
     
@@ -476,6 +743,41 @@ extension ToDoViewController: ToDoEntryDelegate {
 }
 
 extension ToDoViewController {//all helper funcs for organization
+    private func initProgressBarFlowAnimation() {
+        if (entries.filter({$0.isCurrentTask == true}).count > 0) {
+            customProgressBar.createRepeatingAnimation()
+        }
+        else {
+            customProgressBar.resetAnimation()
+        }
+        
+    }
+    
+    private func returnIndexPathForTotalPos(pos: Int) -> IndexPath {
+        var currentPos = pos
+        
+        var section = 0
+        
+        while (currentPos > 0) {
+            currentPos -= tableView.numberOfRows(inSection: section)
+            section+=1
+        }
+        
+        let rV = IndexPath(row: tableView.numberOfRows(inSection: section) - (currentPos * -1), section: section)
+        
+        print("new section: ", section)
+        print("new row: ", rV.row)
+        return rV
+    }
+    private func smartInsertEntry(newEntry: ToDoEntry, newPos: Int) {
+        if (entries.count <= newPos) {
+            entries.append(newEntry)
+        }
+        else {
+            entries.insert(newEntry, at: newPos)
+        }
+    }
+    
     
     private func setGreetingMessage() {
         let calendar = Calendar.current
@@ -506,6 +808,13 @@ extension ToDoViewController {//all helper funcs for organization
             print("updateIsCurrentTask: will update current task in the User")
             User.shared().updateUserInfo(newInfo: ["isWorking": !(User.shared().userInfo["isWorking"] as? Bool ?? false)])
         }
+        
+        if (currentTasks.count > 0) {
+            customProgressBar.createRepeatingAnimation()
+        }
+        else {
+            customProgressBar.resetAnimation()
+        }
     }
     
     private func initProgressNoFirestore() {
@@ -529,7 +838,10 @@ extension ToDoViewController {//all helper funcs for organization
             print("error in updateProgress")
         }
         percentageLabel.text = String(format: "%.f", progress * 100) + "%"
-        progressBar.progress = progress
+        
+        //customProgressBar.progress = progress
+        //customProgressBar.createDoubleAnimation()
+        //progressBar.progress = progress
     }
 
     private func updateProgress() {
@@ -555,7 +867,8 @@ extension ToDoViewController {//all helper funcs for organization
             print("error in updateProgress")
         }
         percentageLabel.text = String(format: "%.f%%", progress * 100)
-        progressBar.progress = progress
+        //progressBar.progress = progress
+        //customProgressBar.progress = progress
         
         User.shared().updateUserInfo(newInfo: ["progress": progress])
         
@@ -597,6 +910,13 @@ extension ToDoViewController {//all helper funcs for organization
         }*/
     }
     
+    private func taskCompleted() {
+        User.shared().updateUserInfo(newInfo: ["likes": []])
+        
+        customProgressBar.pulseAnimation()
+        
+    }
+    
     private func updateUniqueDates() {
         
         uniqueDates = {
@@ -623,8 +943,10 @@ extension ToDoViewController {//all helper funcs for organization
               }
             }
             return rV
-
+            
         }()
+        
+        print("new unique dates", uniqueDates)
     }
     
     private func orderEntries() {
@@ -636,7 +958,7 @@ extension ToDoViewController {//all helper funcs for organization
                 if ($0.isPlaceholder == true) {//if its the placeholder
                     return Constants.Settings.showCompletedEntries //if show checked entries is true, then returning true -> placeholder goes to top
                 }
-                if ($0.isCurrentTask != $1.isCurrentTask) {//if only one is a current task
+                else if ($0.isCurrentTask != $1.isCurrentTask) {//if only one is a current task
                     return $0.isCurrentTask
                 }
                 else if ($0.isChecked == $1.isChecked) {//if both are current task, both must be checked so always this. if both aren't current task, this checks checking status
@@ -652,7 +974,9 @@ extension ToDoViewController {//all helper funcs for organization
             }
         }
         let placeholder = self.entries.filter({$0.isPlaceholder == true})
-        if (placeholder.count == 0)  {//if there's no placeholders
+        if (placeholder.count != 1)  {
+            self.entries.removeAll(where: {$0.isPlaceholder == true})
+            
             let newToDoEntry = ToDoEntry(context: self.context)
             initializeToDoEntry(newEntry: newToDoEntry, order: 0, isPlaceholder: true)
             if (Constants.Settings.showCompletedEntries == true) {
@@ -668,7 +992,55 @@ extension ToDoViewController {//all helper funcs for organization
                     entries.insert(newToDoEntry, at: index + 1)
                 }
             }
+            resetOrder()
+            tableView.reloadData()
+            
         }
+        else if (!calendar.isDate(placeholder[0].date!, equalTo: Date(), toGranularity: .day)){
+            self.entries.removeAll(where: {$0.isPlaceholder == true})
+            
+            let newToDoEntry = ToDoEntry(context: self.context)
+            initializeToDoEntry(newEntry: newToDoEntry, order: 0, isPlaceholder: true)
+            if (Constants.Settings.showCompletedEntries == true) {
+                //insert at top of today's section
+                if let index = entries.firstIndex(where: {calendar.isDate($0.date!, equalTo: Date(), toGranularity: .day)}) {//case where there is 0 index in today is already handled by the tableview sections stuff
+                    entries.insert(newToDoEntry, at: index)
+                }
+                
+            }
+            else {
+                //insert at bottom of today's section
+                if let index = entries.lastIndex(where: {calendar.isDate($0.date!, equalTo: Date(), toGranularity: .day)}) {
+                    entries.insert(newToDoEntry, at: index + 1)
+                }
+            }
+            resetOrder()
+            tableView.reloadData()
+        }
+        else if (placeholder[0].text?.trimmingCharacters(in: .whitespacesAndNewlines) != "") {
+            placeholder[0].isPlaceholder = false
+            let newToDoEntry = ToDoEntry(context: self.context)
+            initializeToDoEntry(newEntry: newToDoEntry, order: 0, isPlaceholder: true)
+            if (Constants.Settings.showCompletedEntries == true) {
+                //insert at top of today's section
+                if let index = entries.firstIndex(where: {calendar.isDate($0.date!, equalTo: Date(), toGranularity: .day)}) {//case where there is 0 index in today is already handled by the tableview sections stuff
+                    entries.insert(newToDoEntry, at: index)
+                }
+                
+            }
+            else {
+                //insert at bottom of today's section
+                if let index = entries.lastIndex(where: {calendar.isDate($0.date!, equalTo: Date(), toGranularity: .day)}) {
+                    entries.insert(newToDoEntry, at: index + 1)
+                }
+            }
+            resetOrder()
+            tableView.reloadData()
+        }
+        else if (placeholder[0].text != "") {
+            placeholder[0].text = ""
+        }
+        
         resetOrder()//i always run this
         saveItems()//i always run this
         
@@ -684,7 +1056,7 @@ extension ToDoViewController {//all helper funcs for organization
     //functions to easily initialize to do entry
     
     
-    private func initializeToDoEntry(newEntry: ToDoEntry, text: String = "", isChecked: Bool = false, isCurrentTask: Bool = false, date: Date = Date(), time: Double = 0.0, order: Int16, isPlaceholder: Bool = false) {//to initialize default new one
+    private func initializeToDoEntry(newEntry: ToDoEntry, text: String = "", isChecked: Bool = false, isCurrentTask: Bool = false, date: Date = Date(), time: Double = 0.0, order: Int16 = 0, isPlaceholder: Bool = false) {//to initialize default new one
         newEntry.text = text
         newEntry.isChecked = isChecked
         newEntry.isCurrentTask = isCurrentTask
@@ -733,13 +1105,13 @@ extension ToDoViewController {//all helper funcs for organization
         
     }
     //for total indexpath
-    private func returnPositionForThisIndexPath(indexPath:IndexPath, insideThisTable theTable:UITableView)->Int{
+    private func returnPositionForThisIndexPath(indexPath:IndexPath)->Int{
 
         var i = 0
         var rowCount = 0
 
         while i < indexPath.section {
-            rowCount += theTable.numberOfRows(inSection: i)
+            rowCount += tableView.numberOfRows(inSection: i)
             i+=1
         }
 
@@ -747,6 +1119,9 @@ extension ToDoViewController {//all helper funcs for organization
 
         return rowCount
     }
+    
+    
+    
     
    
 }//helper funcs

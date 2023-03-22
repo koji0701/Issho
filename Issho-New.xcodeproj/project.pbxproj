@@ -38,6 +38,7 @@
 		E53AED922963B801000AF59D /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53AED912963B801000AF59D /* LoginViewController.swift */; };
 		E54887392994309300EC4A5B /* AddFriendsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54887382994309300EC4A5B /* AddFriendsCell.swift */; };
 		E548873B2994339300EC4A5B /* AddFriendsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E548873A2994339300EC4A5B /* AddFriendsCell.xib */; };
+		E55B7E5929C23BA5008D58D4 /* GradientHorizontalProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = E55B7E5829C23BA5008D58D4 /* GradientHorizontalProgressBar.swift */; };
 		E58245C3296622EF0093E0D5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E58245C2296622EF0093E0D5 /* GoogleService-Info.plist */; };
 		E58245C62966238D0093E0D5 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = E58245C52966238D0093E0D5 /* FirebaseAuth */; };
 		E58245C82966238D0093E0D5 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = E58245C72966238D0093E0D5 /* FirebaseFirestore */; };
@@ -111,6 +112,7 @@
 		E53AED912963B801000AF59D /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		E54887382994309300EC4A5B /* AddFriendsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendsCell.swift; sourceTree = "<group>"; };
 		E548873A2994339300EC4A5B /* AddFriendsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AddFriendsCell.xib; sourceTree = "<group>"; };
+		E55B7E5829C23BA5008D58D4 /* GradientHorizontalProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientHorizontalProgressBar.swift; sourceTree = "<group>"; };
 		E58245C2296622EF0093E0D5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E58245C9296633BB0093E0D5 /* Welcome.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Welcome.storyboard; sourceTree = "<group>"; };
 		E58B01DA29691492007061D0 /* FirebaseUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseUtilities.swift; sourceTree = "<group>"; };
@@ -167,6 +169,7 @@
 				E52FBCA7292F18D30053208C /* AppDelegate.swift */,
 				E52FBCA9292F18D30053208C /* SceneDelegate.swift */,
 				E58B01DA29691492007061D0 /* FirebaseUtilities.swift */,
+				E50E17B62992F8A20034543C /* MiscExtensions.swift */,
 				E52FBCB0292F18D40053208C /* Assets.xcassets */,
 				E58245C2296622EF0093E0D5 /* GoogleService-Info.plist */,
 			);
@@ -186,9 +189,9 @@
 			isa = PBXGroup;
 			children = (
 				E5119FF629AEE52300A00930 /* Custom Tab Bar */,
-				E50E17B62992F8A20034543C /* MiscExtensions.swift */,
 				E516286E29ADA76900454397 /* CustomNavigationController.swift */,
 				E511A00529AFBFF500A00930 /* CustomImageView.swift */,
+				E55B7E5829C23BA5008D58D4 /* GradientHorizontalProgressBar.swift */,
 			);
 			path = "UI Improvements";
 			sourceTree = "<group>";
@@ -499,6 +502,7 @@
 				E5119FF929AEE56700A00930 /* FloatingBarView.swift in Sources */,
 				E52FBCA8292F18D30053208C /* AppDelegate.swift in Sources */,
 				E58DED42292F198400F1EF0C /* ToDoEntryCell.swift in Sources */,
+				E55B7E5929C23BA5008D58D4 /* GradientHorizontalProgressBar.swift in Sources */,
 				E516286F29ADA76900454397 /* CustomNavigationController.swift in Sources */,
 				E58DED50292F19FF00F1EF0C /* Constants.swift in Sources */,
 				E511A00429AEF71500A00930 /* MosaicLayout.swift in Sources */,

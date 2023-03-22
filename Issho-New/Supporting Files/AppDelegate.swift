@@ -30,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         //settings constants init from userdefaults
         Constants.Settings.displayMode = defaults.value(forKey: "displayMode") as? Int ?? 1
-        Constants.Settings.showCompletedEntries = defaults.value(forKey: "showCompletedEntries") as? Bool ?? true
+        Constants.Settings.showCompletedEntries = defaults.value(forKey: "showCompletedEntries") as? Bool ?? false
         if (defaults.value(forKey: "showCompletedEntries") == nil) {//settings init condition, only check one
             defaults.set(Constants.Settings.displayMode, forKey: "displayMode")
             defaults.set(Constants.Settings.showCompletedEntries, forKey: "showCompletedEntries")

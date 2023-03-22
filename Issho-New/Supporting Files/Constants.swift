@@ -289,7 +289,7 @@ struct Constants {
     }
     struct Settings {
         
-        static var showCompletedEntries = true
+        static var showCompletedEntries = false
         static var displayMode = 1
     }
     

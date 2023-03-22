@@ -56,4 +56,75 @@ extension ToDoViewController {
         
     }*/ //checkbox pressed old function
     
+    /*.func createNewToDoEntryCell(in cell: ToDoEntryCell, makeFirstResponder: Bool){
+     
+     
+     
+     guard let indexPath = tableView.indexPath(for: cell) else {
+         print("error in the createNewToDoEntryCell func in the ToDoViewController")
+         return
+     }
+     
+     guard let order = cell.toDoEntry?.order else {
+         print("couldn't find order in the createNewToDoEntryCell func in the ToDoViewController")
+         return
+     }
+     
+     guard let isPlaceholder = cell.toDoEntry?.isPlaceholder else {
+         print("couldn't find isplaceholder in createnewtodoentrycell func in todoviewcontroller")
+         return
+     }
+     
+     
+     let nextIndexPath = IndexPath(row: indexPath.row+1, section: indexPath.section)
+     
+     
+     
+     let newToDoEntry = ToDoEntry(context: self.context)
+     let dateComponents = uniqueDates[nextIndexPath.section]
+     
+     
+     let calendar = Calendar.current
+     let date = calendar.date(from: dateComponents)!
+     
+     
+     
+     if (isPlaceholder == true) {
+         let totalIndexPath = returnPositionForThisIndexPath(indexPath: indexPath)
+         entries[totalIndexPath].isPlaceholder = false
+         if (Constants.Settings.showCompletedEntries == true) {
+             initializeToDoEntry(newEntry: newToDoEntry, date: date, order: order - 1, isPlaceholder: true)
+             entries.insert(newToDoEntry, at: Int(order))//insert it above the current if showcheckedentries is true
+         }
+         
+         else {
+             initializeToDoEntry(newEntry: newToDoEntry, date: date, order: order + 1, isPlaceholder: false)
+             entries.insert(newToDoEntry, at: Int(order+1))//insert below if not showing the checked entries
+         }
+     }
+     else {
+         initializeToDoEntry(newEntry: newToDoEntry, date: date, order: order + 1, isPlaceholder: false)
+         entries.insert(newToDoEntry, at: Int(order+1))//insert below if not showing the checked entries//insert below if placeholder isn't true
+     }
+     
+     
+     resetOrder()
+     
+     updateProgress()
+     
+     self.saveItems()
+     tableView.reloadData()
+     guard let nextCell = tableView.cellForRow(at: nextIndexPath) as? ToDoEntryCell else {
+         print("error in the creating a new todoentry creating the next cell cellforrow")
+         return
+     }
+     if (makeFirstResponder) {
+         nextCell.textView.becomeFirstResponder()
+     }
+     else {
+         nextCell.textView.resignFirstResponder()
+         
+     }
+ }
+ **/
 }
