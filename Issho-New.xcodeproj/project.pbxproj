@@ -61,6 +61,7 @@
 		E5A8B1D7295E535C00D5E684 /* ToDoEntryToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A8B1D6295E535C00D5E684 /* ToDoEntryToolbar.swift */; };
 		E5B6676629B12D690090AB89 /* Photos Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B6676529B12D690090AB89 /* Photos Auth.swift */; };
 		E5B6676829B147C90090AB89 /* EditProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B6676729B147C90090AB89 /* EditProfileVC.swift */; };
+		E5D1174929CAEE5E00F85BBE /* ProfileListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5D1174829CAEE5E00F85BBE /* ProfileListVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -131,6 +132,7 @@
 		E5A8B1D6295E535C00D5E684 /* ToDoEntryToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoEntryToolbar.swift; sourceTree = "<group>"; };
 		E5B6676529B12D690090AB89 /* Photos Auth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Photos Auth.swift"; sourceTree = "<group>"; };
 		E5B6676729B147C90090AB89 /* EditProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileVC.swift; sourceTree = "<group>"; };
+		E5D1174829CAEE5E00F85BBE /* ProfileListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileListVC.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -325,6 +327,7 @@
 				E548873A2994339300EC4A5B /* AddFriendsCell.xib */,
 				E54887382994309300EC4A5B /* AddFriendsCell.swift */,
 				E50E17B32992E8CD0034543C /* AddFriendsViewController.swift */,
+				E5D1174829CAEE5E00F85BBE /* ProfileListVC.swift */,
 			);
 			path = AddFriends;
 			sourceTree = "<group>";
@@ -510,6 +513,7 @@
 				E5A5166C2958D329002BC2B3 /* ToDoEntryData.xcdatamodeld in Sources */,
 				E539DD172963B3970034E1E5 /* SignupViewController.swift in Sources */,
 				E5A8B1D7295E535C00D5E684 /* ToDoEntryToolbar.swift in Sources */,
+				E5D1174929CAEE5E00F85BBE /* ProfileListVC.swift in Sources */,
 				E53721A0296F7ECF00AD0BF7 /* SettingsViewController.swift in Sources */,
 				E58DED4C292F19B200F1EF0C /* SMPostCell.swift in Sources */,
 				E511A00229AEF70300A00930 /* Photo Selector Controller.swift in Sources */,
@@ -696,6 +700,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Issho-New/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Issho;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We need to access your photos";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -727,6 +732,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Issho-New/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Issho;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We need to access your photos";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;

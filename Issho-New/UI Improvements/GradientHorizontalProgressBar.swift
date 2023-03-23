@@ -9,14 +9,16 @@
 import Foundation
 import UIKit
 
-@IBDesignable
+
 class GradientHorizontalProgressBar: UIView {
-    @IBInspectable var color: UIColor = .gray {
+    var color: UIColor = .systemPink {
         didSet { setNeedsDisplay() }
     }
-    @IBInspectable var gradientColor: UIColor = .white {
+    var gradientColor: UIColor = .white {
         didSet { setNeedsDisplay() }
     }
+    
+    
 
     var progress: CGFloat = 0 {
         didSet { setNeedsDisplay() }
@@ -47,24 +49,28 @@ class GradientHorizontalProgressBar: UIView {
     }
 
     func createRepeatingAnimation() {
-        gradientLayer.colors = [color.cgColor, gradientColor.cgColor, color.cgColor]
+        
+            gradientLayer.colors = [color.cgColor, gradientColor.cgColor, color.cgColor]
 
-        let flowAnimation = CABasicAnimation(keyPath: "locations")
-        flowAnimation.fromValue = [-0.3, -0.15, 0]
-        flowAnimation.toValue = [1, 1.15, 1.3]
+            let flowAnimation = CABasicAnimation(keyPath: "locations")
+            flowAnimation.fromValue = [-0.3, -0.15, 0]
+            flowAnimation.toValue = [1, 1.15, 1.3]
 
-        flowAnimation.isRemovedOnCompletion = false
-        flowAnimation.repeatCount = Float.infinity
-        flowAnimation.duration = 1
+            flowAnimation.isRemovedOnCompletion = false
+            flowAnimation.repeatCount = Float.infinity
+            flowAnimation.duration = 2
 
-        gradientLayer.add(flowAnimation, forKey: "flowAnimation")
+            gradientLayer.add(flowAnimation, forKey: "flowAnimation")
+        
+        
     }
     
     func resetAnimation() {
+        
         gradientLayer.removeAnimation(forKey: "flowAnimation")
         gradientLayer.colors = [color.cgColor, color.cgColor, color.cgColor]
     }
-    /*
+    
     
     func createSingleAnimation() {
         gradientLayer.colors = [color.cgColor, gradientColor.cgColor, color.cgColor]
@@ -99,9 +105,10 @@ class GradientHorizontalProgressBar: UIView {
         CATransaction.commit()
         
         
-    }*/
+    }
     
     func pulseAnimation() {
+        CATransaction.begin()
         let pulse = CASpringAnimation(keyPath: "transform.scale")
         pulse.duration = 0.2
         pulse.fromValue = 0.95
@@ -109,6 +116,8 @@ class GradientHorizontalProgressBar: UIView {
         pulse.autoreverses = true
         pulse.damping = 0.5
         layer.add(pulse, forKey: "pulse")
+        CATransaction.commit()
+        
     }
     
 

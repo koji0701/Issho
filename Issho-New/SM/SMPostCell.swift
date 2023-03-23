@@ -22,6 +22,8 @@ class SMPostCell: UITableViewCell {
     @IBOutlet weak var profilePictureTapView: UIView!
     @IBOutlet weak var progressBar: UIProgressView!
     
+    @IBOutlet weak var customProgressBar: GradientHorizontalProgressBar!
+    
     @IBOutlet weak var likes: UILabel!
     @IBOutlet weak var username: UILabel!
     @IBOutlet weak var streak: UILabel!
@@ -116,6 +118,7 @@ class SMPostCell: UITableViewCell {
         print("like animation performed")
         likesButton.setImage(likedLikeImage, for: .normal)
         likesButton.tintColor = .black
+        customProgressBar.pulseAnimation()
         
         likesButton.pulse()
     }

@@ -98,6 +98,13 @@
                                                     <view contentMode="scaleToFill" horizontalCompressionResistancePriority="10" translatesAutoresizingMaskIntoConstraints="NO" id="F1r-PI-jZ8">
                                                         <rect key="frame" x="0.0" y="38" width="293" height="20"/>
                                                         <subviews>
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="atv-Jf-xFz" userLabel="CustomProgressBar" customClass="GradientHorizontalProgressBar" customModule="Issho_New" customModuleProvider="target">
+                                                                <rect key="frame" x="0.0" y="0.0" width="293" height="20"/>
+                                                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="height" constant="20" id="1p8-lL-kpi"/>
+                                                                </constraints>
+                                                            </view>
                                                             <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" horizontalCompressionResistancePriority="740" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Ss2-sT-I0E" userLabel="ProgressBar">
                                                                 <rect key="frame" x="0.0" y="0.0" width="293" height="20"/>
                                                                 <constraints>
@@ -118,10 +125,13 @@
                                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                         <constraints>
                                                             <constraint firstAttribute="trailing" secondItem="Ss2-sT-I0E" secondAttribute="trailing" id="KJS-OD-Jpk"/>
+                                                            <constraint firstAttribute="trailing" secondItem="atv-Jf-xFz" secondAttribute="trailing" id="SA0-G7-B1d"/>
                                                             <constraint firstItem="Ss2-sT-I0E" firstAttribute="centerY" secondItem="F1r-PI-jZ8" secondAttribute="centerY" id="UER-2U-9H4"/>
+                                                            <constraint firstItem="atv-Jf-xFz" firstAttribute="centerY" secondItem="F1r-PI-jZ8" secondAttribute="centerY" id="Vqt-i4-2TS"/>
                                                             <constraint firstItem="Ss2-sT-I0E" firstAttribute="leading" secondItem="F1r-PI-jZ8" secondAttribute="leading" id="XlJ-aB-RRY"/>
                                                             <constraint firstItem="Fja-MU-6wp" firstAttribute="leading" secondItem="F1r-PI-jZ8" secondAttribute="leading" constant="15" id="bul-4j-cZu"/>
                                                             <constraint firstAttribute="height" constant="20" id="dOh-dZ-zFL"/>
+                                                            <constraint firstItem="atv-Jf-xFz" firstAttribute="leading" secondItem="F1r-PI-jZ8" secondAttribute="leading" id="w3U-Tc-Mib"/>
                                                             <constraint firstItem="Fja-MU-6wp" firstAttribute="centerY" secondItem="F1r-PI-jZ8" secondAttribute="centerY" id="zin-1W-dFP"/>
                                                         </constraints>
                                                     </view>
@@ -187,6 +197,7 @@
             <viewLayoutGuide key="safeArea" id="duV-GW-clM"/>
             <gestureRecognizers/>
             <connections>
+                <outlet property="customProgressBar" destination="atv-Jf-xFz" id="TbX-nl-3b2"/>
                 <outlet property="likes" destination="SnC-ZZ-UZY" id="nab-mr-ZCC"/>
                 <outlet property="likesButton" destination="OCi-Uk-6Oq" id="VTs-HG-ik6"/>
                 <outlet property="likesView" destination="BPy-Mg-Gsn" id="ZoU-Hc-dnd"/>

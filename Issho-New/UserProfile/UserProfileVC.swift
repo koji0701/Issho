@@ -56,9 +56,28 @@ class UserProfileVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        friendsCountLabel.isUserInteractionEnabled = true
+        let friendsTapGesture = UITapGestureRecognizer(target: self, action: #selector(handleFriendsTap))
+        friendsCountLabel.addGestureRecognizer(friendsTapGesture)
     }
     
+    @objc private func handleFriendsTap() {
+        performSegue(withIdentifier: Constants.Segues.userProfileToProfileList, sender: nil)
+    }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let profileListVC = segue.destination as? ProfileListVC {
+            profileListVC.displayMode = 1
+            guard let user = user else {
+                profileListVC.friendsForUserUID  = User.shared().uid
+                return
+            }
+            profileListVC.friendsForUserUID = user.uid
+            
+            
+        }
+    }
     
     private func setUpUser() {
         

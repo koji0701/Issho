@@ -41,11 +41,11 @@ class ToDoViewController: UIViewController {
     
     @IBOutlet weak var customProgressBar: GradientHorizontalProgressBar!
     
+    
     @IBOutlet weak var likesLabel: UILabel!
     
     
     @IBOutlet weak var percentageLabel: UILabel!
-    
     
     
     override func viewWillAppear(_ animated: Bool) {
@@ -55,6 +55,7 @@ class ToDoViewController: UIViewController {
         tabBarController?.tabBar.isHidden = true
         navigationController?.navigationBar.backItem?.title = ""
         navigationController?.navigationBar.barTintColor = .clear
+        updateIsWorking()
         
     }
     
@@ -66,7 +67,7 @@ class ToDoViewController: UIViewController {
         let streak = info?.streak as? Int ?? 0
         likesLabel.text = String(likesCount) + "🎉"
         streakLabel.text = String(streak) + "🔥"
-        
+        updateIsWorking()
         
     }
     
@@ -99,6 +100,9 @@ class ToDoViewController: UIViewController {
         greeting.font = Constants.Fonts.navigationBarTitleFont
         streakLabel.text = "0🔥"
         likesLabel.text = "0"
+        likesLabel.isUserInteractionEnabled = true
+        let likesTapGesture = UITapGestureRecognizer(target: self, action: #selector(handleSegueToProfileList(_:)))
+        likesLabel.addGestureRecognizer(likesTapGesture)
         
         setGreetingMessage()
         initProgressBarFlowAnimation()
@@ -107,7 +111,18 @@ class ToDoViewController: UIViewController {
         
     }
     
+    @objc private func handleSegueToProfileList(_ sender: UITapGestureRecognizer) {
+        print("should handle segue")
+        performSegue(withIdentifier: Constants.Segues.toDoToProfileList, sender: nil)
+    }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let profileListVC = segue.destination as? ProfileListVC {
+            profileListVC.displayMode = 0
+            print("todovc is the destination")
+            
+        }
+    }
 }
 
 
@@ -725,8 +740,8 @@ extension ToDoViewController: ToDoEntryDelegate {
         self.entries[Int(cell.toDoEntry!.order)].order = Int16(self.entries.count) //set order to max so that it'll go to the back of each section
         self.orderEntries()
             
-        self.updateProgress()
-        saveItems()
+        //self.updateProgress()
+        //saveItems()
         tableView.reloadData()
             
     }
@@ -744,6 +759,8 @@ extension ToDoViewController: ToDoEntryDelegate {
 
 extension ToDoViewController {//all helper funcs for organization
     private func initProgressBarFlowAnimation() {
+        
+        
         if (entries.filter({$0.isCurrentTask == true}).count > 0) {
             customProgressBar.createRepeatingAnimation()
         }
@@ -800,21 +817,28 @@ extension ToDoViewController {//all helper funcs for organization
     }
     
     private func updateIsWorking() {
+        
+        guard let FSisWorking = User.shared().userInfo["isWorking"] as? Bool else {
+            return
+        }
         let currentTasks = entries.filter { $0.isCurrentTask == true }
         //currenttasks count > 0 means currently working
         //isWorking == true means is working
         //logic: if both are true, or both are false, then this code block will not run because I need to make sure that the updateUserInfo only happens when its needed
-        if (currentTasks.count > 0) != (User.shared().userInfo["isWorking"] as? Bool == true) {
+        if (currentTasks.count > 0) != (FSisWorking == true) {
             print("updateIsCurrentTask: will update current task in the User")
             User.shared().updateUserInfo(newInfo: ["isWorking": !(User.shared().userInfo["isWorking"] as? Bool ?? false)])
         }
         
-        if (currentTasks.count > 0) {
-            customProgressBar.createRepeatingAnimation()
+        DispatchQueue.main.async {
+            if (currentTasks.count > 0) {
+                self.customProgressBar.createRepeatingAnimation()
+            }
+            else {
+                self.customProgressBar.resetAnimation()
+            }
         }
-        else {
-            customProgressBar.resetAnimation()
-        }
+        
     }
     
     private func initProgressNoFirestore() {
@@ -992,8 +1016,7 @@ extension ToDoViewController {//all helper funcs for organization
                     entries.insert(newToDoEntry, at: index + 1)
                 }
             }
-            resetOrder()
-            tableView.reloadData()
+            
             
         }
         else if (!calendar.isDate(placeholder[0].date!, equalTo: Date(), toGranularity: .day)){
@@ -1014,8 +1037,6 @@ extension ToDoViewController {//all helper funcs for organization
                     entries.insert(newToDoEntry, at: index + 1)
                 }
             }
-            resetOrder()
-            tableView.reloadData()
         }
         else if (placeholder[0].text?.trimmingCharacters(in: .whitespacesAndNewlines) != "") {
             placeholder[0].isPlaceholder = false
@@ -1034,16 +1055,15 @@ extension ToDoViewController {//all helper funcs for organization
                     entries.insert(newToDoEntry, at: index + 1)
                 }
             }
-            resetOrder()
-            tableView.reloadData()
         }
         else if (placeholder[0].text != "") {
             placeholder[0].text = ""
         }
         
         resetOrder()//i always run this
+        updateIsWorking()
+        tableView.reloadData()
         saveItems()//i always run this
-        
     }
     
     
@@ -1095,15 +1115,17 @@ extension ToDoViewController {//all helper funcs for organization
         
         if (entries[0].date! <= twoDaysAgo) {//if the first entry's date is less than or equal to two days ago from the start of the new day
             
-            User.shared().updateUserInfo(newInfo: ["likes": [String](), "streak": 0, "progress": progress])
+            User.shared().updateUserInfo(newInfo: ["likes": [String](), "todaysLikes": [String](), "streak": 0, "progress": progress])
             
         }
         else {
-            User.shared().updateUserInfo(newInfo: ["likes": [String](), "streak": FieldValue.increment(1.0), "progress": progress])
+            User.shared().updateUserInfo(newInfo: ["likes": [String](), "todaysLikes": [String](), "streak": FieldValue.increment(1.0), "progress": progress])
             
         }
         
     }
+    
+    
     //for total indexpath
     private func returnPositionForThisIndexPath(indexPath:IndexPath)->Int{
 

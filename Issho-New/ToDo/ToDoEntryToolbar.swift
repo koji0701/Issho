@@ -22,6 +22,8 @@ class ToDoEntryToolbar: UIToolbar {
         dateSelectedCallBack?(sender.date)
     }
     
+    
+    
     var currentTaskButton: UIBarButtonItem = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "bolt"), for: .normal)

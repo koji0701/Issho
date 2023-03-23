@@ -56,7 +56,9 @@ class User {
                     "friendRequests": document["friendRequests"] as! [String],
                     "friends": document["friends"] as! [String],
                     "lastUpdated": document["lastUpdated"] as? Date ?? Date(),
-                    "image": document["image"] as? String ?? "default"
+                    "image": document["image"] as? String ?? "default",
+                    "todaysLikes": document["todaysLikes"] as! [String],
+
                 ]
                 self.lastUpdateUserInfo = self.userInfo
                 self.image.loadImage(urlString: self.userInfo["image"] as! String)
@@ -91,7 +93,8 @@ class User {
             "friendRequests": newInfo["friendRequests"] as? [String] ?? userInfo["friendRequests"]!,
             "friends": newInfo["friends"] as? [String] ?? userInfo["friends"]!,
             "lastUpdated": newInfo["lastUpdated"] as? [String] ?? userInfo["lastUpdated"]!,
-            "image": newInfo["image"] as? String ?? userInfo["image"] ?? lastUpdateUserInfo["image"]
+            "image": newInfo["image"] as? String ?? userInfo["image"] ?? lastUpdateUserInfo["image"]!,
+            "todaysLikes": newInfo["todaysLikes"] as? [String] ?? userInfo["todaysLikes"]!
             
         ]
         

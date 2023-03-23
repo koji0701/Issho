@@ -34,10 +34,10 @@ class SMViewController: UIViewController {
                         let data = doc.data()
                         
                         
-                        if let streak = data["streak"] as? Int, let isWorking = data["isWorking"] as? Bool, let lastUpdated = data["lastUpdated"] as? Timestamp, let username = data["username"] as? String, let progress = data["progress"] as? Float, let likes = data["likes"] as? [String], let friends = data["friends"] as? [String], let friendReq = data["friendRequests"], let image = data["image"] {
+                        if let streak = data["streak"] as? Int, let isWorking = data["isWorking"] as? Bool, let lastUpdated = data["lastUpdated"] as? Timestamp, let username = data["username"] as? String, let progress = data["progress"] as? Float, let likes = data["likes"] as? [String], let friends = data["friends"] as? [String], let friendReq = data["friendRequests"], let image = data["image"], let todaysLikes = data["todaysLikes"] as? [String] {
                             print("got past the if let conditions")
                             let isLiked = likes.contains(User.shared().uid)//if likes contains uid, true its been liked
-                            let dict: [String: Any] = ["streak": streak, "isWorking": isWorking, "lastUpdated": lastUpdated.dateValue(), "username": username, "progress": progress, "isLiked": isLiked, "friends": friends, "friendRequests": friendReq, "image": image, "likes": likes]
+                            let dict: [String: Any] = ["streak": streak, "isWorking": isWorking, "lastUpdated": lastUpdated.dateValue(), "username": username, "progress": progress, "isLiked": isLiked, "friends": friends, "friendRequests": friendReq, "image": image, "likes": likes, "todaysLikes": todaysLikes]
                             
                             
                             let newPost = UserInfo(uid: doc.documentID, dictionary: dict)
@@ -76,15 +76,18 @@ class SMViewController: UIViewController {
     private func updateLikeInFirestore(post: UserInfo) {
         
        
-        guard let uid = Auth.auth().currentUser?.uid else {
-            print("could not find current user in updatelikeinfirestore")
-            return
-        }
+        let uid = User.shared().uid
         let postUID = post.uid
         
-        Firestore.updateUserInfo(uid: postUID, fields: ["likes": FieldValue.arrayUnion([uid])])
+        let newTodaysLikes: [String] = {
+            var current = [String]()
+            current.append(contentsOf: post.todaysLikes)
+            current.append(User.shared().uid)
+            return current
+        }()
+        //UPDATE TODAYS LIKES WITH THE NEW TODAYSLIKES, BE CAREFUL ABOUT UID
         
-        
+        Firestore.updateUserInfo(uid: postUID, fields: ["likes": FieldValue.arrayUnion([uid]), "todaysLikes": newTodaysLikes])
         
     }
     
@@ -126,12 +129,19 @@ extension SMViewController: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.SM.reuseIdentifier, for: indexPath) as! SMPostCell
         
         cell.postDelegate = self
-        if (posts[indexPath.row].isWorking == true) {
-            cell.username.text = "⚡️" + posts[indexPath.row].username
+        DispatchQueue.main.async {
+            if (self.posts[indexPath.row].isWorking == true) {
+                cell.username.text = "⚡️" + self.posts[indexPath.row].username
+                
+                cell.customProgressBar.createRepeatingAnimation()
+            }
+            else {
+                cell.username.text = self.posts[indexPath.row].username
+                cell.customProgressBar.resetAnimation()
+
+            }
         }
-        else {
-            cell.username.text = posts[indexPath.row].username
-        }
+        
         
         
         cell.likesView.isHidden = posts[indexPath.row].isLiked
@@ -141,7 +151,8 @@ extension SMViewController: UITableViewDataSource, UITableViewDelegate {
         cell.profilePicture.loadImage(urlString: posts[indexPath.row].image)
         cell.streak.text = String(posts[indexPath.row].streak) + "🔥"
         cell.likes.text = String(posts[indexPath.row].likesCount) + "🎉"
-        cell.progressBar.progress = posts[indexPath.row].progress
+        cell.customProgressBar.progress = CGFloat(posts[indexPath.row].progress)
+
         cell.progressPercentage.text = String(format: "%.0f", posts[indexPath.row].progress * 100) + "%"
         //cell.contentView.backgroundColor = (posts[indexPath.row].isLiked == true) ? .systemYellow : .systemGray6
         
