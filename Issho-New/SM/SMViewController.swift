@@ -134,6 +134,9 @@ extension SMViewController: UITableViewDataSource, UITableViewDelegate {
                 cell.username.text = "⚡️" + self.posts[indexPath.row].username
                 
                 cell.customProgressBar.createRepeatingAnimation()
+                cell.likes.textColor = .darkGray
+                cell.streak.textColor = .darkGray
+                cell.username.textColor = .black
             }
             else {
                 cell.username.text = self.posts[indexPath.row].username
@@ -145,6 +148,17 @@ extension SMViewController: UITableViewDataSource, UITableViewDelegate {
         
         
         cell.likesView.isHidden = posts[indexPath.row].isLiked
+        if (posts[indexPath.row].isLiked == true) {
+            cell.likes.textColor = .gray
+            cell.streak.textColor = .gray
+            cell.username.textColor = .gray
+        }
+        else {
+            cell.likes.textColor = .darkGray
+            cell.streak.textColor = .darkGray
+            cell.username.textColor = .black
+        }
+        
         print(posts[indexPath.row])
         print(posts[indexPath.row].isLiked)
         

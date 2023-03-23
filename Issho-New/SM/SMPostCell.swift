@@ -48,8 +48,7 @@ class SMPostCell: UITableViewCell {
         likes.font = Constants.Fonts.smUsernameFont
         streak.font = Constants.Fonts.smUsernameFont
         
-        likes.textColor = .gray
-        streak.textColor = .gray
+        
         
         likesView.addSeparator(at: .top, color: .lightGray, weight: 1.5, insets: UIEdgeInsets(top: 0, left: 35, bottom: 0, right: 35))
         

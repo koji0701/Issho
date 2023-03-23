@@ -179,14 +179,8 @@ extension ProfileListVC: UITableViewDataSource {
         }
         
         
-        //hide buttons
-        cell.addButton.isHidden = true
-        cell.addButton.isEnabled = false
-        cell.requestsView.isHidden = true
-        cell.acceptButton.isHidden = true
-        cell.acceptButton.isEnabled = false
-        cell.deleteButton.isHidden = true
-        cell.deleteButton.isEnabled = false
+        cell.setActionButton(for: displayItems[indexPath.row], uid: friendsForUserUID)
+        
         
         
         return cell
@@ -196,13 +190,64 @@ extension ProfileListVC: UITableViewDataSource {
 }
 
 extension ProfileListVC: AddFriendsCellDelegate {
+    func addPressed(in cell: AddFriendsCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else {return}
+        var new = User.shared().userInfo["friendRequests"] as? [String] ?? []
+        new.append(displayItems[indexPath.row].uid)
+        User.shared().updateUserInfo(newInfo: [
+            "friendRequests": new
+        ])
+    }
+    
+    func unfriendPressed(in cell: AddFriendsCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else {return}
+        Firestore.updateUserInfo(uid: User.shared().uid, fields: [
+            "friends": FieldValue.arrayRemove([displayItems[indexPath.row].uid])
+        ])
+        Firestore.updateUserInfo(uid: displayItems[indexPath.row].uid, fields: [
+            "friends": FieldValue.arrayRemove([User.shared().uid])
+        ])
+    }
+    
+    func requestSentPressed(in cell: AddFriendsCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else {return}
+        var new = User.shared().userInfo["friendRequests"] as? [String] ?? []
+        new.removeAll(where: {$0 == displayItems[indexPath.row].uid})
+        User.shared().updateUserInfo(newInfo: [
+            "friendRequests": new
+        ])
+    }
+    
     
     func deleteRequest(in cell: AddFriendsCell) {
-        return
+        guard let indexPath = tableView.indexPath(for: cell) else {return}
+        Firestore.updateUserInfo(uid: displayItems[indexPath.row].uid, fields: ["friendRequests": FieldValue.arrayRemove([User.shared().uid])])
+        cell.requestsView.isHidden = true
+        
+        cell.actionButton.isHidden = false
+        cell.actionButton.isEnabled = true
+        cell.actionButton.setTitle("Add", for: .normal)
     }
     
     func acceptRequest(in cell: AddFriendsCell) {
-        return
+        guard let indexPath = tableView.indexPath(for: cell) else {return}
+        
+        cell.requestsView.isHidden = true
+        
+        cell.actionButton.isHidden = false
+        cell.actionButton.isEnabled = true
+        cell.actionButton.setTitle("Friends", for: .normal)
+        let user = displayItems[indexPath.row]
+        
+        var new = User.shared().userInfo["friends"] as? [String] ?? []
+        new.append(user.uid)
+        User.shared().updateUserInfo(newInfo: [
+            "friends": new
+        ])
+        Firestore.updateUserInfo(uid: user.uid, fields: [
+            "friends": FieldValue.arrayUnion([User.shared().uid]),
+            "friendRequests": FieldValue.arrayRemove([User.shared().uid])
+        ])
     }
     
     func viewProfile(in cell: AddFriendsCell) {

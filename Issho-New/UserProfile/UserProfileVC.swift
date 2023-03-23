@@ -24,7 +24,7 @@ class UserProfileVC: UIViewController {
     
     @IBOutlet weak var button: UIButton!
     
-    /** different states of the button: Follow, Unfriend, Friends, Add Friends, Accept Request, Request Sent **/
+    /** different states of the button: Add, Unfriend, Friends, Add Friends, Accept Request, Request Sent **/
     
     
     
@@ -129,8 +129,8 @@ class UserProfileVC: UIViewController {
             }
         }
         else {
-            print("making it follow")
-            button.setTitle("Follow", for: .normal)
+            print("making it add")
+            button.setTitle("Add", for: .normal)
         }
     }
     
@@ -138,7 +138,7 @@ class UserProfileVC: UIViewController {
     
     @IBAction func buttonClicked(_ sender: Any) {
         print("button clicked", button.currentTitle)
-        if (button.currentTitle == "Follow") {
+        if (button.currentTitle == "Add") {
             button.setTitle("Request Sent", for: .normal)
             var new = User.shared().userInfo["friendRequests"] as? [String] ?? []
             new.append(user.uid)
@@ -161,7 +161,7 @@ class UserProfileVC: UIViewController {
         }
         
         else if (button.currentTitle == "Request Sent") {
-            button.setTitle("Follow", for: .normal)
+            button.setTitle("Add", for: .normal)
             
             var new = User.shared().userInfo["friendRequests"] as? [String] ?? []
             new.removeAll(where: {$0 == user.uid})
@@ -176,7 +176,7 @@ class UserProfileVC: UIViewController {
         }
         
         else if (button.currentTitle == "Unfriend") {
-            button.setTitle("Follow", for: .normal)
+            button.setTitle("Add", for: .normal)
             /*
             var new = User.shared().userInfo["friends"] as? [String] ?? []
             new.removeAll(where: {$0 == user.uid})

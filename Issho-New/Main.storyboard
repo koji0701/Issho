@@ -65,7 +65,7 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lqt-33-xy5" userLabel="Edit profile button">
-                                <rect key="frame" x="142" y="174" width="106" height="34.666666666666657"/>
+                                <rect key="frame" x="142" y="174" width="106" height="34.666666666666629"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="Edit profile"/>
                                 <connections>
@@ -690,7 +690,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="BK9-21-k6P"/>
+        <segue reference="dTI-Bl-88Y"/>
         <segue reference="sFr-pL-dSo"/>
         <segue reference="Vpc-bA-ptI"/>
     </inferredMetricsTieBreakers>

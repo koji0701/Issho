@@ -306,6 +306,7 @@ struct Constants {
         static let progressBarFont = UIFont(name: "NunitoSans-ExtraBold", size: 20)
         
         static let smUsernameFont = UIFont(name: "NunitoSans-ExtraBold", size: 18)
+        static let profileListUsernameFont = UIFont(name: "NunitoSans-ExtraBold", size: 18)
         
     }
     

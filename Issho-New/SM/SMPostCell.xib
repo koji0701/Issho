@@ -100,18 +100,11 @@
                                                         <subviews>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="atv-Jf-xFz" userLabel="CustomProgressBar" customClass="GradientHorizontalProgressBar" customModule="Issho_New" customModuleProvider="target">
                                                                 <rect key="frame" x="0.0" y="0.0" width="293" height="20"/>
-                                                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                                <color key="backgroundColor" systemColor="placeholderTextColor"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="20" id="1p8-lL-kpi"/>
                                                                 </constraints>
                                                             </view>
-                                                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" horizontalCompressionResistancePriority="740" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Ss2-sT-I0E" userLabel="ProgressBar">
-                                                                <rect key="frame" x="0.0" y="0.0" width="293" height="20"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="height" constant="20" id="fT1-Gh-DUM"/>
-                                                                </constraints>
-                                                                <color key="progressTintColor" red="0.47684186699999997" green="0.50480759139999998" blue="1" alpha="0.80499793050000001" colorSpace="custom" customColorSpace="sRGB"/>
-                                                            </progressView>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fja-MU-6wp" userLabel="Percentage">
                                                                 <rect key="frame" x="15.000000000000004" y="-0.3333333333333286" width="41.333333333333343" height="21"/>
                                                                 <constraints>
@@ -124,11 +117,8 @@
                                                         </subviews>
                                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="trailing" secondItem="Ss2-sT-I0E" secondAttribute="trailing" id="KJS-OD-Jpk"/>
                                                             <constraint firstAttribute="trailing" secondItem="atv-Jf-xFz" secondAttribute="trailing" id="SA0-G7-B1d"/>
-                                                            <constraint firstItem="Ss2-sT-I0E" firstAttribute="centerY" secondItem="F1r-PI-jZ8" secondAttribute="centerY" id="UER-2U-9H4"/>
                                                             <constraint firstItem="atv-Jf-xFz" firstAttribute="centerY" secondItem="F1r-PI-jZ8" secondAttribute="centerY" id="Vqt-i4-2TS"/>
-                                                            <constraint firstItem="Ss2-sT-I0E" firstAttribute="leading" secondItem="F1r-PI-jZ8" secondAttribute="leading" id="XlJ-aB-RRY"/>
                                                             <constraint firstItem="Fja-MU-6wp" firstAttribute="leading" secondItem="F1r-PI-jZ8" secondAttribute="leading" constant="15" id="bul-4j-cZu"/>
                                                             <constraint firstAttribute="height" constant="20" id="dOh-dZ-zFL"/>
                                                             <constraint firstItem="atv-Jf-xFz" firstAttribute="leading" secondItem="F1r-PI-jZ8" secondAttribute="leading" id="w3U-Tc-Mib"/>
@@ -203,7 +193,6 @@
                 <outlet property="likesView" destination="BPy-Mg-Gsn" id="ZoU-Hc-dnd"/>
                 <outlet property="profilePicture" destination="Dqa-8o-8xt" id="5JQ-nj-GAM"/>
                 <outlet property="profilePictureTapView" destination="WCT-TO-RpO" id="fMS-s6-EqQ"/>
-                <outlet property="progressBar" destination="Ss2-sT-I0E" id="dll-mb-suu"/>
                 <outlet property="progressPercentage" destination="Fja-MU-6wp" id="Jf9-0o-JLx"/>
                 <outlet property="streak" destination="heb-HY-KHh" id="2Vj-TP-r7O"/>
                 <outlet property="username" destination="JEF-eL-ozf" id="u0F-oT-uzJ"/>
@@ -213,6 +202,9 @@
     </objects>
     <resources>
         <image name="paperplane.fill" catalog="system" width="128" height="119"/>
+        <systemColor name="placeholderTextColor">
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.29803921568627451" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
