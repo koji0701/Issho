@@ -13,16 +13,21 @@ import FirebaseFirestore
 
 class UserProfileVC: UIViewController {
     
+    
+    
     var user: UserInfo!
     
     @IBOutlet weak var usernameLabel: UILabel!
-    @IBOutlet weak var friendsCountLabel: UILabel!
+    @IBOutlet weak var friendsLabel: UILabel!
     
     @IBOutlet weak var profilePicImage: CustomImageView!
     
     @IBOutlet weak var streakLabel: UILabel!
     
+    @IBOutlet weak var likesLabel: UILabel!
     @IBOutlet weak var button: UIButton!
+    
+    var friendStatusChanged: Bool = false
     
     /** different states of the button: Add, Unfriend, Friends, Add Friends, Accept Request, Request Sent **/
     
@@ -57,9 +62,14 @@ class UserProfileVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        friendsCountLabel.isUserInteractionEnabled = true
+        friendsLabel.isUserInteractionEnabled = true
         let friendsTapGesture = UITapGestureRecognizer(target: self, action: #selector(handleFriendsTap))
-        friendsCountLabel.addGestureRecognizer(friendsTapGesture)
+        friendsLabel.addGestureRecognizer(friendsTapGesture)
+        
+        usernameLabel.font = Constants.Fonts.userProfileUsernameFont
+        friendsLabel.font = Constants.Fonts.userProfileAttributesFonts
+        streakLabel.font = Constants.Fonts.userProfileAttributesFonts
+        likesLabel.font = Constants.Fonts.userProfileAttributesFonts
     }
     
     @objc private func handleFriendsTap() {
@@ -75,18 +85,24 @@ class UserProfileVC: UIViewController {
             }
             profileListVC.friendsForUserUID = user.uid
             
-            
         }
+        
     }
     
     private func setUpUser() {
         
         guard var user = user else {
             let username = User.shared().userInfo["username"] as? String ?? "Username"
-            let streak = User.shared().userInfo["streak"] as? String ?? "0"
-            streakLabel.text = streak
+            let streak = User.shared().userInfo["streak"] as? Int ?? 0
+            let likes = User.shared().userInfo["todaysLikes"] as? [String] ?? [String]()
+            let streakIsLate = User.shared().userInfo["streakIsLate"] as? Bool ?? false
+            likesLabel.text = " \(likes.count)🎉"
+            streakLabel.text = "• \(streak)🔥"
+            if (streakIsLate == true) {
+                streakLabel.text! += "⏳"
+            }
             usernameLabel.text = username
-            friendsCountLabel.text = String((User.shared().userInfo["friends"] as? [String])?.count ?? 0)
+            friendsLabel.text = String((User.shared().userInfo["friends"] as? [String])?.count ?? 0) + " friends "
             
             profilePicImage.loadImage(urlString: User.shared().userInfo["image"] as! String)
             
@@ -103,9 +119,13 @@ class UserProfileVC: UIViewController {
         profilePicImage.loadImage(urlString: user.image)
         
         //set all the labels
+        likesLabel.text = "  \(user.todaysLikes.count)🎉"
         usernameLabel.text = user.username
-        streakLabel.text = "\(user.streak)"
-        friendsCountLabel.text = String(user.friendsCount)
+        streakLabel.text = " • \(user.streak)🔥"
+        if (user.streakIsLate == true) {
+            streakLabel.text! += "⏳"
+        }
+        friendsLabel.text = String(user.friendsCount) + " friends"
         
         settingsButton.isHidden = true
         if (user.friends.contains(User.shared().uid)) {
@@ -138,6 +158,8 @@ class UserProfileVC: UIViewController {
     
     @IBAction func buttonClicked(_ sender: Any) {
         print("button clicked", button.currentTitle)
+        
+        friendStatusChanged = true
         if (button.currentTitle == "Add") {
             button.setTitle("Request Sent", for: .normal)
             var new = User.shared().userInfo["friendRequests"] as? [String] ?? []
@@ -151,7 +173,7 @@ class UserProfileVC: UIViewController {
             button.setTitle("Friends", for: .normal)
             var new = User.shared().userInfo["friends"] as? [String] ?? []
             new.append(user.uid)
-            User.shared().updateUserInfo(newInfo: [
+            Firestore.updateUserInfo(uid: User.shared().uid, fields: [
                 "friends": new
             ])
             Firestore.updateUserInfo(uid: user.uid, fields: [

@@ -33,7 +33,8 @@ extension Firestore {
             "likes": [String](),
             "friendRequests": [String](),
             "image": image,
-            "todaysLikes": [String]()
+            "todaysLikes": [String](),
+            "streakIsLate": false
             
         ])
         User.shared().initUserInfo()

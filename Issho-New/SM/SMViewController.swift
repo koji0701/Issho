@@ -13,6 +13,7 @@ class SMViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
+    //MARK: accept the userInfoUpdated call in order to update the users shown here. can just compare old update to new update, no need for firestore
     
     
     let db = Firestore.firestore()
@@ -20,7 +21,7 @@ class SMViewController: UIViewController {
     var posts = [UserInfo]()
     
     
-    private func fetchPosts() {
+    func fetchPosts() {
         
         db.collection(Constants.FBase.collectionName).whereField("friends", arrayContains: User.shared().uid).getDocuments() { querySnapshot, error in
             self.posts = []
@@ -34,10 +35,10 @@ class SMViewController: UIViewController {
                         let data = doc.data()
                         
                         
-                        if let streak = data["streak"] as? Int, let isWorking = data["isWorking"] as? Bool, let lastUpdated = data["lastUpdated"] as? Timestamp, let username = data["username"] as? String, let progress = data["progress"] as? Float, let likes = data["likes"] as? [String], let friends = data["friends"] as? [String], let friendReq = data["friendRequests"], let image = data["image"], let todaysLikes = data["todaysLikes"] as? [String] {
+                        if let streak = data["streak"] as? Int, let isWorking = data["isWorking"] as? Bool, let lastUpdated = data["lastUpdated"] as? Timestamp, let username = data["username"] as? String, let progress = data["progress"] as? Float, let likes = data["likes"] as? [String], let friends = data["friends"] as? [String], let friendReq = data["friendRequests"], let image = data["image"], let todaysLikes = data["todaysLikes"] as? [String], let streakIsLate = data["streakIsLate"] as? Bool {
                             print("got past the if let conditions")
                             let isLiked = likes.contains(User.shared().uid)//if likes contains uid, true its been liked
-                            let dict: [String: Any] = ["streak": streak, "isWorking": isWorking, "lastUpdated": lastUpdated.dateValue(), "username": username, "progress": progress, "isLiked": isLiked, "friends": friends, "friendRequests": friendReq, "image": image, "likes": likes, "todaysLikes": todaysLikes]
+                            let dict: [String: Any] = ["streak": streak, "isWorking": isWorking, "lastUpdated": lastUpdated.dateValue(), "username": username, "progress": progress, "isLiked": isLiked, "friends": friends, "friendRequests": friendReq, "image": image, "likes": likes, "todaysLikes": todaysLikes, "streakIsLate": streakIsLate]
                             
                             
                             let newPost = UserInfo(uid: doc.documentID, dictionary: dict)
@@ -96,7 +97,7 @@ class SMViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        fetchPosts()
+        //fetchPosts()
         tableView.dataSource = self
         tableView.register(UINib(nibName: Constants.SM.nibName, bundle: nil), forCellReuseIdentifier: "SMReusablePostCell")
         tableView.delegate = self
@@ -105,6 +106,7 @@ class SMViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.setNavigationBarHidden(false, animated: false)
         tabBarController?.tabBar.isHidden = true
+        fetchPosts()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -164,7 +166,7 @@ extension SMViewController: UITableViewDataSource, UITableViewDelegate {
         
         cell.profilePicture.loadImage(urlString: posts[indexPath.row].image)
         cell.streak.text = String(posts[indexPath.row].streak) + "🔥"
-        cell.likes.text = String(posts[indexPath.row].likesCount) + "🎉"
+        cell.likes.text = String(posts[indexPath.row].todaysLikes.count) + "🎉"
         cell.customProgressBar.progress = CGFloat(posts[indexPath.row].progress)
 
         cell.progressPercentage.text = String(format: "%.0f", posts[indexPath.row].progress * 100) + "%"
@@ -180,6 +182,14 @@ extension SMViewController: UITableViewDataSource, UITableViewDelegate {
         
         let radius = cell.contentView.layer.cornerRadius
         cell.layer.shadowPath = UIBezierPath(roundedRect: cell.bounds, cornerRadius: radius).cgPath
+    }
+    
+    func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        if (posts.count == 0) {
+            //MARK: add friends button here? put in the footer for view
+            return "No friends"
+        }
+        return nil
     }
 
 }
@@ -209,4 +219,6 @@ extension SMViewController: PostDelegate {
         let info = posts[indexPath.row]
         performSegue(withIdentifier: Constants.Segues.SMToUserProfile, sender: info)
     }
+    
+    
 }

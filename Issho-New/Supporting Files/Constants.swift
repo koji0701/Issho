@@ -14,6 +14,7 @@ struct Constants {
         static let nibName = "ToDoEntryCell"
         static let reuseIdentifier = "ToDoReusableEntryCell"
         
+        
         static let emojis = [
             "🎃",
             "🎄",
@@ -295,6 +296,9 @@ struct Constants {
         
         static var showCompletedEntries = false
         static var displayMode = 1
+        
+        static let toDoProgressUntilDate = 0
+
     }
     
     struct Fonts {
@@ -308,6 +312,13 @@ struct Constants {
         static let smUsernameFont = UIFont(name: "NunitoSans-ExtraBold", size: 18)
         static let profileListUsernameFont = UIFont(name: "NunitoSans-ExtraBold", size: 18)
         
+        static let friendRequestsLabelFont = UIFont(name: "NunitoSans-ExtraBold", size: 20)
+        
+        static let userProfileUsernameFont = UIFont(name: "NunitoSans-ExtraBold", size: 24)
+        static let userProfileAttributesFonts = UIFont(name: "NunitoSans-SemiBold", size: 18)
+        
+        static let welcomeForms = UIFont(name: "NunitoSans-SemiBold", size: 18)
+        static let welcomeSignupButton = UIFont(name: "NunitoSans-ExtraBold", size: 20)
     }
     
 }

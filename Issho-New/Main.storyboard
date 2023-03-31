@@ -65,7 +65,7 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lqt-33-xy5" userLabel="Edit profile button">
-                                <rect key="frame" x="142" y="174" width="106" height="34.666666666666629"/>
+                                <rect key="frame" x="142" y="174" width="106" height="34.666666666666657"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="Edit profile"/>
                                 <connections>
@@ -355,7 +355,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="SHi-cp-qFT">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="SHi-cp-qFT">
                                 <rect key="frame" x="0.0" y="91" width="390" height="670"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </tableView>
@@ -387,27 +387,35 @@
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="rdR-4Z-xKg" userLabel="FriendRequestsTableView">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="rdR-4Z-xKg" userLabel="FriendRequestsTableView">
                                 <rect key="frame" x="0.0" y="91" width="390" height="753"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <view key="tableHeaderView" contentMode="scaleToFill" id="Ufm-SN-XnT" userLabel="HeaderView">
-                                    <rect key="frame" x="0.0" y="0.0" width="390" height="77"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="390" height="114"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
-                                        <searchBar contentMode="redraw" searchBarStyle="minimal" text="" placeholder="Search by username" showsCancelButton="YES" translatesAutoresizingMaskIntoConstraints="NO" id="x6H-Vz-k7i">
-                                            <rect key="frame" x="0.0" y="5" width="390" height="56"/>
+                                        <searchBar contentMode="redraw" searchBarStyle="minimal" text="" placeholder="Search by username" translatesAutoresizingMaskIntoConstraints="NO" id="x6H-Vz-k7i">
+                                            <rect key="frame" x="7" y="5" width="376" height="56"/>
                                             <textInputTraits key="textInputTraits" autocorrectionType="no"/>
                                             <scopeButtonTitles>
                                                 <string>Title</string>
                                                 <string>Title</string>
                                             </scopeButtonTitles>
                                         </searchBar>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Friend Requests" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P6z-9P-I3k">
+                                            <rect key="frame" x="15.000000000000007" y="79" width="124.66666666666669" height="20"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
+                                        <constraint firstItem="P6z-9P-I3k" firstAttribute="leading" secondItem="Ufm-SN-XnT" secondAttribute="leading" constant="15" id="6gx-lz-2y6"/>
                                         <constraint firstItem="x6H-Vz-k7i" firstAttribute="top" secondItem="Ufm-SN-XnT" secondAttribute="top" constant="5" id="Wvs-GN-N4f"/>
-                                        <constraint firstAttribute="trailing" secondItem="x6H-Vz-k7i" secondAttribute="trailing" id="ds0-Gx-jyx"/>
-                                        <constraint firstItem="x6H-Vz-k7i" firstAttribute="leading" secondItem="Ufm-SN-XnT" secondAttribute="leading" id="ve5-qF-nMt"/>
+                                        <constraint firstAttribute="trailing" secondItem="x6H-Vz-k7i" secondAttribute="trailing" constant="7" id="ds0-Gx-jyx"/>
+                                        <constraint firstItem="x6H-Vz-k7i" firstAttribute="leading" secondItem="Ufm-SN-XnT" secondAttribute="leading" constant="7" id="ve5-qF-nMt"/>
+                                        <constraint firstAttribute="bottom" secondItem="P6z-9P-I3k" secondAttribute="bottom" constant="15" id="yFO-7k-zJz"/>
                                     </constraints>
                                 </view>
                             </tableView>
@@ -424,6 +432,7 @@
                     <navigationItem key="navigationItem" title="Add Friends" id="IZV-EH-Jvj"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics"/>
                     <connections>
+                        <outlet property="friendRequestsLabel" destination="P6z-9P-I3k" id="rpM-Lq-CSv"/>
                         <outlet property="searchBar" destination="x6H-Vz-k7i" id="G3c-iu-ktE"/>
                         <outlet property="tableView" destination="rdR-4Z-xKg" id="0S2-xl-HHm"/>
                         <segue destination="RdK-Zf-Ors" kind="show" identifier="AddFriendsToUserProfile" id="dTI-Bl-88Y"/>
@@ -431,7 +440,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HuR-QR-c4M" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1348" y="944"/>
+            <point key="canvasLocation" x="1347.6923076923076" y="943.3649289099526"/>
         </scene>
         <!--Custom Tab Bar Controller-->
         <scene sceneID="RX8-on-Hg9">
@@ -531,13 +540,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="23" translatesAutoresizingMaskIntoConstraints="NO" id="uPB-eh-zkV" userLabel="Big Stack">
-                                <rect key="frame" x="81" y="96" width="228" height="312"/>
+                                <rect key="frame" x="120" y="96" width="150" height="271.66666666666669"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="fTY-wy-o4Q" userLabel="Profile + Stats Stack">
-                                        <rect key="frame" x="0.0" y="0.0" width="228" height="243"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="150" height="202.66666666666666"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5UW-9A-OrN">
-                                                <rect key="frame" x="45" y="0.0" width="138" height="182.33333333333334"/>
+                                                <rect key="frame" x="6" y="0.0" width="138" height="182.33333333333334"/>
                                                 <subviews>
                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pencil.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="crU-5I-wJV" userLabel="ProfilePic" customClass="CustomImageView" customModule="Issho_New" customModuleProvider="target">
                                                         <rect key="frame" x="20" y="21.000000000000007" width="98" height="96.666666666666686"/>
@@ -566,54 +575,26 @@
                                                     <constraint firstItem="vO8-JK-r3W" firstAttribute="centerX" secondItem="crU-5I-wJV" secondAttribute="centerX" id="vjX-dX-nJf"/>
                                                 </constraints>
                                             </view>
-                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="29" translatesAutoresizingMaskIntoConstraints="NO" id="eIo-20-EYN" userLabel="StatsStack">
-                                                <rect key="frame" x="0.0" y="182.33333333333331" width="228" height="60.666666666666657"/>
+                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="eIo-20-EYN" userLabel="StatsStack">
+                                                <rect key="frame" x="0.0" y="182.33333333333331" width="150" height="20.333333333333343"/>
                                                 <subviews>
-                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="m5f-We-y44" userLabel="FriendsStackView">
-                                                        <rect key="frame" x="0.0" y="0.0" width="56.666666666666664" height="60.666666666666664"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10 friends" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IcC-LS-EMQ" userLabel="Friends">
+                                                        <rect key="frame" x="0.0" y="0.0" width="75" height="20.333333333333332"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kZw-Xv-yw7">
+                                                        <rect key="frame" x="75" y="0.0" width="75" height="20.333333333333332"/>
                                                         <subviews>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IcC-LS-EMQ" userLabel="FriendsCountLabel">
-                                                                <rect key="frame" x="0.0" y="0.0" width="56.666666666666664" height="20.333333333333332"/>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="•100" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z6U-0d-J4b" userLabel="Streak">
+                                                                <rect key="frame" x="0.0" y="0.0" width="48.333333333333336" height="20.333333333333332"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Friends" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="80d-Hr-q6p" userLabel="Friends Word Label">
-                                                                <rect key="frame" x="0.0" y="40.333333333333371" width="56.666666666666664" height="20.333333333333329"/>
-                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                                <nil key="textColor"/>
-                                                                <nil key="highlightedColor"/>
-                                                            </label>
-                                                        </subviews>
-                                                    </stackView>
-                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="35R-7C-Y9I" userLabel="BestStreakStack">
-                                                        <rect key="frame" x="85.666666666666657" y="0.0" width="56.666666666666657" height="60.666666666666664"/>
-                                                        <subviews>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="100" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z6U-0d-J4b" userLabel="StreakLabel">
-                                                                <rect key="frame" x="14.333333333333341" y="0.0" width="28.333333333333329" height="20.333333333333332"/>
-                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                                <nil key="textColor"/>
-                                                                <nil key="highlightedColor"/>
-                                                            </label>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Streak" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rBN-AP-9YI" userLabel="Streak Word Label">
-                                                                <rect key="frame" x="4" y="40.333333333333371" width="49" height="20.333333333333329"/>
-                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                                <nil key="textColor"/>
-                                                                <nil key="highlightedColor"/>
-                                                            </label>
-                                                        </subviews>
-                                                    </stackView>
-                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="lxg-Hc-A2t" userLabel="LikesStack">
-                                                        <rect key="frame" x="171.33333333333334" y="0.0" width="56.666666666666657" height="60.666666666666664"/>
-                                                        <subviews>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="800" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oVc-IN-fyt" userLabel="LikesLabel">
-                                                                <rect key="frame" x="0.0" y="0.0" width="56.666666666666664" height="20.333333333333332"/>
-                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                                <nil key="textColor"/>
-                                                                <nil key="highlightedColor"/>
-                                                            </label>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Likes" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w3M-R9-8fT" userLabel="Likes Word Label">
-                                                                <rect key="frame" x="0.0" y="40.333333333333371" width="56.666666666666664" height="20.333333333333329"/>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" text="  10" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Ej-44-JEw" userLabel="Likes">
+                                                                <rect key="frame" x="48.333333333333343" y="0.0" width="26.666666666666671" height="20.333333333333332"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
@@ -625,7 +606,7 @@
                                         </subviews>
                                     </stackView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xYV-Og-tvw" userLabel="Control Button">
-                                        <rect key="frame" x="64" y="266" width="100" height="46"/>
+                                        <rect key="frame" x="25" y="225.66666666666669" width="100" height="46"/>
                                         <constraints>
                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="9kO-fp-E3M"/>
                                             <constraint firstAttribute="height" constant="46" id="OhI-OC-dbJ"/>
@@ -673,7 +654,8 @@
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="button" destination="xYV-Og-tvw" id="S69-h4-RwB"/>
-                        <outlet property="friendsCountLabel" destination="IcC-LS-EMQ" id="Um8-6Z-5n6"/>
+                        <outlet property="friendsLabel" destination="IcC-LS-EMQ" id="Um8-6Z-5n6"/>
+                        <outlet property="likesLabel" destination="4Ej-44-JEw" id="Dbp-0V-3lg"/>
                         <outlet property="profilePicImage" destination="crU-5I-wJV" id="tNg-m4-pw3"/>
                         <outlet property="settingsButton" destination="jhl-hS-bCF" id="Ij5-ZJ-CDL"/>
                         <outlet property="streakLabel" destination="z6U-0d-J4b" id="Txq-nV-yFZ"/>

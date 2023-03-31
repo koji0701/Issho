@@ -126,10 +126,3 @@ class SMPostCell: UITableViewCell {
     
     
 }
-/*
-extension SMPostCell {
-    override func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-            return true
-        }
-}
-*/

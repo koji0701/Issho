@@ -58,6 +58,7 @@ class User {
                     "lastUpdated": document["lastUpdated"] as? Date ?? Date(),
                     "image": document["image"] as? String ?? "default",
                     "todaysLikes": document["todaysLikes"] as! [String],
+                    "streakIsLate": document["streakIsLate"] as! Bool
 
                 ]
                 self.lastUpdateUserInfo = self.userInfo
@@ -94,10 +95,12 @@ class User {
             "friends": newInfo["friends"] as? [String] ?? userInfo["friends"]!,
             "lastUpdated": newInfo["lastUpdated"] as? [String] ?? userInfo["lastUpdated"]!,
             "image": newInfo["image"] as? String ?? userInfo["image"] ?? lastUpdateUserInfo["image"]!,
-            "todaysLikes": newInfo["todaysLikes"] as? [String] ?? userInfo["todaysLikes"]!
+            "todaysLikes": newInfo["todaysLikes"] as? [String] ?? userInfo["todaysLikes"]!,
+            "streakIsLate": newInfo["streakIsLate"] as? Bool ?? userInfo["streakIsLate"]!
             
         ]
-        
+        NotificationCenter.default.post(name: NSNotification.Name("userInfoUpdated"),
+                                        object: UserInfo(dictionary: self.userInfo))
         dbUpdateTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { [weak self] _ in
             guard let self = self else {return}
             print("dbUpdateTimer is running")
@@ -108,8 +111,7 @@ class User {
                 self.lastUpdateUserInfo = self.userInfo//set the last update to current userinfo
                 //push the update to firestoer
                 Firestore.updateUserInfo(uid: self.uid, fields: self.userInfo)
-                NotificationCenter.default.post(name: NSNotification.Name("userInfoUpdated"),
-                                                object: UserInfo(dictionary: self.userInfo))
+                
             }
             
             

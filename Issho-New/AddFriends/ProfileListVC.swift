@@ -12,12 +12,14 @@ import FirebaseFirestore
 class ProfileListVC: UIViewController {
     
     
+    //MARK: accept the userInfoUpdated call in order to update the users shown here. can just compare old update to new update, no need for firestore
     
     @IBOutlet weak var tableView: UITableView!
     var displayMode: Int! //0 - likes, 1 - friends
     
-    var displayLikes = [UserInfo]()
     var likesDuplicatesCount = [String: Int]()
+    
+    let userDownloader = UserDownloader()
 
     
     var displayFriends = [UserInfo]()
@@ -38,13 +40,7 @@ class ProfileListVC: UIViewController {
         tabBarController?.tabBar.isHidden = true
         navigationController?.navigationBar.backItem?.title = ""
         if (displayMode == 0) {
-            if (displayLikes.isEmpty) {
-                fetchLikes()
-            }
-            else {
-                displayItems = displayLikes
-                tableView.reloadData()
-            }
+            fetchLikes()
 
             navigationItem.title = "Likes"
             print("display mode working")
@@ -79,10 +75,10 @@ class ProfileListVC: UIViewController {
                         print("found one doc")
                         let data = doc.data()
                         print(data)
-                        if let streak = data["streak"] as? Int, let isWorking = data["isWorking"] as? Bool, let lastUpdated = data["lastUpdated"] as? Timestamp, let username = data["username"] as? String, let progress = data["progress"] as? Float, let likes = data["likes"] as? [String], let friends = data["friends"] as? [String], let friendRq = data["friendRequests"] as? [String], let image = data["image"] {
+                        if let streak = data["streak"] as? Int, let isWorking = data["isWorking"] as? Bool, let lastUpdated = data["lastUpdated"] as? Timestamp, let username = data["username"] as? String, let progress = data["progress"] as? Float, let likes = data["likes"] as? [String], let friends = data["friends"] as? [String], let friendRq = data["friendRequests"] as? [String], let image = data["image"], let todaysLikes = data["todaysLikes"] as? [String] {
                             print("got past the if let conditions")
                             
-                            let dict: [String: Any] = ["streak": streak, "isWorking": isWorking, "lastUpdated": lastUpdated.dateValue(), "username": username, "progress": progress, "friends": friends, "friendRequests": friendRq, "likes": likes, "image": image]
+                            let dict: [String: Any] = ["streak": streak, "isWorking": isWorking, "lastUpdated": lastUpdated.dateValue(), "username": username, "progress": progress, "friends": friends, "friendRequests": friendRq, "likes": likes, "image": image, "todaysLikes": todaysLikes]
                             
                             
                             let friendReq = UserInfo(uid: doc.documentID, dictionary: dict)
@@ -102,7 +98,6 @@ class ProfileListVC: UIViewController {
     }
     
     private func fetchLikes() {
-        let db = Firestore.firestore()
         guard let rawTodaysLikes = User.shared().userInfo["todaysLikes"] as? [String] else {return}
  
         // Create a set to remove duplicates and a dictionary to count duplicates
@@ -115,6 +110,16 @@ class ProfileListVC: UIViewController {
             }
         }
         
+        userDownloader.downloadUsers(uidsToSearch: uniqueTodaysLikes, completion: {userArray, error in
+            if let error = error {
+                print("error in the fetchLikes call for userDownloader", error)
+                return
+            }
+            
+            self.displayItems = userArray
+            self.tableView.reloadData()
+        })
+        /*
         db.collection(Constants.FBase.collectionName)
           .whereField("__name__", in: uniqueTodaysLikes)
           .getDocuments() { (querySnapshot, error) in
@@ -130,10 +135,10 @@ class ProfileListVC: UIViewController {
                           print("found one doc")
                           let data = doc.data()
                           
-                          if let streak = data["streak"] as? Int, let isWorking = data["isWorking"] as? Bool, let lastUpdated = data["lastUpdated"] as? Timestamp, let username = data["username"] as? String, let progress = data["progress"] as? Float, let likes = data["likes"] as? [String], let friends = data["friends"] as? [String], let friendRq = data["friendRequests"] as? [String], let image = data["image"] {
+                          if let streak = data["streak"] as? Int, let isWorking = data["isWorking"] as? Bool, let lastUpdated = data["lastUpdated"] as? Timestamp, let username = data["username"] as? String, let progress = data["progress"] as? Float, let likes = data["likes"] as? [String], let friends = data["friends"] as? [String], let friendRq = data["friendRequests"] as? [String], let image = data["image"], let todaysLikes = data["todaysLikes"] as? [String] {
                               print("got past the if let conditions")
                               
-                              let dict: [String: Any] = ["streak": streak, "isWorking": isWorking, "lastUpdated": lastUpdated.dateValue(), "username": username, "progress": progress, "friends": friends, "friendRequests": friendRq, "likes": likes, "image": image]
+                              let dict: [String: Any] = ["streak": streak, "isWorking": isWorking, "lastUpdated": lastUpdated.dateValue(), "username": username, "progress": progress, "friends": friends, "friendRequests": friendRq, "likes": likes, "image": image, "todaysLikes": todaysLikes]
                               
                               
                               let user = UserInfo(uid: doc.documentID, dictionary: dict)
@@ -148,7 +153,7 @@ class ProfileListVC: UIViewController {
                   }
               }
             // Handle the query results
-        }
+        }*/
     }
 }
 
@@ -168,7 +173,7 @@ extension ProfileListVC: UITableViewDataSource {
             if (likesDuplicatesCount.contains(where: {$0.key == displayItems[indexPath.row].uid})) {
                 
                 let dispDup = likesDuplicatesCount[displayItems[indexPath.row].uid]!
-                cell.usernameLabel.text = displayItems[indexPath.row].username + "  (\(dispDup)🎉)"
+                cell.usernameLabel.text = displayItems[indexPath.row].username + "  x\(dispDup)🎉"
             }
             else {
                 cell.usernameLabel.text = displayItems[indexPath.row].username

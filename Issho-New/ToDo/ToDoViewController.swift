@@ -13,10 +13,13 @@ import IQKeyboardManagerSwift
 
 
 class ToDoViewController: UIViewController {
+    
+    let defaults = UserDefaults.standard
 
     var entries = [ToDoEntry]()
     var progress: Float = 0.0 {
         didSet {
+            percentageLabel.text = String(format: "%.f%%", progress * 100)
             customProgressBar.progress = CGFloat(progress)
         }
     }
@@ -55,7 +58,7 @@ class ToDoViewController: UIViewController {
         tabBarController?.tabBar.isHidden = true
         navigationController?.navigationBar.backItem?.title = ""
         navigationController?.navigationBar.barTintColor = .clear
-        updateIsWorking()
+        //updateIsWorking()
         
     }
     
@@ -65,9 +68,17 @@ class ToDoViewController: UIViewController {
         var info = notification.object as? UserInfo
         let likesCount = info?.likesCount as? Int ?? 0
         let streak = info?.streak as? Int ?? 0
+        let fProgress = info?.progress as? Float ?? 0.0
+        let streakIsLate = info?.streakIsLate as? Bool ?? false
         likesLabel.text = String(likesCount) + "🎉"
         streakLabel.text = String(streak) + "🔥"
-        updateIsWorking()
+        if (streakIsLate == true) {
+            streakLabel.text! += "⏳"
+        }
+        
+        if (progress > fProgress) { //if there was a firestore update pushing the progress to 0, then make sure too reupdate firestore + allow for a like
+            taskCompleted()
+        }
         
     }
     
@@ -78,6 +89,7 @@ class ToDoViewController: UIViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(userUpdate(_:)),name: NSNotification.Name ("userInfoUpdated"), object: nil)
         
+        newDayUpdates()
         
         tableView.dataSource = self
         tableView.delegate = self
@@ -827,7 +839,7 @@ extension ToDoViewController {//all helper funcs for organization
         //logic: if both are true, or both are false, then this code block will not run because I need to make sure that the updateUserInfo only happens when its needed
         if (currentTasks.count > 0) != (FSisWorking == true) {
             print("updateIsCurrentTask: will update current task in the User")
-            User.shared().updateUserInfo(newInfo: ["isWorking": !(User.shared().userInfo["isWorking"] as? Bool ?? false)])
+            User.shared().updateUserInfo(newInfo: ["isWorking": !FSisWorking])
         }
         
         DispatchQueue.main.async {
@@ -842,26 +854,47 @@ extension ToDoViewController {//all helper funcs for organization
     }
     
     private func initProgressNoFirestore() {
-        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
         let fetchRequest: NSFetchRequest<ToDoEntry> = ToDoEntry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "date <= %@", tomorrow as NSDate)
 
+        /*
+        if (Constants.Settings.toDoProgressUntilDate >= 0) {
+            let progressUntilDate = Calendar.current.date(byAdding: .day, value: Constants.Settings.toDoProgressUntilDate, to: Date())!
+            fetchRequest.predicate = NSPredicate(format: "date <= %@", progressUntilDate as NSDate)
+        }*/
+        
+        //fetchRequest.predicate = NSPredicate(format: "date <= %@", NSDate())
         do {
-            let checkedEntries = try context.fetch(fetchRequest)
-                                            .filter { $0.isChecked == true }
-            let totalEntries = try context.fetch(fetchRequest).filter {$0.isPlaceholder == false}
+            //let checkedEntries = try context.fetch(fetchRequest).filter { $0.isChecked == true }
+            //let totalEntries = try context.fetch(fetchRequest).filter {$0.isPlaceholder == false}
             //account for the isPlaceholder cell
+            let calendar = Calendar.current
             
-            self.progress = Float(checkedEntries.count) / Float(totalEntries.count)
-            if (self.progress.isNaN == true) {
-                self.progress = 1.0//if not a number set to 1.0
+            let totalEntries = try context.fetch(fetchRequest).filter {$0.isPlaceholder == false}
+            let startOfTomorrow = calendar.startOfDay(for: calendar.date(byAdding: .day, value: 1, to: Date())!)
+            
+            let todayAndPrevEntries = totalEntries.filter({$0.date! < startOfTomorrow})
+            let checkedTodayAndPrev = todayAndPrevEntries.filter({$0.isChecked == true})
+            
+            let futureEntries = totalEntries.filter({$0.date! >= startOfTomorrow})
+            let checkedFutureEntries = totalEntries.filter({$0.isChecked == true})
+            
+            if (todayAndPrevEntries.count == 0) {
+                progress = 1 + (Float(checkedFutureEntries.count) / Float(futureEntries.count))
             }
+            else {
+                progress = (Float(checkedTodayAndPrev.count + checkedFutureEntries.count)) / Float(todayAndPrevEntries.count + checkedFutureEntries.count)
+            }
+            if (progress.isNaN) {
+                progress = 1.0
+            }
+            
 
         } catch {
             progress = 0.0
             print("error in updateProgress")
         }
-        percentageLabel.text = String(format: "%.f", progress * 100) + "%"
+        
+        //percentageLabel.text = String(format: "%.f", progress * 100) + "%"
         
         //customProgressBar.progress = progress
         //customProgressBar.createDoubleAnimation()
@@ -869,69 +902,10 @@ extension ToDoViewController {//all helper funcs for organization
     }
 
     private func updateProgress() {
+        initProgressNoFirestore()
         
-        
-        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
-        let fetchRequest: NSFetchRequest<ToDoEntry> = ToDoEntry.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "date <= %@", tomorrow as NSDate)
-
-        do {
-            let checkedEntries = try context.fetch(fetchRequest)
-                                            .filter { $0.isChecked == true }
-            let totalEntries = try context.fetch(fetchRequest).filter {$0.isPlaceholder == false}
-            //account for the isPlaceholder cell
-            
-            self.progress = Float(checkedEntries.count) / Float(totalEntries.count)
-            if (self.progress.isNaN == true) {
-                self.progress = 1.0//if not a number set to 1.0
-            }
-
-        } catch {
-            progress = 0.0
-            print("error in updateProgress")
-        }
-        percentageLabel.text = String(format: "%.f%%", progress * 100)
-        //progressBar.progress = progress
-        //customProgressBar.progress = progress
         
         User.shared().updateUserInfo(newInfo: ["progress": progress])
-        
-        /*
-        
-        // invalidate the timer if it's already running
-        updateProgressTimer?.invalidate()
-        
-        // start a new timer
-        updateProgressTimer = Timer.scheduledTimer(withTimeInterval: 30.0, repeats: false) { [weak self] _ in
-            // this block of code will be executed 1 minute after `updateProgress` was last called
-            guard let self = self else {return}
-            guard let uid = Auth.auth().currentUser?.uid else {
-                print("could not find uid for currentuser in the todoviewcontroller")
-                return
-            }
-            print("updateProgressTimer function is running")
-            //while im doing a write operation, i might as well update the isCurrent bc no cost
-            self.updateIsWorkingTimer?.invalidate()//if im doing updates in here, then i might as well invalidate that one bc i can write it in here anyways. this will help reduce writes in cases wehre isCurrent is changed after the progress
-            print("in the updateProgressTimer function, updateIsWorkingTimer function is invalidated")
-            let entryIsWorking: Bool = {
-                for entry in self.entries {
-                    if entry.isCurrentTask == true {
-                        print("found an entry that isWorking = true")
-                        return true
-                    }
-                }
-                return false
-            }()
-            self.userIsWorking = entryIsWorking//update flag
-           
-            if (self.updateProgressShouldBeLastUpdatedFlag == true) {
-                Firestore.updateUserInfo(uid: uid, fields: ["likes": [String](), "lastUpdated": FieldValue.serverTimestamp(), "progress": self.progress, "isWorking": entryIsWorking])//batch updates
-                self.updateProgressShouldBeLastUpdatedFlag = false
-            }
-            else {
-                Firestore.updateUserInfo(uid: uid, fields: ["progress": self.progress, "isWorking": entryIsWorking])
-            }
-        }*/
     }
     
     private func taskCompleted() {
@@ -1087,12 +1061,24 @@ extension ToDoViewController {//all helper funcs for organization
     }
     
     private func newDayUpdates() {
+        
+        
+        let calendar = Calendar.current
+        let lastOpened = defaults.value(forKey: "appLastOpened") as? Date
+        
+        if let lO = lastOpened {
+            if (calendar.isDate(Date(), inSameDayAs: lO)) {
+                return // same day, its fine
+            }
+        }
+        
+        defaults.set(Date(), forKey: "appLastOpened")
+        
         let fetchRequest: NSFetchRequest<ToDoEntry> = ToDoEntry.fetchRequest()
         let predicate1 = NSPredicate(format: "isChecked == true AND date < %@", NSDate())
         let predicate2 = NSPredicate(format: "isPlaceholder == true")//get rid of the old placeholder
         let compoundPredicate = NSCompoundPredicate(type: .or, subpredicates: [predicate1, predicate2])
         fetchRequest.predicate = compoundPredicate
-        print("new day update")
         do {
             let toDelete = try context.fetch(fetchRequest)
             for entry in toDelete {
@@ -1104,12 +1090,10 @@ extension ToDoViewController {//all helper funcs for organization
             print("error in newDayUpdate todoviewcontroller")
         }
         loadItems()
-        
         orderEntries()//new placeholder will be added back in here
-        
         updateProgress()
         
-        //for streak
+        /*
         let calendar = Calendar.current
         let twoDaysAgo = calendar.date(byAdding: .day, value: -2, to: Date())!
         
@@ -1121,7 +1105,7 @@ extension ToDoViewController {//all helper funcs for organization
         else {
             User.shared().updateUserInfo(newInfo: ["likes": [String](), "todaysLikes": [String](), "streak": FieldValue.increment(1.0), "progress": progress])
             
-        }
+        }*/
         
     }
     

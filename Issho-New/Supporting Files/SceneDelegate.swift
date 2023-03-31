@@ -23,7 +23,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         print("scene willconnect to is running")
         
         
-            
+        
         Auth.auth().addStateDidChangeListener { auth, user in
           if user != nil {
             // User is signed in. Show home screen
@@ -43,6 +43,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
               print("current user isn't signed in")
           }
         }
+        /*
+        let welcomeStoryboard = UIStoryboard(name: "Welcome", bundle: Bundle.main)
+        self.window?.rootViewController = welcomeStoryboard.instantiateInitialViewController()!
+        self.window?.makeKeyAndVisible()*/
         window?.makeKeyAndVisible()
         
     }
