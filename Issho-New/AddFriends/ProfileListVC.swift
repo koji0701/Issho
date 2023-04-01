@@ -22,7 +22,6 @@ class ProfileListVC: UIViewController {
     let userDownloader = UserDownloader()
 
     
-    var displayFriends = [UserInfo]()
     var friendsForUserUID: String = User.shared().uid
     
     var displayItems = [UserInfo]()
@@ -31,7 +30,24 @@ class ProfileListVC: UIViewController {
         super.viewDidLoad()
         tableView.dataSource = self
         tableView.register(UINib(nibName: Constants.SM.addFriendsNibName, bundle: nil), forCellReuseIdentifier: Constants.SM.addFriendsReuseIdentifier)
+        tableView.refreshControl = UIRefreshControl()
+        tableView.refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
         
+        NotificationCenter.default.addObserver(self, selector: #selector(userUpdate(_:)),name: NSNotification.Name ("userInfoUpdated"), object: nil)
+        
+    }
+    
+    @objc private func refresh() {
+        User.shared().initUserInfo()
+    }
+    
+    @objc private func userUpdate(_ notification: Notification) {
+        if (displayMode == 0) {
+            fetchLikes()
+        }
+        else if (displayMode == 1) {
+            fetchFriends(for: friendsForUserUID)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -61,39 +77,23 @@ class ProfileListVC: UIViewController {
     }
     
     private func fetchFriends(for userUID: String = User.shared().uid) {
-        let db = Firestore.firestore()
-        db.collection(Constants.FBase.collectionName).whereField("friends", arrayContains: userUID).getDocuments() { querySnapshot, error in
+        let toSearch: [String]
+        if (userUID == User.shared().uid) {
+            toSearch = User.shared().userInfo["friends"] as! [String]
+        }
+        else {
+            toSearch = UserDownloader.cachedUsers[userUID]?.friends ?? []
+        }
+        userDownloader.downloadUsers(uidsToSearch: toSearch, completion: { userArray, error in
             if let e = error {
-                print("There was an issue retrieving data from Firestore. \(e)")
-            }
-            else {
-                self.displayFriends = []
-                print("gets past the else statement)")
-                if let snapshotDocuments = querySnapshot?.documents {
-                    print("snapshot documents = querysnapshot? documents")
-                    for doc in snapshotDocuments {
-                        print("found one doc")
-                        let data = doc.data()
-                        print(data)
-                        if let streak = data["streak"] as? Int, let isWorking = data["isWorking"] as? Bool, let lastUpdated = data["lastUpdated"] as? Timestamp, let username = data["username"] as? String, let progress = data["progress"] as? Float, let likes = data["likes"] as? [String], let friends = data["friends"] as? [String], let friendRq = data["friendRequests"] as? [String], let image = data["image"], let todaysLikes = data["todaysLikes"] as? [String] {
-                            print("got past the if let conditions")
-                            
-                            let dict: [String: Any] = ["streak": streak, "isWorking": isWorking, "lastUpdated": lastUpdated.dateValue(), "username": username, "progress": progress, "friends": friends, "friendRequests": friendRq, "likes": likes, "image": image, "todaysLikes": todaysLikes]
-                            
-                            
-                            let friendReq = UserInfo(uid: doc.documentID, dictionary: dict)
-                            self.displayFriends.append(friendReq)
-                            DispatchQueue.main.async {
-                                self.displayItems = self.displayFriends
-                                self.tableView.reloadData()
-                                
-                            }
-                        }
-                    }
-                }
+                print("error in fetchFriends profilelistvc, ",e)
+                return
                 
             }
-        }
+            self.tableView.refreshControl?.endRefreshing()
+            self.displayItems = userArray
+            self.tableView.reloadData()
+        })
         
     }
     
@@ -115,45 +115,11 @@ class ProfileListVC: UIViewController {
                 print("error in the fetchLikes call for userDownloader", error)
                 return
             }
-            
+            self.tableView.refreshControl?.endRefreshing()
             self.displayItems = userArray
             self.tableView.reloadData()
         })
-        /*
-        db.collection(Constants.FBase.collectionName)
-          .whereField("__name__", in: uniqueTodaysLikes)
-          .getDocuments() { (querySnapshot, error) in
-            if let error = error {
-              print("Error fetching documents in fetchLikes: \(error)")
-              return
-            }
-              else {
-                  self.displayLikes = []
-                  if let snapshotDocuments = querySnapshot?.documents {
-                      print("snapshot documents = querysnapshot? documents")
-                      for doc in snapshotDocuments {
-                          print("found one doc")
-                          let data = doc.data()
-                          
-                          if let streak = data["streak"] as? Int, let isWorking = data["isWorking"] as? Bool, let lastUpdated = data["lastUpdated"] as? Timestamp, let username = data["username"] as? String, let progress = data["progress"] as? Float, let likes = data["likes"] as? [String], let friends = data["friends"] as? [String], let friendRq = data["friendRequests"] as? [String], let image = data["image"], let todaysLikes = data["todaysLikes"] as? [String] {
-                              print("got past the if let conditions")
-                              
-                              let dict: [String: Any] = ["streak": streak, "isWorking": isWorking, "lastUpdated": lastUpdated.dateValue(), "username": username, "progress": progress, "friends": friends, "friendRequests": friendRq, "likes": likes, "image": image, "todaysLikes": todaysLikes]
-                              
-                              
-                              let user = UserInfo(uid: doc.documentID, dictionary: dict)
-                              self.displayLikes .append(user)
-                              DispatchQueue.main.async {
-                                  self.displayItems = self.displayLikes
-                                  self.tableView.reloadData()
-                                  //MARK: CONTINUE. LIKES IS WORKING, I JUST NEED TO IMPLMENT THE 2X THING
-                              }
-                          }
-                      }
-                  }
-              }
-            // Handle the query results
-        }*/
+        
     }
 }
 
@@ -197,36 +163,27 @@ extension ProfileListVC: UITableViewDataSource {
 extension ProfileListVC: AddFriendsCellDelegate {
     func addPressed(in cell: AddFriendsCell) {
         guard let indexPath = tableView.indexPath(for: cell) else {return}
-        var new = User.shared().userInfo["friendRequests"] as? [String] ?? []
-        new.append(displayItems[indexPath.row].uid)
-        User.shared().updateUserInfo(newInfo: [
-            "friendRequests": new
-        ])
+        AddFriendsManager.addFriend(newFriend: displayItems[indexPath.row].uid)
+
     }
     
     func unfriendPressed(in cell: AddFriendsCell) {
         guard let indexPath = tableView.indexPath(for: cell) else {return}
-        Firestore.updateUserInfo(uid: User.shared().uid, fields: [
-            "friends": FieldValue.arrayRemove([displayItems[indexPath.row].uid])
-        ])
-        Firestore.updateUserInfo(uid: displayItems[indexPath.row].uid, fields: [
-            "friends": FieldValue.arrayRemove([User.shared().uid])
-        ])
+        AddFriendsManager.unfriend(notFriend: displayItems[indexPath.row].uid)
+
     }
     
     func requestSentPressed(in cell: AddFriendsCell) {
         guard let indexPath = tableView.indexPath(for: cell) else {return}
-        var new = User.shared().userInfo["friendRequests"] as? [String] ?? []
-        new.removeAll(where: {$0 == displayItems[indexPath.row].uid})
-        User.shared().updateUserInfo(newInfo: [
-            "friendRequests": new
-        ])
+        
+        AddFriendsManager.cancelFriendRequest(cancelledUser: displayItems[indexPath.row].uid)
     }
     
     
     func deleteRequest(in cell: AddFriendsCell) {
         guard let indexPath = tableView.indexPath(for: cell) else {return}
-        Firestore.updateUserInfo(uid: displayItems[indexPath.row].uid, fields: ["friendRequests": FieldValue.arrayRemove([User.shared().uid])])
+        AddFriendsManager.deleteRequest(rejectee: displayItems[indexPath.row].uid)
+        
         cell.requestsView.isHidden = true
         
         cell.actionButton.isHidden = false
@@ -242,22 +199,13 @@ extension ProfileListVC: AddFriendsCellDelegate {
         cell.actionButton.isHidden = false
         cell.actionButton.isEnabled = true
         cell.actionButton.setTitle("Friends", for: .normal)
-        let user = displayItems[indexPath.row]
+        AddFriendsManager.acceptRequest(aceptee: displayItems[indexPath.row].uid)
         
-        var new = User.shared().userInfo["friends"] as? [String] ?? []
-        new.append(user.uid)
-        User.shared().updateUserInfo(newInfo: [
-            "friends": new
-        ])
-        Firestore.updateUserInfo(uid: user.uid, fields: [
-            "friends": FieldValue.arrayUnion([User.shared().uid]),
-            "friendRequests": FieldValue.arrayRemove([User.shared().uid])
-        ])
     }
     
     func viewProfile(in cell: AddFriendsCell) {
         guard let indexPath = tableView.indexPath(for: cell) else {return}
         
-        performSegue(withIdentifier: Constants.Segues.profileListToUserProfile, sender: displayItems[indexPath.row])
+        performSegue(withIdentifier: Constants.Segues.profileListToUserProfile, sender: UserDownloader.cachedUsers[displayItems[indexPath.row].uid])
     }
 }

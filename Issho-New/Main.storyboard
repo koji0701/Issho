@@ -65,7 +65,7 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lqt-33-xy5" userLabel="Edit profile button">
-                                <rect key="frame" x="142" y="174" width="106" height="34.666666666666657"/>
+                                <rect key="frame" x="142" y="174" width="106" height="34.666666666666629"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="Edit profile"/>
                                 <connections>
@@ -305,7 +305,7 @@
                         <outlet property="headerView" destination="6Sp-zk-Nma" id="RPb-hW-KiG"/>
                         <outlet property="likesLabel" destination="8BW-Nd-m4V" id="3ba-uz-Ylg"/>
                         <outlet property="percentageLabel" destination="tB9-lt-esg" id="LDV-jd-4jb"/>
-                        <outlet property="streakLabel" destination="mEI-zj-9Ow" id="4mg-3T-Mgc"/>
+                        <outlet property="streakLabel" destination="mEI-zj-9Ow" id="I66-UC-be2"/>
                         <outlet property="tableView" destination="7np-CV-0J4" id="na8-qr-MX1"/>
                         <segue destination="cvm-79-BEt" kind="show" identifier="ToDoToProfileList" id="3yO-SP-tLT"/>
                     </connections>
@@ -356,7 +356,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="SHi-cp-qFT">
-                                <rect key="frame" x="0.0" y="91" width="390" height="670"/>
+                                <rect key="frame" x="0.0" y="47" width="390" height="714"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </tableView>
                         </subviews>
@@ -674,7 +674,7 @@
     <inferredMetricsTieBreakers>
         <segue reference="dTI-Bl-88Y"/>
         <segue reference="sFr-pL-dSo"/>
-        <segue reference="Vpc-bA-ptI"/>
+        <segue reference="3yO-SP-tLT"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="pencil.circle.fill" catalog="system" width="128" height="123"/>

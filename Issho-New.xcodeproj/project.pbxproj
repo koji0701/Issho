@@ -54,6 +54,7 @@
 		E595D11229A375AD00A53594 /* UserProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E595D11129A375AD00A53594 /* UserProfileVC.swift */; };
 		E595D11529A40F1200A53594 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = E595D11429A40F1200A53594 /* FirebaseStorage */; };
 		E5A36BE829D77EF300C74BEE /* UserDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A36BE729D77EF300C74BEE /* UserDownloader.swift */; };
+		E5A36BEA29D7DD5300C74BEE /* AddFriendsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A36BE929D7DD5300C74BEE /* AddFriendsManager.swift */; };
 		E5A5166C2958D329002BC2B3 /* ToDoEntryData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E5A5166A2958D329002BC2B3 /* ToDoEntryData.xcdatamodeld */; };
 		E5A8B1D3295E2BC900D5E684 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E5A8B1D2295E2BC900D5E684 /* IQKeyboardManagerSwift */; };
 		E5A8B1D7295E535C00D5E684 /* ToDoEntryToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A8B1D6295E535C00D5E684 /* ToDoEntryToolbar.swift */; };
@@ -126,6 +127,7 @@
 		E58DED55292F26D900F1EF0C /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		E595D11129A375AD00A53594 /* UserProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileVC.swift; sourceTree = "<group>"; };
 		E5A36BE729D77EF300C74BEE /* UserDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDownloader.swift; sourceTree = "<group>"; };
+		E5A36BE929D7DD5300C74BEE /* AddFriendsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendsManager.swift; sourceTree = "<group>"; };
 		E5A5166B2958D329002BC2B3 /* ToDoEntryData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ToDoEntryData.xcdatamodel; sourceTree = "<group>"; };
 		E5A8B1D6295E535C00D5E684 /* ToDoEntryToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoEntryToolbar.swift; sourceTree = "<group>"; };
 		E5B6676529B12D690090AB89 /* Photos Auth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Photos Auth.swift"; sourceTree = "<group>"; };
@@ -190,7 +192,6 @@
 			children = (
 				E5119FF629AEE52300A00930 /* Custom Tab Bar */,
 				E516286E29ADA76900454397 /* CustomNavigationController.swift */,
-				E511A00529AFBFF500A00930 /* CustomImageView.swift */,
 				E55B7E5829C23BA5008D58D4 /* GradientHorizontalProgressBar.swift */,
 			);
 			path = "UI Improvements";
@@ -222,6 +223,7 @@
 		E521803A29415A7400925BAC /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				E511A00529AFBFF500A00930 /* CustomImageView.swift */,
 				E58DED4A292F19B200F1EF0C /* UserInfo.swift */,
 				E58DED55292F26D900F1EF0C /* User.swift */,
 				E5A36BE729D77EF300C74BEE /* UserDownloader.swift */,
@@ -326,6 +328,7 @@
 				E54887382994309300EC4A5B /* AddFriendsCell.swift */,
 				E50E17B32992E8CD0034543C /* AddFriendsViewController.swift */,
 				E5D1174829CAEE5E00F85BBE /* ProfileListVC.swift */,
+				E5A36BE929D7DD5300C74BEE /* AddFriendsManager.swift */,
 			);
 			path = AddFriends;
 			sourceTree = "<group>";
@@ -515,6 +518,7 @@
 				E58DED4C292F19B200F1EF0C /* SMPostCell.swift in Sources */,
 				E511A00229AEF70300A00930 /* Photo Selector Controller.swift in Sources */,
 				E52FBCAA292F18D30053208C /* SceneDelegate.swift in Sources */,
+				E5A36BEA29D7DD5300C74BEE /* AddFriendsManager.swift in Sources */,
 				E58DED46292F19A300F1EF0C /* ToDoViewController.swift in Sources */,
 				E50E17B42992E8CD0034543C /* AddFriendsViewController.swift in Sources */,
 				E53AED922963B801000AF59D /* LoginViewController.swift in Sources */,

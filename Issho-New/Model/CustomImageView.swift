@@ -10,13 +10,13 @@ import UIKit
 import FirebaseStorage
 
 // image caching
-var imageCache: [String: UIImage] = ["default": UIImage(systemName: "person.circle")!]
 
 var i = 0
 var j = 0
 let storage = Storage.storage()
 
 class CustomImageView: UIImageView {
+    static var imageCache: [String: UIImage] = ["default": UIImage(systemName: "person.circle")!]
     
     var lastURLUsedToLoadImage: String?
     
@@ -25,7 +25,7 @@ class CustomImageView: UIImageView {
         //print("Loading image...")
         lastURLUsedToLoadImage = urlString
         
-        if let cachedImage = imageCache[urlString] {
+        if let cachedImage = CustomImageView.imageCache[urlString] {
             //i += 1
            // print("Cache Hit: \(i)")
             self.image = cachedImage
@@ -45,7 +45,7 @@ class CustomImageView: UIImageView {
               guard let imageData = data else { print("was not able to get image data for the profile pic error")
 return}
               let image = UIImage(data: imageData)
-              imageCache[urlString] = image
+              CustomImageView.imageCache[urlString] = image
               DispatchQueue.main.async {
                   self.image = image
               }

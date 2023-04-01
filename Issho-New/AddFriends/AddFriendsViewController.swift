@@ -17,7 +17,6 @@ class AddFriendsViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
     @IBOutlet weak var friendRequestsLabel: UILabel!
-    var requests = [UserInfo]()//just for storing the requests
     var displayItems = [UserInfo]()
     
     var displayIsShowingRequests = true
@@ -27,6 +26,7 @@ class AddFriendsViewController: UIViewController {
         navigationController?.setNavigationBarHidden(false, animated: true)
         tabBarController?.tabBar.isHidden = true
         navigationController?.navigationBar.backItem?.title = ""
+        fetchFriendRequests()
 
     }
     
@@ -39,7 +39,22 @@ class AddFriendsViewController: UIViewController {
     
     
     private func fetchFriendRequests() {
-        let db = Firestore.firestore()
+        
+        let userDownloader = UserDownloader()
+        userDownloader.downloadUsers(uidsToSearch: User.shared().userInfo["friendRequests"] as! [String], completion: {userArray,error in
+            
+            if let e = error {
+                print("error fetchFriendRequests", e)
+                return
+            }
+            self.displayItems = userArray
+            self.tableView.refreshControl?.endRefreshing()
+            self.tableView.reloadData()
+            self.displayIsShowingRequests = true
+
+        })
+        
+        /*
         db.collection(Constants.FBase.collectionName).whereField("friendRequests", arrayContains: User.shared().uid).getDocuments() { querySnapshot, error in
             self.requests = []
             if let e = error {
@@ -74,7 +89,7 @@ class AddFriendsViewController: UIViewController {
                 }
                         
                     }
-        }
+        }*/
         
     }
     
@@ -83,11 +98,32 @@ class AddFriendsViewController: UIViewController {
         //NotificationCenter.default.addObserver(self, selector: #selector(userUpdate(_:)),name: NSNotification.Name ("userInfoUpdated"),                                           object: nil)
         friendRequestsLabel.font = Constants.Fonts.friendRequestsLabelFont
 
-        fetchFriendRequests()
         tableView.dataSource = self
         tableView.register(UINib(nibName: Constants.SM.addFriendsNibName, bundle: nil), forCellReuseIdentifier: Constants.SM.addFriendsReuseIdentifier)
         
         searchBar.delegate = self
+        
+        tableView.refreshControl = UIRefreshControl()
+        tableView.refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
+        NotificationCenter.default.addObserver(self, selector: #selector(userUpdate(_:)),name: NSNotification.Name ("userInfoUpdated"), object: nil)
+
+    }
+    @objc private func refresh() {
+        if (displayIsShowingRequests) {
+            User.shared().initUserInfo()
+        }
+        else {
+            self.tableView.refreshControl?.endRefreshing()
+        }
+    }
+    
+    @objc private func userUpdate(_ notification: Notification) {
+        if (displayIsShowingRequests) {
+            fetchFriendRequests()
+        }
+        else {
+            self.tableView.refreshControl?.endRefreshing()
+        }
     }
 }
 
@@ -159,30 +195,40 @@ extension AddFriendsViewController: AddFriendsCellDelegate {
     func addPressed(in cell: AddFriendsCell) {
         
         guard let indexPath = tableView.indexPath(for: cell) else {return}
+        
+        /*
         var new = User.shared().userInfo["friendRequests"] as? [String] ?? []
         new.append(displayItems[indexPath.row].uid)
         User.shared().updateUserInfo(newInfo: [
             "friendRequests": new
-        ])
+        ])*/
+        
+        AddFriendsManager.addFriend(newFriend: displayItems[indexPath.row].uid)
     }
     
     func unfriendPressed(in cell: AddFriendsCell) {
         guard let indexPath = tableView.indexPath(for: cell) else {return}
-        Firestore.updateUserInfo(uid: User.shared().uid, fields: [
-            "friends": FieldValue.arrayRemove([displayItems[indexPath.row].uid])
-        ])
-        Firestore.updateUserInfo(uid: displayItems[indexPath.row].uid, fields: [
-            "friends": FieldValue.arrayRemove([User.shared().uid])
-        ])
+        
+        /*var new = User.shared().userInfo["friends"] as? [String] ?? []
+        new.removeAll(where: {$0 == displayItems[indexPath.row].uid})
+        User.shared().updateUserInfo(newInfo: [
+            "friends": new
+        ])*/
+        
+        AddFriendsManager.unfriend(notFriend: displayItems[indexPath.row].uid)
+        
     }
     
     func requestSentPressed(in cell: AddFriendsCell) {
         guard let indexPath = tableView.indexPath(for: cell) else {return}
+        /*
         var new = User.shared().userInfo["friendRequests"] as? [String] ?? []
         new.removeAll(where: {$0 == displayItems[indexPath.row].uid})
         User.shared().updateUserInfo(newInfo: [
             "friendRequests": new
-        ])
+        ])*/
+        AddFriendsManager.unfriend(notFriend: displayItems[indexPath.row].uid)
+
     }
     
     
@@ -194,11 +240,17 @@ extension AddFriendsViewController: AddFriendsCellDelegate {
         tableView.deleteRows(at: [indexPath], with: .fade)
         
         
-        // remove from the other user's outgoing friend requests
-        Firestore.updateUserInfo(uid: requests[indexPath.row].uid, fields: ["friendRequests": FieldValue.arrayRemove([User.shared().uid])])
+        //Firestore.updateUserInfo(uid: requests[indexPath.row].uid, fields: ["friendRequests": FieldValue.arrayRemove([User.shared().uid])])
+        /*
+        var new = User.shared().userInfo["friendRequests"] as? [String] ?? []
+        new.removeAll(where: {$0 == displayItems[indexPath.row].uid})
+        User.shared().updateUserInfo(newInfo: [
+            "friendRequests": new
+        ])*/
+        
+        AddFriendsManager.deleteRequest(rejectee: displayItems[indexPath.row].uid)
         
         // remove from the array
-        requests.remove(at: indexPath.row)
         displayItems.remove(at: indexPath.row)
         tableView.endUpdates()
     }
@@ -210,12 +262,9 @@ extension AddFriendsViewController: AddFriendsCellDelegate {
         tableView.deleteRows(at: [indexPath], with: .fade)
         
         
-        // remove from the other user's outgoing friend requests + add it to both user's friends list
-        Firestore.updateUserInfo(uid: requests[indexPath.row].uid, fields: ["friendRequests": FieldValue.arrayRemove([User.shared().uid]), "friends": FieldValue.arrayUnion([User.shared().uid])])
-        Firestore.updateUserInfo(uid: User.shared().uid, fields: ["friends": FieldValue.arrayUnion([requests[indexPath.row].uid])])
+        AddFriendsManager.acceptRequest(aceptee: displayItems[indexPath.row].uid)
         
         // remove from the array
-        requests.remove(at: indexPath.row)
         displayItems.remove(at: indexPath.row)
 
         tableView.endUpdates()
@@ -224,7 +273,7 @@ extension AddFriendsViewController: AddFriendsCellDelegate {
     func viewProfile(in cell: AddFriendsCell) {
         guard let indexPath = tableView.indexPath(for: cell) else {return}
         
-        performSegue(withIdentifier: Constants.Segues.addFriendsToUserProfile, sender: displayItems[indexPath.row])
+        performSegue(withIdentifier: Constants.Segues.addFriendsToUserProfile, sender: UserDownloader.cachedUsers[displayItems[indexPath.row].uid])
     }
     
     
@@ -239,9 +288,11 @@ extension AddFriendsViewController: UISearchBarDelegate {
      */
     
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
-        displayItems = [UserInfo]()
-        displayIsShowingRequests = false
-        tableView.reloadData()
+        if (displayIsShowingRequests) {
+            displayItems = [UserInfo]()
+            displayIsShowingRequests = false
+            tableView.reloadData()
+        }
         searchBar.showsCancelButton = true
         friendRequestsLabel.isHidden = true
         return true
@@ -272,9 +323,8 @@ extension AddFriendsViewController: UISearchBarDelegate {
 
             if searchText.isEmpty {
                 // Search text is empty
-                displayItems = requests
-                displayIsShowingRequests = true
-                tableView.reloadData()
+                fetchFriendRequests()
+                
                 
                 searchBar.text = ""
                 searchBar.showsCancelButton = false
@@ -287,9 +337,8 @@ extension AddFriendsViewController: UISearchBarDelegate {
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        displayItems = requests
-        displayIsShowingRequests = true
-        tableView.reloadData()
+        fetchFriendRequests()
+        
         
         searchBar.text = ""
     }
@@ -298,9 +347,7 @@ extension AddFriendsViewController: UISearchBarDelegate {
     //search function
     private func fetchSearchResults(name: String) {
         if (name.trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: .punctuationCharacters).trimmingCharacters(in: .symbols).isEmpty) {
-            displayIsShowingRequests = true
-            displayItems = requests
-            tableView.reloadData()
+            fetchFriendRequests()
             searchBar.text = ""
             return
         }
@@ -330,6 +377,7 @@ extension AddFriendsViewController: UISearchBarDelegate {
                             
                             let newPerson = UserInfo(uid: doc.documentID, dictionary: dict)
                             self.displayItems.append(newPerson)
+                            UserDownloader.cachedUsers[doc.documentID] = newPerson
                             DispatchQueue.main.async {
                                 
                                 self.tableView.reloadData()

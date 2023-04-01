@@ -46,6 +46,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
 
         self.saveContext()
+        Firestore.updateUserInfo(uid: User.shared().uid, fields: User.shared().userInfo)
     }
     
     // MARK: - Core Data stack

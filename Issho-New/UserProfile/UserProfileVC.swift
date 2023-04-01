@@ -133,10 +133,10 @@ class UserProfileVC: UIViewController {
 
         }
         else if (user.friendRequests.contains(User.shared().uid)) {
-            button.setTitle("Accept Request", for: .normal)
+            button.setTitle("Request Sent", for: .normal)
         }
         else if ((User.shared().userInfo["friendRequests"] as! [String]).contains(user.uid)) {
-            button.setTitle("Request Sent", for: .normal)
+            button.setTitle("Accept Request", for: .normal)
         }
         else if (user.uid == User.shared().uid) {
             button.setTitle("Add Friends", for: .normal)
@@ -162,34 +162,22 @@ class UserProfileVC: UIViewController {
         friendStatusChanged = true
         if (button.currentTitle == "Add") {
             button.setTitle("Request Sent", for: .normal)
-            var new = User.shared().userInfo["friendRequests"] as? [String] ?? []
-            new.append(user.uid)
-            User.shared().updateUserInfo(newInfo: [
-                "friendRequests": new
-            ])
+            
+            AddFriendsManager.addFriend(newFriend: user.uid)
+            
         }
         
         else if (button.currentTitle == "Accept Request") {
             button.setTitle("Friends", for: .normal)
-            var new = User.shared().userInfo["friends"] as? [String] ?? []
-            new.append(user.uid)
-            Firestore.updateUserInfo(uid: User.shared().uid, fields: [
-                "friends": new
-            ])
-            Firestore.updateUserInfo(uid: user.uid, fields: [
-                "friends": FieldValue.arrayUnion([User.shared().uid]),
-                "friendRequests": FieldValue.arrayRemove([User.shared().uid])
-            ])
+            
+            AddFriendsManager.acceptRequest(aceptee: user.uid)
+            
         }
         
         else if (button.currentTitle == "Request Sent") {
             button.setTitle("Add", for: .normal)
             
-            var new = User.shared().userInfo["friendRequests"] as? [String] ?? []
-            new.removeAll(where: {$0 == user.uid})
-            User.shared().updateUserInfo(newInfo: [
-                "friendRequests": new
-            ])
+            AddFriendsManager.cancelFriendRequest(cancelledUser: user.uid)
         }
         
         else if (button.currentTitle == "Friends") {
@@ -199,18 +187,8 @@ class UserProfileVC: UIViewController {
         
         else if (button.currentTitle == "Unfriend") {
             button.setTitle("Add", for: .normal)
-            /*
-            var new = User.shared().userInfo["friends"] as? [String] ?? []
-            new.removeAll(where: {$0 == user.uid})
-            User.shared().updateUserInfo(newInfo: [
-                "friends": new
-            ])*/
-            Firestore.updateUserInfo(uid: User.shared().uid, fields: [
-                "friends": FieldValue.arrayRemove([user.uid])
-            ])
-            Firestore.updateUserInfo(uid: user.uid, fields: [
-                "friends": FieldValue.arrayRemove([User.shared().uid])
-            ])
+            AddFriendsManager.unfriend(notFriend: user.uid)
+
             
         }
         

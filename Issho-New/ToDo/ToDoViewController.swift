@@ -39,8 +39,8 @@ class ToDoViewController: UIViewController {
     
     @IBOutlet weak var headerView: UIView!
     
-    @IBOutlet weak var streakLabel: UILabel!
     
+    @IBOutlet weak var streakLabel: UILabel!
     
     @IBOutlet weak var customProgressBar: GradientHorizontalProgressBar!
     
@@ -70,15 +70,20 @@ class ToDoViewController: UIViewController {
         let streak = info?.streak as? Int ?? 0
         let fProgress = info?.progress as? Float ?? 0.0
         let streakIsLate = info?.streakIsLate as? Bool ?? false
+        
+        
+        
+        
         likesLabel.text = String(likesCount) + "🎉"
         streakLabel.text = String(streak) + "🔥"
         if (streakIsLate == true) {
             streakLabel.text! += "⏳"
         }
         
+        /*
         if (progress > fProgress) { //if there was a firestore update pushing the progress to 0, then make sure too reupdate firestore + allow for a like
             taskCompleted()
-        }
+        }*/
         
     }
     
@@ -89,7 +94,7 @@ class ToDoViewController: UIViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(userUpdate(_:)),name: NSNotification.Name ("userInfoUpdated"), object: nil)
         
-        newDayUpdates()
+        //newDayUpdates()
         
         tableView.dataSource = self
         tableView.delegate = self

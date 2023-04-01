@@ -23,35 +23,23 @@ class SMViewController: UIViewController {
     
     func fetchPosts() {
         
-        db.collection(Constants.FBase.collectionName).whereField("friends", arrayContains: User.shared().uid).getDocuments() { querySnapshot, error in
-            self.posts = []
-            print("found the friend")
-            if let e = error {
-                print("There was an issue retrieving data from Firestore. \(e)")
+        let userDownloader = UserDownloader()
+        guard let friends = User.shared().userInfo["friends"] as? [String] else {return}
+        
+        userDownloader.downloadUsers(uidsToSearch: friends, completion: { userArray, error in
+            
+            if let error = error {
+                print("error in fetchPosts SMVC", error)
+                return
             }
-            else {
-                if let snapshotDocuments = querySnapshot?.documents {
-                    for doc in snapshotDocuments {
-                        let data = doc.data()
-                        
-                        
-                        if let streak = data["streak"] as? Int, let isWorking = data["isWorking"] as? Bool, let lastUpdated = data["lastUpdated"] as? Timestamp, let username = data["username"] as? String, let progress = data["progress"] as? Float, let likes = data["likes"] as? [String], let friends = data["friends"] as? [String], let friendReq = data["friendRequests"], let image = data["image"], let todaysLikes = data["todaysLikes"] as? [String], let streakIsLate = data["streakIsLate"] as? Bool {
-                            print("got past the if let conditions")
-                            let isLiked = likes.contains(User.shared().uid)//if likes contains uid, true its been liked
-                            let dict: [String: Any] = ["streak": streak, "isWorking": isWorking, "lastUpdated": lastUpdated.dateValue(), "username": username, "progress": progress, "isLiked": isLiked, "friends": friends, "friendRequests": friendReq, "image": image, "likes": likes, "todaysLikes": todaysLikes, "streakIsLate": streakIsLate]
-                            
-                            
-                            let newPost = UserInfo(uid: doc.documentID, dictionary: dict)
-                            self.posts.append(newPost)
-                            DispatchQueue.main.async {
-                                self.orderPosts()
-                                self.tableView.reloadData()
-                            }
-                        }
-                    }
-                }
-            }
-        }
+            self.posts = userArray
+            self.orderPosts()
+            self.tableView.refreshControl?.endRefreshing()
+            print("end refreshing")
+            self.tableView.reloadData()
+            
+        })
+        
     }
     
     private func orderPosts() {
@@ -86,13 +74,20 @@ class SMViewController: UIViewController {
             current.append(User.shared().uid)
             return current
         }()
-        //UPDATE TODAYS LIKES WITH THE NEW TODAYSLIKES, BE CAREFUL ABOUT UID
-        
+        UserDownloader.cachedUsers[postUID]?.likes.append(uid)
+        UserDownloader.cachedUsers[postUID]?.todaysLikes = newTodaysLikes
         Firestore.updateUserInfo(uid: postUID, fields: ["likes": FieldValue.arrayUnion([uid]), "todaysLikes": newTodaysLikes])
         
     }
     
-    
+    override class func awakeFromNib() {
+        super.awakeFromNib()
+        
+    }
+    @objc private func userUpdate(_ notification: Notification) {
+        fetchPosts()
+        print("recieved user update")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -101,6 +96,14 @@ class SMViewController: UIViewController {
         tableView.dataSource = self
         tableView.register(UINib(nibName: Constants.SM.nibName, bundle: nil), forCellReuseIdentifier: "SMReusablePostCell")
         tableView.delegate = self
+        
+        tableView.refreshControl = UIRefreshControl()
+        tableView.refreshControl?.addTarget(self, action: #selector(refresh), for: .valueChanged)
+        NotificationCenter.default.addObserver(self, selector: #selector(userUpdate(_:)),name: NSNotification.Name ("userInfoUpdated"), object: nil)
+        
+    }
+    @objc private func refresh() {
+        User.shared().initUserInfo()
     }
     
     override func viewWillAppear(_ animated: Bool) {

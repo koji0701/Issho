@@ -26,6 +26,7 @@ class User {
     var uid: String = ""
     var image: CustomImageView = CustomImageView()
     var userInfo = [String: Any]()
+    private var updateInfo = [String: Any]()
     private var lastUpdateUserInfo = [String: Any]()
     
     
@@ -99,6 +100,10 @@ class User {
             "streakIsLate": newInfo["streakIsLate"] as? Bool ?? userInfo["streakIsLate"]!
             
         ]
+        
+        for (key, value) in newInfo {
+            updateInfo[key] = value
+        }
         NotificationCenter.default.post(name: NSNotification.Name("userInfoUpdated"),
                                         object: UserInfo(dictionary: self.userInfo))
         dbUpdateTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { [weak self] _ in
@@ -110,16 +115,15 @@ class User {
                 print("pushing updates to firestore")
                 self.lastUpdateUserInfo = self.userInfo//set the last update to current userinfo
                 //push the update to firestoer
-                Firestore.updateUserInfo(uid: self.uid, fields: self.userInfo)
+                Firestore.updateUserInfo(uid: self.uid, fields: self.updateInfo)
                 
             }
             
             
         }
-        
-        
-        
     }
+    
+    
     
     
     
