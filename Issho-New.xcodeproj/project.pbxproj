@@ -262,7 +262,6 @@
 				E58245CB296634930093E0D5 /* Welcome */,
 				E521803A29415A7400925BAC /* Model */,
 				E58DED51292F1AD000F1EF0C /* Main.storyboard */,
-				E537219F296F7ECF00AD0BF7 /* SettingsViewController.swift */,
 				E58DED54292F265800F1EF0C /* ToDo */,
 				E58DED53292F263000F1EF0C /* SM */,
 				E595D11029A3759B00A53594 /* UserProfile */,
@@ -338,6 +337,7 @@
 			children = (
 				E595D11129A375AD00A53594 /* UserProfileVC.swift */,
 				E5B6676729B147C90090AB89 /* EditProfileVC.swift */,
+				E537219F296F7ECF00AD0BF7 /* SettingsViewController.swift */,
 			);
 			path = UserProfile;
 			sourceTree = "<group>";

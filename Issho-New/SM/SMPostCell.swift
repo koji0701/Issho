@@ -120,6 +120,7 @@ class SMPostCell: UITableViewCell {
         customProgressBar.pulseAnimation()
         
         likesButton.pulse()
+        
     }
     
     

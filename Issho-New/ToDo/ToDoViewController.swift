@@ -37,8 +37,8 @@ class ToDoViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
     
-    @IBOutlet weak var headerView: UIView!
     
+    @IBOutlet weak var headerView: RoundedShadowView!
     
     @IBOutlet weak var streakLabel: UILabel!
     
@@ -58,6 +58,8 @@ class ToDoViewController: UIViewController {
         tabBarController?.tabBar.isHidden = true
         navigationController?.navigationBar.backItem?.title = ""
         navigationController?.navigationBar.barTintColor = .clear
+        
+        navigationController?.hidesBarsOnSwipe = true
         //updateIsWorking()
         
     }
@@ -103,12 +105,12 @@ class ToDoViewController: UIViewController {
 
         tableView.separatorStyle = .none
         
-        loadItems()
-        orderEntries()
-        
-        updateUniqueDates()
-        initProgressNoFirestore()
-        
+        loadItems(completion: {
+            self.orderEntries()
+            self.initProgressNoFirestore()
+
+        })
+                
         
         //header
         streakLabel.font = Constants.Fonts.navigationBarTitleFont
@@ -123,7 +125,6 @@ class ToDoViewController: UIViewController {
         
         setGreetingMessage()
         initProgressBarFlowAnimation()
-        
         
         
     }
@@ -310,7 +311,7 @@ extension ToDoViewController: UITableViewDataSource, UITableViewDelegate {
         cell.toDoEntry = entries[totalIndexRow]
         cell.toDoEntryDelegate = self
         //cell.toolbar = ToDoEntryToolbar(setDate: entries[totalIndexRow].date!, isCurrentTask: entries[totalIndexRow].isCurrentTask)
-        cell.styleTextView(isCurrent: entries[totalIndexRow].isCurrentTask)
+        //cell.styleTextView(isCurrent: entries[totalIndexRow].isCurrentTask)
         cell.textView.font = Constants.Fonts.toDoEntryCellFont
 
         // set the closure
@@ -359,7 +360,7 @@ extension ToDoViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
 
-    func loadItems() {
+    func loadItems(completion: @escaping() -> Void) {
         let request: NSFetchRequest<ToDoEntry> = ToDoEntry.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(key: "order", ascending: true)]
         if (Constants.Settings.showCompletedEntries == false) {
@@ -367,10 +368,22 @@ extension ToDoViewController: UITableViewDataSource, UITableViewDelegate {
         }
         do {
             entries = try context.fetch(request)
-            
+            completion()
+
         } catch {
             print("error fetching data from context: \(error)")
         }
+        
+    }
+    
+    func refreshTableViewMode() {
+        loadItems(completion: {
+            self.orderEntries()
+            print("completed loading items")
+        })
+        
+        
+        
     }
     
     
@@ -569,53 +582,15 @@ extension ToDoViewController: ToDoEntryDelegate {
         tableView.endUpdates()
         updateProgress()
         
-        let nextCell = tableView.cellForRow(at: newIndexPath) as! ToDoEntryCell
-        nextCell.textView.becomeFirstResponder()
-        tableView.scrollToRow(at: newIndexPath, at: .top, animated: true)
-        
-        
-        
-        
-       //MARK: CONTINEU HERE. I THINK THE NEW ABOVE AND BELOW IS WORKING FINE.
-        
-        /*
-        
-        if (isPlaceholder == true) {
-            let totalIndexPath = returnPositionForThisIndexPath(indexPath: indexPath)
-            entries[totalIndexPath].isPlaceholder = false
-            if (Constants.Settings.showCompletedEntries == true) {
-                initializeToDoEntry(newEntry: newToDoEntry, date: date, order: order - 1, isPlaceholder: true)
-                entries.insert(newToDoEntry, at: Int(order))//insert it above the current if showcheckedentries is true
-            }
-            
-            else {
-                initializeToDoEntry(newEntry: newToDoEntry, date: date, order: order + 1, isPlaceholder: false)
-                entries.insert(newToDoEntry, at: Int(order+1))//insert below if not showing the checked entries
-            }
+        if (isPlaceholder == false) {
+            IQKeyboardManager.shared.goNext()
+
         }
-        else {
-            initializeToDoEntry(newEntry: newToDoEntry, date: date, order: order + 1, isPlaceholder: false)
-            entries.insert(newToDoEntry, at: Int(order+1))//insert below if not showing the checked entries//insert below if placeholder isn't true
-        }
+        //tableView.scrollToRow(at: newIndexPath, at: .top, animated: true)
         
         
-        resetOrder()
         
-        updateProgress()
         
-        self.saveItems()
-        tableView.reloadData()
-        guard let nextCell = tableView.cellForRow(at: nextIndexPath) as? ToDoEntryCell else {
-            print("error in the creating a new todoentry creating the next cell cellforrow")
-            return
-        }
-        if (makeFirstResponder) {
-            nextCell.textView.becomeFirstResponder()
-        }
-        else {
-            nextCell.textView.resignFirstResponder()
-            
-        }*/
     }
     
     /*
@@ -952,7 +927,7 @@ extension ToDoViewController {//all helper funcs for organization
         print("new unique dates", uniqueDates)
     }
     
-    private func orderEntries() {
+    func orderEntries() {
         let calendar = Calendar.current
         self.entries.removeAll(where: {($0.text == "" || $0.text == "⚡️") && $0.isPlaceholder == false})//removes all unnecessary ones
         
@@ -1041,6 +1016,7 @@ extension ToDoViewController {//all helper funcs for organization
         
         resetOrder()//i always run this
         updateIsWorking()
+        updateUniqueDates()
         tableView.reloadData()
         saveItems()//i always run this
     }
@@ -1065,7 +1041,7 @@ extension ToDoViewController {//all helper funcs for organization
         newEntry.isPlaceholder = isPlaceholder
     }
     
-    private func newDayUpdates() {
+    /*private func newDayUpdates() {
         
         
         let calendar = Calendar.current
@@ -1112,7 +1088,7 @@ extension ToDoViewController {//all helper funcs for organization
             
         }*/
         
-    }
+    }*/
     
     
     //for total indexpath
@@ -1137,12 +1113,5 @@ extension ToDoViewController {//all helper funcs for organization
    
 }//helper funcs
 
-extension ToDoViewController: SettingsToDoViewControllerDelegate {
-    
-    func refreshTableView() {//MARK: THIS ISN'T WORKING CORRECTLY. RETHINK THE LOADITEMS?
-        loadItems()
-        saveItems()
-    }
-}
 
 

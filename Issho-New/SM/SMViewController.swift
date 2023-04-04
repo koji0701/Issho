@@ -32,11 +32,14 @@ class SMViewController: UIViewController {
                 print("error in fetchPosts SMVC", error)
                 return
             }
-            self.posts = userArray
-            self.orderPosts()
-            self.tableView.refreshControl?.endRefreshing()
-            print("end refreshing")
-            self.tableView.reloadData()
+            DispatchQueue.main.async {
+                self.posts = userArray
+                self.orderPosts()
+                self.tableView.refreshControl?.endRefreshing()
+                print("end refreshing")
+                self.tableView.reloadData()
+            }
+            
             
         })
         
@@ -152,7 +155,9 @@ extension SMViewController: UITableViewDataSource, UITableViewDelegate {
         
         
         
+        
         cell.likesView.isHidden = posts[indexPath.row].isLiked
+
         if (posts[indexPath.row].isLiked == true) {
             cell.likes.textColor = .gray
             cell.streak.textColor = .gray
@@ -207,6 +212,7 @@ extension SMViewController: PostDelegate {
         var post = posts[indexPath.row]
         if (post.isLiked == false) {
             updateLikeInFirestore(post: post)
+            posts[indexPath.row].isLiked = true
             return true
         }
         else {

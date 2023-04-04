@@ -181,7 +181,7 @@ class RoundedShadowView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        layer.cornerRadius = 10
+        layer.cornerRadius = 30
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOffset = CGSize(width: 0, height: 2)
         layer.shadowOpacity = 0.2

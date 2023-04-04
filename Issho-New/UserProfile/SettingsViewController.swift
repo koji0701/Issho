@@ -56,7 +56,13 @@ class SettingsViewController: UIViewController {
         
         setCompletedTasksButtonDisplay(mode: Constants.Settings.showCompletedEntries)
         //reload tableview
-        settingsToDoViewControllerDelegate?.refreshTableView()
+        //settingsToDoViewControllerDelegate?.refreshTableView()
+        
+        
+        if let toDoVC = tabBarController?.viewControllers![0].children[0] as? ToDoViewController {
+            toDoVC.refreshTableViewMode()
+            print("completed tasks button clicked working")
+        }
         
     }
     

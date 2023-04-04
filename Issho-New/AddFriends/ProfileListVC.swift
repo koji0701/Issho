@@ -102,6 +102,7 @@ class ProfileListVC: UIViewController {
  
         // Create a set to remove duplicates and a dictionary to count duplicates
         var uniqueTodaysLikes = [String]()
+        likesDuplicatesCount.removeAll()
         for userID in rawTodaysLikes {
             if uniqueTodaysLikes.contains(userID) {
                 likesDuplicatesCount[userID, default: 1] += 1

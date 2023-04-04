@@ -40,10 +40,13 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
             
             if (toDoEntry?.isChecked == true) {
                 checkboxButton.setImage(UIImage(systemName: "checkmark.circle.fill"), for: .normal)
-                print("ischecked is true")
+                contentView.backgroundColor = .systemGray6
+                
             }
             else {
                 checkboxButton.setImage(UIImage(systemName: "circle"), for: .normal)
+                contentView.backgroundColor = .clear
+
             }
             if (toDoEntry?.isPlaceholder == true) {
                 
@@ -83,12 +86,12 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
             toolbar.currentTaskCallBack = { [weak self] isCurrentTask in
                 guard let self = self else { return }
                 self.toDoEntryDelegate?.updateIsCurrentTask(in: self, isCurrentTask: isCurrentTask)
-                self.styleTextView(isCurrent: isCurrentTask)
+                //self.styleTextView(isCurrent: isCurrentTask)
                 //self.toDoEntry?.isCurrentTask = isCurrentTask//rely on the didset to call the styling method
             }
         }
     }
-    
+    /*
     func styleTextView(isCurrent: Bool) {//also put fonts and color here
         if (isCurrent) {
             //let imageAttachment = NSTextAttachment()
@@ -125,7 +128,7 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
         }
 
         
-    }
+    }*/
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -141,6 +144,15 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
         //textView.textContainer.size = textView.frame.size
         
         addButton.tintColor = .darkGray
+        if (Constants.Settings.showCompletedEntries && toDoEntry?.isChecked == true) {
+            contentView.backgroundColor = .systemGray6
+        }
+        else {
+            contentView.backgroundColor = .clear
+
+        }
+        
+        contentView.layer.cornerRadius = 18
         
     }
     
@@ -165,6 +177,9 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
         }
         else {
             self.toDoEntryDelegate?.checkBoxPressed(in: self, deletionInContext: false)
+            if (Constants.Settings.showCompletedEntries) {
+                contentView.backgroundColor = .systemGray6
+            }
         }
         
         
@@ -218,7 +233,7 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
                 resignedOnBackspace = false
             }
             else {
-                if (resignedOnBackspace) {//MARK: NOT WORKING
+                if (resignedOnBackspace) {
                     print("resigned on backspace")
                     /**if (IQKeyboardManager.shared.canGoPrevious) {
                         print("can go previous")
@@ -233,6 +248,7 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
             }
         }
         else {
+            /*
             if (resignedOnEnter) {
                 if (toDoEntry?.isPlaceholder == false) {
                     self.toDoEntryDelegate?.createNewToDoEntryCell(in: self)
@@ -244,13 +260,16 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
                 }
                 else if (Constants.Settings.showCompletedEntries == true) {
                     self.toDoEntryDelegate?.createNewToDoEntryCell(in: self)
-                    IQKeyboardManager.shared.goPrevious()
                     resignedOnEnter = false
                 }
             }
             else {
                 
                 toDoEntryDelegate?.commandOrderEntries()//if theres stuff in there still, but i gesture tap off then re order entries. 
+            }*/
+            if (!resignedOnEnter) {
+                toDoEntryDelegate?.commandOrderEntries()//if theres stuff in there still, but i gesture tap off then re order entries.
+                resignedOnEnter = false
             }
             
         }
@@ -276,10 +295,17 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
         
         
         if text == "\n" {
-            if (textView.text != "") {
-                resignedOnEnter = true
+            resignedOnEnter = true
+            if (textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
+                .trimmingCharacters(in: .punctuationCharacters)
+                .trimmingCharacters(in: .symbols).isEmpty) {
+            
+                textView.resignFirstResponder()
+                
             }
-            textView.resignFirstResponder()
+            else {
+                self.toDoEntryDelegate?.createNewToDoEntryCell(in: self)
+            }
             return false
         }
         
