@@ -9,7 +9,7 @@ import UIKit
 import IQKeyboardManagerSwift
 
 protocol ToDoEntryDelegate {
-    func checkBoxPressed(in cell: ToDoEntryCell, deletionInContext: Bool)
+    func checkBoxPressed(in cell: ToDoEntryCell, deletionInContext: Bool, resignedOnBackspace: Bool)
     func createNewToDoEntryCell(in cell: ToDoEntryCell)
     func commandOrderEntries()
     //toolbar stuff
@@ -171,12 +171,12 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
             
             //MARK: account for double deletion situation. When ending editing and pressing at the same time, double deletion
             if !textView.isFirstResponder {
-                self.toDoEntryDelegate?.checkBoxPressed(in: self, deletionInContext: true)
+                self.toDoEntryDelegate?.checkBoxPressed(in: self, deletionInContext: true, resignedOnBackspace: false)
             }
             
         }
         else {
-            self.toDoEntryDelegate?.checkBoxPressed(in: self, deletionInContext: false)
+            self.toDoEntryDelegate?.checkBoxPressed(in: self, deletionInContext: false, resignedOnBackspace: false)
             if (Constants.Settings.showCompletedEntries) {
                 contentView.backgroundColor = .systemGray6
             }
@@ -233,18 +233,11 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
                 resignedOnBackspace = false
             }
             else {
-                if (resignedOnBackspace) {
-                    print("resigned on backspace")
-                    /**if (IQKeyboardManager.shared.canGoPrevious) {
-                        print("can go previous")
-                        IQKeyboardManager.shared.goPrevious()
-                    }**/
-                    IQKeyboardManager.shared.goPrevious()
-                    
-                    resignedOnBackspace = false
+                if (!resignedOnBackspace) {
+                    toDoEntryDelegate?.checkBoxPressed(in: self, deletionInContext: true, resignedOnBackspace: false)
                 }
+                resignedOnBackspace = false
                 
-                self.toDoEntryDelegate?.checkBoxPressed(in: self, deletionInContext: true)
             }
         }
         else {
@@ -269,8 +262,9 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
             }*/
             if (!resignedOnEnter) {
                 toDoEntryDelegate?.commandOrderEntries()//if theres stuff in there still, but i gesture tap off then re order entries.
-                resignedOnEnter = false
             }
+            resignedOnEnter = false
+
             
         }
 
@@ -304,15 +298,16 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
                 
             }
             else {
-                self.toDoEntryDelegate?.createNewToDoEntryCell(in: self)
+                toDoEntryDelegate?.createNewToDoEntryCell(in: self)
             }
             return false
         }
         
         if (text.isBackspace) {
+
             if (textView.text == "") {
                 resignedOnBackspace = true
-                textView.resignFirstResponder()
+                toDoEntryDelegate?.checkBoxPressed(in: self, deletionInContext: true, resignedOnBackspace: true)
                 return false
             }
             

@@ -283,13 +283,13 @@ extension ToDoViewController: UITableViewDataSource, UITableViewDelegate {
             let index = returnPositionForThisIndexPath(indexPath: IndexPath(row: sectionEntries.count, section: section))
             let newToDoEntry = ToDoEntry(context: self.context)
             initializeToDoEntry(newEntry: newToDoEntry, order: 0, isPlaceholder: true)
-            
-            if (Constants.Settings.showCompletedEntries == true) {
-                entries.insert(newToDoEntry, at: 0)
+            entries.insert(newToDoEntry, at: 0)
+
+            /*if (Constants.Settings.showCompletedEntries == true) {
             }
             else {
                 entries.insert(newToDoEntry, at: index)
-            }
+            }*/
             resetOrder()
             saveItems()
             tableView.reloadData()
@@ -410,12 +410,13 @@ extension ToDoViewController: ToDoEntryDelegate {
     }
     
     //deletion of todo cell
-    func checkBoxPressed(in cell: ToDoEntryCell, deletionInContext: Bool) {
+    func checkBoxPressed(in cell: ToDoEntryCell, deletionInContext: Bool, resignedOnBackspace: Bool = false) {
         guard let indexPath = tableView.indexPath(for: cell) else {
                 return
             }
         // MARK: don't let the placeholder cell do it
         if (cell.toDoEntry?.isPlaceholder == true) {
+            cell.textView.resignFirstResponder()
             return
         }
         
@@ -517,6 +518,9 @@ extension ToDoViewController: ToDoEntryDelegate {
         if (deletionInContext == false) {
             taskCompleted()
         }
+        else if (IQKeyboardManager.shared.canGoPrevious && resignedOnBackspace) {
+            IQKeyboardManager.shared.goPrevious()
+        }
         
         tableView.endUpdates()
         
@@ -550,13 +554,17 @@ extension ToDoViewController: ToDoEntryDelegate {
 
             entries[totalIndexPath].isPlaceholder = false
             cell.toDoEntry?.isPlaceholder = false
+            
+            newIndexPath = IndexPath(row: indexPath.row, section: indexPath.section)
+            tableView.insertRows(at: [newIndexPath], with: .fade)
+            entries.insert(newToDoEntry, at: totalIndexPath )
+            /*
             if (Constants.Settings.showCompletedEntries == true) { //placeholder is at the top, insert a row directly above it
                 
-                newIndexPath = IndexPath(row: indexPath.row, section: indexPath.section)
-                tableView.insertRows(at: [newIndexPath], with: .fade)
-                entries.insert(newToDoEntry, at: totalIndexPath )
+                
                 
             }
+            
             else {//placeholder is at the bottom, insert directly below
                 newIndexPath = IndexPath(row: indexPath.row + 1, section: indexPath.section)
                 tableView.insertRows(at: [newIndexPath], with: .fade)
@@ -564,7 +572,7 @@ extension ToDoViewController: ToDoEntryDelegate {
                 smartInsertEntry(newEntry: newToDoEntry, newPos: totalIndexPath + 1)
 
                 //entries.insert(newToDoEntry, at: totalIndexPath + 1)
-            }
+            }*/
             
         }
         else {//insert directly below
@@ -584,6 +592,10 @@ extension ToDoViewController: ToDoEntryDelegate {
         
         if (isPlaceholder == false) {
             IQKeyboardManager.shared.goNext()
+
+        }
+        else {
+            IQKeyboardManager.shared.goPrevious()
 
         }
         //tableView.scrollToRow(at: newIndexPath, at: .top, animated: true)
@@ -934,7 +946,8 @@ extension ToDoViewController {//all helper funcs for organization
         self.entries.sort {
             if (calendar.isDate($0.date!, equalTo: $1.date!, toGranularity: .day)) {//if same day
                 if ($0.isPlaceholder == true) {//if its the placeholder
-                    return Constants.Settings.showCompletedEntries //if show checked entries is true, then returning true -> placeholder goes to top
+                    //return Constants.Settings.showCompletedEntries //if show checked entries is true, then returning true -> placeholder goes to top
+                    return true
                 }
                 else if ($0.isCurrentTask != $1.isCurrentTask) {//if only one is a current task
                     return $0.isCurrentTask
@@ -957,6 +970,11 @@ extension ToDoViewController {//all helper funcs for organization
             
             let newToDoEntry = ToDoEntry(context: self.context)
             initializeToDoEntry(newEntry: newToDoEntry, order: 0, isPlaceholder: true)
+            //insert at top of today's section
+            if let index = entries.firstIndex(where: {calendar.isDate($0.date!, equalTo: Date(), toGranularity: .day)}) {//case where there is 0 index in today is already handled by the tableview sections stuff
+                entries.insert(newToDoEntry, at: index)
+            }
+            /*
             if (Constants.Settings.showCompletedEntries == true) {
                 //insert at top of today's section
                 if let index = entries.firstIndex(where: {calendar.isDate($0.date!, equalTo: Date(), toGranularity: .day)}) {//case where there is 0 index in today is already handled by the tableview sections stuff
@@ -969,7 +987,9 @@ extension ToDoViewController {//all helper funcs for organization
                 if let index = entries.lastIndex(where: {calendar.isDate($0.date!, equalTo: Date(), toGranularity: .day)}) {
                     entries.insert(newToDoEntry, at: index + 1)
                 }
-            }
+            }*/
+            
+            
             
             
         }
@@ -978,6 +998,13 @@ extension ToDoViewController {//all helper funcs for organization
             
             let newToDoEntry = ToDoEntry(context: self.context)
             initializeToDoEntry(newEntry: newToDoEntry, order: 0, isPlaceholder: true)
+            //insert at top of today's section
+            if let index = entries.firstIndex(where: {calendar.isDate($0.date!, equalTo: Date(), toGranularity: .day)}) {//case where there is 0 index in today is already handled by the tableview sections stuff
+                entries.insert(newToDoEntry, at: index)
+            }
+            
+            
+            /*
             if (Constants.Settings.showCompletedEntries == true) {
                 //insert at top of today's section
                 if let index = entries.firstIndex(where: {calendar.isDate($0.date!, equalTo: Date(), toGranularity: .day)}) {//case where there is 0 index in today is already handled by the tableview sections stuff
@@ -990,12 +1017,20 @@ extension ToDoViewController {//all helper funcs for organization
                 if let index = entries.lastIndex(where: {calendar.isDate($0.date!, equalTo: Date(), toGranularity: .day)}) {
                     entries.insert(newToDoEntry, at: index + 1)
                 }
-            }
+            }*/
+            
+            
         }
         else if (placeholder[0].text?.trimmingCharacters(in: .whitespacesAndNewlines) != "") {
             placeholder[0].isPlaceholder = false
             let newToDoEntry = ToDoEntry(context: self.context)
             initializeToDoEntry(newEntry: newToDoEntry, order: 0, isPlaceholder: true)
+            //insert at top of today's section
+            if let index = entries.firstIndex(where: {calendar.isDate($0.date!, equalTo: Date(), toGranularity: .day)}) {//case where there is 0 index in today is already handled by the tableview sections stuff
+                entries.insert(newToDoEntry, at: index)
+            }
+            
+            /*
             if (Constants.Settings.showCompletedEntries == true) {
                 //insert at top of today's section
                 if let index = entries.firstIndex(where: {calendar.isDate($0.date!, equalTo: Date(), toGranularity: .day)}) {//case where there is 0 index in today is already handled by the tableview sections stuff
@@ -1008,7 +1043,9 @@ extension ToDoViewController {//all helper funcs for organization
                 if let index = entries.lastIndex(where: {calendar.isDate($0.date!, equalTo: Date(), toGranularity: .day)}) {
                     entries.insert(newToDoEntry, at: index + 1)
                 }
-            }
+            }*/
+            
+            
         }
         else if (placeholder[0].text != "") {
             placeholder[0].text = ""
