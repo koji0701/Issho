@@ -86,6 +86,15 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
             toolbar.currentTaskCallBack = { [weak self] isCurrentTask in
                 guard let self = self else { return }
                 self.toDoEntryDelegate?.updateIsCurrentTask(in: self, isCurrentTask: isCurrentTask)
+                
+                if (isCurrentTask) {
+                    self.contentView.backgroundColor = Settings.progressBarColorForHasNotFinishedToday
+                }
+                else {
+                    self.contentView.backgroundColor = .clear
+
+                }
+                
                 //self.styleTextView(isCurrent: isCurrentTask)
                 //self.toDoEntry?.isCurrentTask = isCurrentTask//rely on the didset to call the styling method
             }
@@ -144,13 +153,7 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
         //textView.textContainer.size = textView.frame.size
         
         addButton.tintColor = .darkGray
-        if (Constants.Settings.showCompletedEntries && toDoEntry?.isChecked == true) {
-            contentView.backgroundColor = .systemGray6
-        }
-        else {
-            contentView.backgroundColor = .clear
-
-        }
+        
         
         contentView.layer.cornerRadius = 18
         
@@ -177,7 +180,7 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
         }
         else {
             self.toDoEntryDelegate?.checkBoxPressed(in: self, deletionInContext: false, resignedOnBackspace: false)
-            if (Constants.Settings.showCompletedEntries) {
+            if (Settings.showCompletedEntries) {
                 contentView.backgroundColor = .systemGray6
             }
         }
@@ -247,11 +250,11 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
                     self.toDoEntryDelegate?.createNewToDoEntryCell(in: self)
                     resignedOnEnter = false
                 }
-                else if (Constants.Settings.showCompletedEntries == false) {
+                else if (Settings.showCompletedEntries == false) {
                     self.toDoEntryDelegate?.createNewToDoEntryCell(in: self)
                     resignedOnEnter = false
                 }
-                else if (Constants.Settings.showCompletedEntries == true) {
+                else if (Settings.showCompletedEntries == true) {
                     self.toDoEntryDelegate?.createNewToDoEntryCell(in: self)
                     resignedOnEnter = false
                 }

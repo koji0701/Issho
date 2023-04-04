@@ -55,6 +55,7 @@
 		E595D11529A40F1200A53594 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = E595D11429A40F1200A53594 /* FirebaseStorage */; };
 		E5A36BE829D77EF300C74BEE /* UserDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A36BE729D77EF300C74BEE /* UserDownloader.swift */; };
 		E5A36BEA29D7DD5300C74BEE /* AddFriendsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A36BE929D7DD5300C74BEE /* AddFriendsManager.swift */; };
+		E5A36BEC29DBF88000C74BEE /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A36BEB29DBF88000C74BEE /* Settings.swift */; };
 		E5A5166C2958D329002BC2B3 /* ToDoEntryData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E5A5166A2958D329002BC2B3 /* ToDoEntryData.xcdatamodeld */; };
 		E5A8B1D3295E2BC900D5E684 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E5A8B1D2295E2BC900D5E684 /* IQKeyboardManagerSwift */; };
 		E5A8B1D7295E535C00D5E684 /* ToDoEntryToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A8B1D6295E535C00D5E684 /* ToDoEntryToolbar.swift */; };
@@ -128,6 +129,7 @@
 		E595D11129A375AD00A53594 /* UserProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileVC.swift; sourceTree = "<group>"; };
 		E5A36BE729D77EF300C74BEE /* UserDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDownloader.swift; sourceTree = "<group>"; };
 		E5A36BE929D7DD5300C74BEE /* AddFriendsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendsManager.swift; sourceTree = "<group>"; };
+		E5A36BEB29DBF88000C74BEE /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		E5A5166B2958D329002BC2B3 /* ToDoEntryData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ToDoEntryData.xcdatamodel; sourceTree = "<group>"; };
 		E5A8B1D6295E535C00D5E684 /* ToDoEntryToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoEntryToolbar.swift; sourceTree = "<group>"; };
 		E5B6676529B12D690090AB89 /* Photos Auth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Photos Auth.swift"; sourceTree = "<group>"; };
@@ -338,6 +340,7 @@
 				E595D11129A375AD00A53594 /* UserProfileVC.swift */,
 				E5B6676729B147C90090AB89 /* EditProfileVC.swift */,
 				E537219F296F7ECF00AD0BF7 /* SettingsViewController.swift */,
+				E5A36BEB29DBF88000C74BEE /* Settings.swift */,
 			);
 			path = UserProfile;
 			sourceTree = "<group>";
@@ -515,6 +518,7 @@
 				E5A8B1D7295E535C00D5E684 /* ToDoEntryToolbar.swift in Sources */,
 				E5D1174929CAEE5E00F85BBE /* ProfileListVC.swift in Sources */,
 				E53721A0296F7ECF00AD0BF7 /* SettingsViewController.swift in Sources */,
+				E5A36BEC29DBF88000C74BEE /* Settings.swift in Sources */,
 				E58DED4C292F19B200F1EF0C /* SMPostCell.swift in Sources */,
 				E511A00229AEF70300A00930 /* Photo Selector Controller.swift in Sources */,
 				E52FBCAA292F18D30053208C /* SceneDelegate.swift in Sources */,

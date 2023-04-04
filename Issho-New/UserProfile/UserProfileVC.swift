@@ -55,7 +55,9 @@ class UserProfileVC: UIViewController {
         button.isEnabled = true
         navigationController?.setNavigationBarHidden(false, animated: false)
         tabBarController?.tabBar.isHidden = true
-        
+        if let customTB = tabBarController as? CustomTabBarController {
+            customTB.toggle(hide: false)
+        }
 
     }
     

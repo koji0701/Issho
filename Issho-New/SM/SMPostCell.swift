@@ -81,14 +81,15 @@ class SMPostCell: UITableViewCell {
 
         //shadow cells
         // add shadow on cell
+        
         backgroundColor = .clear // very important
         layer.masksToBounds = false
-        layer.shadowOpacity = 0.3
-        layer.shadowRadius = 14
+        layer.shadowOpacity = 0.2
+        layer.shadowRadius = 3
         layer.shadowOffset = CGSize(width: 0, height: 0)
         layer.shadowColor = UIColor.black.cgColor
         // add corner radius on `contentView`
-        contentView.backgroundColor = .white
+        contentView.backgroundColor = .systemGray6
         contentView.layer.cornerRadius = 20
         
     }

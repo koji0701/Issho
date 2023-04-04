@@ -50,9 +50,9 @@ class UserDownloader {
                           let data = doc.data()
                           
                           
-                          if let streak = data["streak"] as? Int, let isWorking = data["isWorking"] as? Bool, let lastUpdated = data["lastUpdated"] as? Timestamp, let username = data["username"] as? String, let progress = data["progress"] as? Float, let likes = data["likes"] as? [String], let friends = data["friends"] as? [String], let friendRq = data["friendRequests"] as? [String], let image = data["image"], let todaysLikes = data["todaysLikes"] as? [String], let streakIsLate = data["streakIsLate"] {
+                          if let streak = data["streak"] as? Int, let isWorking = data["isWorking"] as? Bool, let lastUpdated = data["lastUpdated"] as? Timestamp, let username = data["username"] as? String, let progress = data["progress"] as? Float, let likes = data["likes"] as? [String], let friends = data["friends"] as? [String], let friendRq = data["friendRequests"] as? [String], let image = data["image"], let todaysLikes = data["todaysLikes"] as? [String], let streakIsLate = data["streakIsLate"], let hasFinishedToday = data["hasFinishedToday"] {
                               
-                              let dict: [String: Any] = ["streak": streak, "isWorking": isWorking, "lastUpdated": lastUpdated.dateValue(), "username": username, "progress": progress, "friends": friends, "friendRequests": friendRq, "likes": likes, "image": image, "todaysLikes": todaysLikes, "streakIsLate": streakIsLate]
+                              let dict: [String: Any] = ["streak": streak, "isWorking": isWorking, "lastUpdated": lastUpdated.dateValue(), "username": username, "progress": progress, "friends": friends, "friendRequests": friendRq, "likes": likes, "image": image, "todaysLikes": todaysLikes, "streakIsLate": streakIsLate, "hasFinishedToday": hasFinishedToday]
                               
                               
                               let user = UserInfo(uid: doc.documentID, dictionary: dict)

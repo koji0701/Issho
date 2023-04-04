@@ -301,11 +301,17 @@
                                             </constraints>
                                         </stackView>
                                     </subviews>
+                                    <color key="backgroundColor" systemColor="systemGray6Color"/>
                                     <constraints>
                                         <constraint firstItem="b0O-tS-kAz" firstAttribute="centerY" secondItem="6Sp-zk-Nma" secondAttribute="centerY" id="0yo-Fh-0VC"/>
                                         <constraint firstItem="b0O-tS-kAz" firstAttribute="leading" secondItem="6Sp-zk-Nma" secondAttribute="leading" constant="15" id="22k-dD-5aA"/>
                                         <constraint firstAttribute="trailing" secondItem="b0O-tS-kAz" secondAttribute="trailing" constant="15" id="gNb-3g-GRr"/>
                                     </constraints>
+                                </view>
+                                <view key="tableFooterView" contentMode="scaleToFill" id="ybe-Bd-Ffd" userLabel="SpacerView">
+                                    <rect key="frame" x="0.0" y="143" width="390" height="30"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 </view>
                             </tableView>
                         </subviews>
@@ -694,7 +700,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="dTI-Bl-88Y"/>
+        <segue reference="Sa1-mP-SU3"/>
         <segue reference="sFr-pL-dSo"/>
         <segue reference="3yO-SP-tLT"/>
     </inferredMetricsTieBreakers>
@@ -707,6 +713,9 @@
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemGray6Color">
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

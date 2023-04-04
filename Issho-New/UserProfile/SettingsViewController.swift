@@ -32,7 +32,7 @@ class SettingsViewController: UIViewController {
     
     override func viewDidLoad() {
         
-        setCompletedTasksButtonDisplay(mode: Constants.Settings.showCompletedEntries)
+        setCompletedTasksButtonDisplay(mode: Settings.showCompletedEntries)
         
         /* TODO:
             
@@ -46,15 +46,21 @@ class SettingsViewController: UIViewController {
         navigationController?.setNavigationBarHidden(false, animated: true)
         tabBarController?.tabBar.isHidden = true
         navigationController?.navigationBar.backItem?.title = ""
+        
+        if let customTB = tabBarController as? CustomTabBarController {
+            customTB.toggle(hide: true)
+        }
+        
+
     }
     
     
     @IBAction func completedTasksButtonClicked(_ sender: Any) {
         //toggle mode in userdefaults and constants
-        defaults.set(!Constants.Settings.showCompletedEntries, forKey: "showCompletedEntries")
-        Constants.Settings.showCompletedEntries = !Constants.Settings.showCompletedEntries
+        defaults.set(!Settings.showCompletedEntries, forKey: "showCompletedEntries")
+        Settings.showCompletedEntries = !Settings.showCompletedEntries
         
-        setCompletedTasksButtonDisplay(mode: Constants.Settings.showCompletedEntries)
+        setCompletedTasksButtonDisplay(mode: Settings.showCompletedEntries)
         //reload tableview
         //settingsToDoViewControllerDelegate?.refreshTableView()
         
@@ -68,13 +74,13 @@ class SettingsViewController: UIViewController {
     
     @IBAction func displayModeButtonClicked(_ sender: Any) {
         //toggle mode in constants + userdefaults
-        if (Constants.Settings.displayMode > 3) {
+        if (Settings.displayMode > 3) {
             defaults.set(1, forKey: "displayMode")
-            Constants.Settings.displayMode = 1
+            Settings.displayMode = 1
         }
         else {
-            defaults.set(Constants.Settings.displayMode + 1, forKey: "displayMode")
-            Constants.Settings.displayMode = Constants.Settings.displayMode + 1
+            defaults.set(Settings.displayMode + 1, forKey: "displayMode")
+            Settings.displayMode = Settings.displayMode + 1
         }
         
         

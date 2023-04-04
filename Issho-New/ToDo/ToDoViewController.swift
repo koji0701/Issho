@@ -23,8 +23,12 @@ class ToDoViewController: UIViewController {
             customProgressBar.progress = CGFloat(progress)
         }
     }
-    //MARK: There are some issues with the pulsing and the flow animation with the current. its mostly with the current working thing. when date change, it doesn't update correctly. make sure that this updates correctly. also, switch current from a text base thing to a switching the ui of the checkbox.
-    //error num 2: error for the placeholder where if the placeholder has text in it, it just resets. needs to make a new one. this also happens with the current
+    
+    private var hasFinishedToday: Bool = false {
+        didSet {
+            customProgressBar.hasFinishedToday = hasFinishedToday
+        }
+    }
     
     
     
@@ -285,7 +289,7 @@ extension ToDoViewController: UITableViewDataSource, UITableViewDelegate {
             initializeToDoEntry(newEntry: newToDoEntry, order: 0, isPlaceholder: true)
             entries.insert(newToDoEntry, at: 0)
 
-            /*if (Constants.Settings.showCompletedEntries == true) {
+            /*if (Settings.showCompletedEntries == true) {
             }
             else {
                 entries.insert(newToDoEntry, at: index)
@@ -314,6 +318,18 @@ extension ToDoViewController: UITableViewDataSource, UITableViewDelegate {
         //cell.styleTextView(isCurrent: entries[totalIndexRow].isCurrentTask)
         cell.textView.font = Constants.Fonts.toDoEntryCellFont
 
+        if (entries[totalIndexRow].isCurrentTask == true) {
+            cell.contentView.backgroundColor = Settings.progressBarColorForHasNotFinishedToday
+
+        }
+        else if (Settings.showCompletedEntries && entries[totalIndexRow].isChecked == true) {
+            cell.contentView.backgroundColor = .systemGray6
+        }
+        else {
+            cell.contentView.backgroundColor = .clear
+        }
+        
+        
         // set the closure
         /*
         weak var tv = tableView
@@ -363,7 +379,7 @@ extension ToDoViewController: UITableViewDataSource, UITableViewDelegate {
     func loadItems(completion: @escaping() -> Void) {
         let request: NSFetchRequest<ToDoEntry> = ToDoEntry.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(key: "order", ascending: true)]
-        if (Constants.Settings.showCompletedEntries == false) {
+        if (Settings.showCompletedEntries == false) {
             request.predicate = NSPredicate(format: "isChecked == false")
         }
         do {
@@ -415,12 +431,14 @@ extension ToDoViewController: ToDoEntryDelegate {
                 return
             }
         // MARK: don't let the placeholder cell do it
+        let totalIndexRow = returnPositionForThisIndexPath(indexPath: indexPath)
+
         if (cell.toDoEntry?.isPlaceholder == true) {
             cell.textView.resignFirstResponder()
+            entries[totalIndexRow].isCurrentTask = false
             return
         }
         
-        let totalIndexRow = returnPositionForThisIndexPath(indexPath: indexPath)
         
         
         if (cell.toDoEntry?.isCurrentTask == true) {//if deleting a current task, then make sure to set it to false and update the is working
@@ -444,7 +462,7 @@ extension ToDoViewController: ToDoEntryDelegate {
             entries[totalIndexRow].isChecked.toggle()
 
             
-            if (Constants.Settings.showCompletedEntries == true) {
+            if (Settings.showCompletedEntries == true) {
                 let calendar = Calendar.current
                 
                 if (entries[totalIndexRow].isChecked == true) { // after the toggle, is it checked?
@@ -559,7 +577,7 @@ extension ToDoViewController: ToDoEntryDelegate {
             tableView.insertRows(at: [newIndexPath], with: .fade)
             entries.insert(newToDoEntry, at: totalIndexPath )
             /*
-            if (Constants.Settings.showCompletedEntries == true) { //placeholder is at the top, insert a row directly above it
+            if (Settings.showCompletedEntries == true) { //placeholder is at the top, insert a row directly above it
                 
                 
                 
@@ -638,7 +656,7 @@ extension ToDoViewController: ToDoEntryDelegate {
         let newRow: Int
         
         
-        if Constants.Settings.showCompletedEntries == true {
+        if Settings.showCompletedEntries == true {
             newRow = entries.filter({
                 calendar.dateComponents([.day, .month, .year], from: $0.date!) == dayDate
                 && $0.isChecked == false
@@ -746,17 +764,17 @@ extension ToDoViewController: ToDoEntryDelegate {
             
         //self.updateProgress()
         //saveItems()
-        tableView.reloadData()
+        updateProgress()
             
     }
     
     func updateIsCurrentTask(in cell: ToDoEntryCell, isCurrentTask: Bool) {
         print("updateIsCurrentTask working")
+        guard let indexPath = tableView.indexPath(for: cell) else {return}
+        let pos = returnPositionForThisIndexPath(indexPath: indexPath)
         
-        self.entries[Int(cell.toDoEntry!.order)].isCurrentTask = isCurrentTask//set current Task
-        
+        entries[pos].isCurrentTask = isCurrentTask//set current Task
         updateIsWorking()
-        
         
     }
 }
@@ -848,56 +866,41 @@ extension ToDoViewController {//all helper funcs for organization
     private func initProgressNoFirestore() {
         let fetchRequest: NSFetchRequest<ToDoEntry> = ToDoEntry.fetchRequest()
 
-        /*
-        if (Constants.Settings.toDoProgressUntilDate >= 0) {
-            let progressUntilDate = Calendar.current.date(byAdding: .day, value: Constants.Settings.toDoProgressUntilDate, to: Date())!
-            fetchRequest.predicate = NSPredicate(format: "date <= %@", progressUntilDate as NSDate)
-        }*/
-        
-        //fetchRequest.predicate = NSPredicate(format: "date <= %@", NSDate())
         do {
-            //let checkedEntries = try context.fetch(fetchRequest).filter { $0.isChecked == true }
-            //let totalEntries = try context.fetch(fetchRequest).filter {$0.isPlaceholder == false}
-            //account for the isPlaceholder cell
-            let calendar = Calendar.current
             
+            
+            let checkedEntries = try context.fetch(fetchRequest).filter { $0.isChecked == true }
             let totalEntries = try context.fetch(fetchRequest).filter {$0.isPlaceholder == false}
-            let startOfTomorrow = calendar.startOfDay(for: calendar.date(byAdding: .day, value: 1, to: Date())!)
             
-            let todayAndPrevEntries = totalEntries.filter({$0.date! < startOfTomorrow})
-            let checkedTodayAndPrev = todayAndPrevEntries.filter({$0.isChecked == true})
-            
-            let futureEntries = totalEntries.filter({$0.date! >= startOfTomorrow})
-            let checkedFutureEntries = totalEntries.filter({$0.isChecked == true})
-            
-            if (todayAndPrevEntries.count == 0) {
-                progress = 1 + (Float(checkedFutureEntries.count) / Float(futureEntries.count))
-            }
-            else {
-                progress = (Float(checkedTodayAndPrev.count + checkedFutureEntries.count)) / Float(todayAndPrevEntries.count + checkedFutureEntries.count)
-            }
+            progress = Float(checkedEntries.count) / Float(totalEntries.count)
             if (progress.isNaN) {
                 progress = 1.0
             }
             
-
+            if (checkedEntries.count > 0) {
+                let calendar = Calendar.current
+                let startOfTomorrow = calendar.startOfDay(for: calendar.date(byAdding: .day, value: 1, to: Date())!)
+                
+                
+                let checkedTodayAndPrev = checkedEntries.filter({$0.date! < startOfTomorrow})
+                let todayAndPrev = totalEntries.filter({$0.date! < startOfTomorrow})
+                hasFinishedToday = (todayAndPrev == checkedTodayAndPrev)
+                
+            }
+ 
         } catch {
             progress = 0.0
             print("error in updateProgress")
         }
         
-        //percentageLabel.text = String(format: "%.f", progress * 100) + "%"
         
-        //customProgressBar.progress = progress
-        //customProgressBar.createDoubleAnimation()
-        //progressBar.progress = progress
     }
 
     private func updateProgress() {
         initProgressNoFirestore()
         
         
-        User.shared().updateUserInfo(newInfo: ["progress": progress])
+        User.shared().updateUserInfo(newInfo: ["progress": progress, "hasFinishedToday": hasFinishedToday])
     }
     
     private func taskCompleted() {
@@ -913,7 +916,7 @@ extension ToDoViewController {//all helper funcs for organization
             let calendar = Calendar.current
             
             let filteredEntries: [ToDoEntry] = {
-                if (Constants.Settings.showCompletedEntries == true) {
+                if (Settings.showCompletedEntries == true) {
                     return entries
                 }
                 else {
@@ -941,13 +944,18 @@ extension ToDoViewController {//all helper funcs for organization
     
     func orderEntries() {
         let calendar = Calendar.current
-        self.entries.removeAll(where: {($0.text == "" || $0.text == "⚡️") && $0.isPlaceholder == false})//removes all unnecessary ones
+        
+        
+        entries.removeAll(where: {$0.text == "" && $0.isPlaceholder == false})
         
         self.entries.sort {
             if (calendar.isDate($0.date!, equalTo: $1.date!, toGranularity: .day)) {//if same day
                 if ($0.isPlaceholder == true) {//if its the placeholder
-                    //return Constants.Settings.showCompletedEntries //if show checked entries is true, then returning true -> placeholder goes to top
+                    
                     return true
+                }
+                else if ($1.isPlaceholder == true) {
+                    return false
                 }
                 else if ($0.isCurrentTask != $1.isCurrentTask) {//if only one is a current task
                     return $0.isCurrentTask
@@ -975,7 +983,7 @@ extension ToDoViewController {//all helper funcs for organization
                 entries.insert(newToDoEntry, at: index)
             }
             /*
-            if (Constants.Settings.showCompletedEntries == true) {
+            if (Settings.showCompletedEntries == true) {
                 //insert at top of today's section
                 if let index = entries.firstIndex(where: {calendar.isDate($0.date!, equalTo: Date(), toGranularity: .day)}) {//case where there is 0 index in today is already handled by the tableview sections stuff
                     entries.insert(newToDoEntry, at: index)
@@ -1005,7 +1013,7 @@ extension ToDoViewController {//all helper funcs for organization
             
             
             /*
-            if (Constants.Settings.showCompletedEntries == true) {
+            if (Settings.showCompletedEntries == true) {
                 //insert at top of today's section
                 if let index = entries.firstIndex(where: {calendar.isDate($0.date!, equalTo: Date(), toGranularity: .day)}) {//case where there is 0 index in today is already handled by the tableview sections stuff
                     entries.insert(newToDoEntry, at: index)
@@ -1031,7 +1039,7 @@ extension ToDoViewController {//all helper funcs for organization
             }
             
             /*
-            if (Constants.Settings.showCompletedEntries == true) {
+            if (Settings.showCompletedEntries == true) {
                 //insert at top of today's section
                 if let index = entries.firstIndex(where: {calendar.isDate($0.date!, equalTo: Date(), toGranularity: .day)}) {//case where there is 0 index in today is already handled by the tableview sections stuff
                     entries.insert(newToDoEntry, at: index)
@@ -1049,6 +1057,9 @@ extension ToDoViewController {//all helper funcs for organization
         }
         else if (placeholder[0].text != "") {
             placeholder[0].text = ""
+        }
+        else if (placeholder[0].isCurrentTask == true) {
+            placeholder[0].isCurrentTask = false
         }
         
         resetOrder()//i always run this

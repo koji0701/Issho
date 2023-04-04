@@ -18,7 +18,16 @@ class GradientHorizontalProgressBar: UIView {
         didSet { setNeedsDisplay() }
     }
     
-    
+    var hasFinishedToday: Bool = false {
+        didSet{
+            if (hasFinishedToday == true) {
+                color = .systemPink
+            }
+            else {
+                color = Settings.progressBarColorForHasNotFinishedToday
+            }
+        }
+    }
 
     var progress: CGFloat = 0 {
         didSet {

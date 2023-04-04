@@ -29,11 +29,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         IQKeyboardManager.shared.shouldResignOnTouchOutside = true
         
         //settings constants init from userdefaults
-        Constants.Settings.displayMode = defaults.value(forKey: "displayMode") as? Int ?? 1
-        Constants.Settings.showCompletedEntries = defaults.value(forKey: "showCompletedEntries") as? Bool ?? false
+        Settings.displayMode = defaults.value(forKey: "displayMode") as? Int ?? 1
+        Settings.showCompletedEntries = defaults.value(forKey: "showCompletedEntries") as? Bool ?? false
         if (defaults.value(forKey: "showCompletedEntries") == nil) {//settings init condition, only check one
-            defaults.set(Constants.Settings.displayMode, forKey: "displayMode")
-            defaults.set(Constants.Settings.showCompletedEntries, forKey: "showCompletedEntries")
+            defaults.set(Settings.displayMode, forKey: "displayMode")
+            defaults.set(Settings.showCompletedEntries, forKey: "showCompletedEntries")
         }
         
         

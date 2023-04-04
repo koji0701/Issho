@@ -59,7 +59,8 @@ class User {
                     "lastUpdated": document["lastUpdated"] as? Date ?? Date(),
                     "image": document["image"] as? String ?? "default",
                     "todaysLikes": document["todaysLikes"] as! [String],
-                    "streakIsLate": document["streakIsLate"] as! Bool
+                    "streakIsLate": document["streakIsLate"] as! Bool,
+                    "hasFinishedToday":document["hasFinishedToday"] as! Bool
 
                 ]
                 self.lastUpdateUserInfo = self.userInfo
@@ -97,7 +98,8 @@ class User {
             "lastUpdated": newInfo["lastUpdated"] as? [String] ?? userInfo["lastUpdated"]!,
             "image": newInfo["image"] as? String ?? userInfo["image"] ?? lastUpdateUserInfo["image"]!,
             "todaysLikes": newInfo["todaysLikes"] as? [String] ?? userInfo["todaysLikes"]!,
-            "streakIsLate": newInfo["streakIsLate"] as? Bool ?? userInfo["streakIsLate"]!
+            "streakIsLate": newInfo["streakIsLate"] as? Bool ?? userInfo["streakIsLate"]!,
+            "hasFinishedToday": newInfo["hasFinishedToday"] as? Bool ?? userInfo["hasFinishedToday"]!
             
         ]
         

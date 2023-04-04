@@ -292,14 +292,7 @@ struct Constants {
         static let collectionName = "users"
         
     }
-    struct Settings {
-        
-        static var showCompletedEntries = false
-        static var displayMode = 1
-        
-        static let toDoProgressUntilDate = 0
-
-    }
+    
     
     struct Fonts {
         static let toDoEntryCellFont = UIFont(name: "NunitoSans-Regular", size: 16)
