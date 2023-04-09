@@ -312,6 +312,8 @@ struct Constants {
         
         static let welcomeForms = UIFont(name: "NunitoSans-SemiBold", size: 18)
         static let welcomeSignupButton = UIFont(name: "NunitoSans-ExtraBold", size: 20)
+        
+        static let friendsControlFont = UIFont(name: "NunitoSans-Regular", size: 15)
     }
     
 }

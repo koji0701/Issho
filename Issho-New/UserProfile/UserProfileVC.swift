@@ -29,7 +29,7 @@ class UserProfileVC: UIViewController {
     
     var friendStatusChanged: Bool = false
     
-    /** different states of the button: Add, Unfriend, Friends, Add Friends, Accept Request, Request Sent **/
+    /** different states of the button: Add, Unfriend, Friends, Add Friends, Accept Requested **/
     
     
     
@@ -135,10 +135,10 @@ class UserProfileVC: UIViewController {
 
         }
         else if (user.friendRequests.contains(User.shared().uid)) {
-            button.setTitle("Request Sent", for: .normal)
+            button.setTitle("Requested", for: .normal)
         }
         else if ((User.shared().userInfo["friendRequests"] as! [String]).contains(user.uid)) {
-            button.setTitle("Accept Request", for: .normal)
+            button.setTitle("Accept", for: .normal)
         }
         else if (user.uid == User.shared().uid) {
             button.setTitle("Add Friends", for: .normal)
@@ -163,20 +163,20 @@ class UserProfileVC: UIViewController {
         
         friendStatusChanged = true
         if (button.currentTitle == "Add") {
-            button.setTitle("Request Sent", for: .normal)
+            button.setTitle("Requested", for: .normal)
             
             AddFriendsManager.addFriend(newFriend: user.uid)
             
         }
         
-        else if (button.currentTitle == "Accept Request") {
+        else if (button.currentTitle == "Accept") {
             button.setTitle("Friends", for: .normal)
             
             AddFriendsManager.acceptRequest(aceptee: user.uid)
             
         }
         
-        else if (button.currentTitle == "Request Sent") {
+        else if (button.currentTitle == "Requested") {
             button.setTitle("Add", for: .normal)
             
             AddFriendsManager.cancelFriendRequest(cancelledUser: user.uid)

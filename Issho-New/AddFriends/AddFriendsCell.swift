@@ -32,7 +32,7 @@ class AddFriendsCell: UITableViewCell {
     @IBOutlet weak var profilePic: CustomImageView!
     @IBOutlet weak var profilePicTapView: UIView!
     
-    @IBOutlet weak var actionButton: UIButton!
+    @IBOutlet weak var actionButton: FriendsControlButton!
     
     @IBOutlet weak var deleteButton: UIButton!
     @IBOutlet weak var requestsView: UIView!
@@ -72,31 +72,32 @@ class AddFriendsCell: UITableViewCell {
     
     
     @IBAction func actionButtonClicked(_ sender: Any) {
+        actionButton.updateState()
         if (actionButton.currentTitle == "Add") {
             addFriendsCellDelegate?.addPressed(in: self)
             
-            actionButton.setTitle("Request Sent", for: .normal)
+            //actionButton.setTitle("Requested", for: .normal)
             
         }
         
         
-        else if (actionButton.currentTitle == "Request Sent") {
+        else if (actionButton.currentTitle == "Requested") {
             addFriendsCellDelegate?.requestSentPressed(in: self)
             
             
-            actionButton.setTitle("Add", for: .normal)
+            //actionButton.setTitle("Add", for: .normal)
             
         }
         
         else if (actionButton.currentTitle == "Friends") {
-            actionButton.setTitle("Unfriend", for: .normal)
+            //actionButton.setTitle("Unfriend", for: .normal)
             
         }
         
         else if (actionButton.currentTitle == "Unfriend") {
             addFriendsCellDelegate?.unfriendPressed(in: self)
             
-            actionButton.setTitle("Add", for: .normal)
+            //actionButton.setTitle("Add", for: .normal)
             /*
             var new = User.shared().userInfo["friends"] as? [String] ?? []
             new.removeAll(where: {$0 == user.uid})
@@ -114,7 +115,7 @@ class AddFriendsCell: UITableViewCell {
         actionButton.isEnabled = true
         if (user.friends.contains(User.shared().uid)) {
             //already friends
-            actionButton.setTitle("Friends", for: .normal)
+            actionButton.setState(state: .friends)
         }
         else if (user.friendRequests.contains(User.shared().uid)) {
             //accept/reject request
@@ -127,18 +128,18 @@ class AddFriendsCell: UITableViewCell {
             deleteButton.isEnabled = true
         }
         else if ((User.shared().userInfo["friendRequests"] as! [String]).contains(user.uid)) {
-            //request sent
-            actionButton.setTitle("Request Sent", for: .normal)
+            //Requested
+            actionButton.setState(state: .requested)
         }
         else if (user.uid == User.shared().uid) {
             //thats you!
-            actionButton.setTitle("Thats you!", for: .normal)
             actionButton.isEnabled = false
+            actionButton.setState(state: .thatsYou)
             
         }
         else {
             //add button
-            actionButton.setTitle("Add", for: .normal)
+            actionButton.setState(state: .add)
         }
     }
     
