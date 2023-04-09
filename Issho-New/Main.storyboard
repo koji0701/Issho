@@ -65,7 +65,7 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lqt-33-xy5" userLabel="Edit profile button">
-                                <rect key="frame" x="142" y="174" width="106" height="34.666666666666629"/>
+                                <rect key="frame" x="142" y="174" width="106" height="34.666666666666657"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="Edit profile"/>
                                 <connections>
@@ -301,7 +301,6 @@
                                             </constraints>
                                         </stackView>
                                     </subviews>
-                                    <color key="backgroundColor" systemColor="systemGray6Color"/>
                                     <constraints>
                                         <constraint firstItem="b0O-tS-kAz" firstAttribute="centerY" secondItem="6Sp-zk-Nma" secondAttribute="centerY" id="0yo-Fh-0VC"/>
                                         <constraint firstItem="b0O-tS-kAz" firstAttribute="leading" secondItem="6Sp-zk-Nma" secondAttribute="leading" constant="15" id="22k-dD-5aA"/>
@@ -713,9 +712,6 @@
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="systemGray6Color">
-            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

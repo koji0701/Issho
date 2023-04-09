@@ -68,7 +68,7 @@ class User {
                 
                 print("user info in the init", self.userInfo)
                 NotificationCenter.default.post(name: NSNotification.Name("userInfoUpdated"),
-                                                object: self.userInfo)
+                                                object: UserInfo(dictionary: self.userInfo))
             } else {
                 print("Document does not exist")
                 fatalError("could not read user document, readUserDocument")
@@ -77,6 +77,8 @@ class User {
     }
     
     func updateUserInfo(newInfo: [String: Any]) {
+        
+        
         print("update user info call, previous userInfo", userInfo)
         
         dbUpdateTimer?.invalidate()//invalidate the timer if it is already running

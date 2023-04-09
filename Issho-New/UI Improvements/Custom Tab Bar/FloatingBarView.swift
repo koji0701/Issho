@@ -21,7 +21,7 @@ class FloatingBarView: UIView {
 
     init(_ items: [[UIImage]]) {
         super.init(frame: .zero)
-        backgroundColor = .white
+        backgroundColor = .secondarySystemBackground
 
         setupStackView(items)
         updateUI(selectedIndex: 0)
@@ -79,9 +79,9 @@ class FloatingBarView: UIView {
             if index == selectedIndex {
                 button.isSelected = true
                 if index == 0 {
-                    button.tintColor = .red
+                    button.tintColor = Settings.progressBar.hasFinishedToday.withAlphaComponent(1)
                 } else {
-                    button.tintColor = .black
+                    button.tintColor = Settings.progressBar.hasNotFinishedToday.withAlphaComponent(0.6)
                 }
             } else {
                 button.isSelected = false

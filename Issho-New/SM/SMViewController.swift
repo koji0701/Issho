@@ -176,6 +176,7 @@ extension SMViewController: UITableViewDataSource, UITableViewDelegate {
         cell.streak.text = String(posts[indexPath.row].streak) + "🔥"
         cell.likes.text = String(posts[indexPath.row].todaysLikes.count) + "🎉"
         cell.customProgressBar.progress = CGFloat(posts[indexPath.row].progress)
+        cell.customProgressBar.hasFinishedToday = posts[indexPath.row].hasFinishedToday
 
         cell.progressPercentage.text = String(format: "%.0f", posts[indexPath.row].progress * 100) + "%"
         //cell.contentView.backgroundColor = (posts[indexPath.row].isLiked == true) ? .systemYellow : .systemGray6

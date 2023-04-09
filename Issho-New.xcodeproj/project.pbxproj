@@ -62,6 +62,7 @@
 		E5B6676629B12D690090AB89 /* Photos Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B6676529B12D690090AB89 /* Photos Auth.swift */; };
 		E5B6676829B147C90090AB89 /* EditProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B6676729B147C90090AB89 /* EditProfileVC.swift */; };
 		E5D1174929CAEE5E00F85BBE /* ProfileListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5D1174829CAEE5E00F85BBE /* ProfileListVC.swift */; };
+		E5E2B2AA29E2A62E0032FE8B /* FriendsControlButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E2B2A929E2A62E0032FE8B /* FriendsControlButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -135,6 +136,7 @@
 		E5B6676529B12D690090AB89 /* Photos Auth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Photos Auth.swift"; sourceTree = "<group>"; };
 		E5B6676729B147C90090AB89 /* EditProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileVC.swift; sourceTree = "<group>"; };
 		E5D1174829CAEE5E00F85BBE /* ProfileListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileListVC.swift; sourceTree = "<group>"; };
+		E5E2B2A929E2A62E0032FE8B /* FriendsControlButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsControlButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -330,6 +332,7 @@
 				E50E17B32992E8CD0034543C /* AddFriendsViewController.swift */,
 				E5D1174829CAEE5E00F85BBE /* ProfileListVC.swift */,
 				E5A36BE929D7DD5300C74BEE /* AddFriendsManager.swift */,
+				E5E2B2A929E2A62E0032FE8B /* FriendsControlButton.swift */,
 			);
 			path = AddFriends;
 			sourceTree = "<group>";
@@ -522,6 +525,7 @@
 				E58DED4C292F19B200F1EF0C /* SMPostCell.swift in Sources */,
 				E511A00229AEF70300A00930 /* Photo Selector Controller.swift in Sources */,
 				E52FBCAA292F18D30053208C /* SceneDelegate.swift in Sources */,
+				E5E2B2AA29E2A62E0032FE8B /* FriendsControlButton.swift in Sources */,
 				E5A36BEA29D7DD5300C74BEE /* AddFriendsManager.swift in Sources */,
 				E58DED46292F19A300F1EF0C /* ToDoViewController.swift in Sources */,
 				E50E17B42992E8CD0034543C /* AddFriendsViewController.swift in Sources */,

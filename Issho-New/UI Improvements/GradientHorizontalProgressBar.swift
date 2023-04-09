@@ -18,13 +18,19 @@ class GradientHorizontalProgressBar: UIView {
         didSet { setNeedsDisplay() }
     }
     
+    
+    
     var hasFinishedToday: Bool = false {
         didSet{
             if (hasFinishedToday == true) {
-                color = .systemPink
+                color = Settings.progressBar.hasFinishedToday
+                backgroundColor = Settings.progressBar.bgHasFinishedToday
+                gradientColor = Settings.progressBar.bgHasFinishedToday
             }
             else {
-                color = Settings.progressBarColorForHasNotFinishedToday
+                color = Settings.progressBar.hasNotFinishedToday
+                backgroundColor = Settings.progressBar.bgHasNotFinishedToday
+                gradientColor = Settings.progressBar.bgHasNotFinishedToday
             }
         }
     }
@@ -64,11 +70,12 @@ class GradientHorizontalProgressBar: UIView {
         gradientLayer.mask = progressLayer
         gradientLayer.locations = [0.35, 0.5, 0.65]
         gradientLayer.startPoint = CGPoint(x: 0, y: 0.5)
+        
     }
 
     func createRepeatingAnimation() {
         
-            gradientLayer.colors = [color.cgColor, gradientColor.cgColor, color.cgColor]
+        gradientLayer.colors = [color.cgColor, gradientColor.cgColor, color.cgColor]
 
             let flowAnimation = CABasicAnimation(keyPath: "locations")
             flowAnimation.fromValue = [-0.3, -0.15, 0]
@@ -90,50 +97,28 @@ class GradientHorizontalProgressBar: UIView {
     }
     
     
-    func createSingleAnimation() {
-        gradientLayer.colors = [color.cgColor, gradientColor.cgColor, color.cgColor]
-        
-        CATransaction.begin()
-        
-        CATransaction.setCompletionBlock({
-            self.gradientLayer.colors = [self.color.cgColor, self.color.cgColor, self.color.cgColor]
-
-        })
-        let alreadyAnimating = (gradientLayer.animation(forKey: "flowAnimation") != nil)
-        print(alreadyAnimating)
-        if (gradientLayer.animation(forKey: "flowAnimation") == nil) {
-            let flowAnimation = CABasicAnimation(keyPath: "locations")
-            flowAnimation.fromValue = [-0.3, -0.15, 0]
-            flowAnimation.toValue = [1, 1.15, 1.3]
-
-            flowAnimation.isRemovedOnCompletion = false
-            flowAnimation.repeatCount = 1
-            flowAnimation.duration = 1
-            gradientLayer.add(flowAnimation, forKey: "flowAnimation")
-        }
-        
-        let pulse = CASpringAnimation(keyPath: "transform.scale")
-        pulse.duration = 0.2
-        pulse.fromValue = 0.95
-        pulse.toValue = 1.03
-        pulse.autoreverses = true
-        pulse.damping = 0.5
-        layer.add(pulse, forKey: "pulse")
-        
-        CATransaction.commit()
-        
-        
-    }
     
     func pulseAnimation() {
+        
+        
         CATransaction.begin()
         let pulse = CASpringAnimation(keyPath: "transform.scale")
         pulse.duration = 0.2
-        pulse.fromValue = 0.95
+        pulse.fromValue = 1.0
         pulse.toValue = 1.03
         pulse.autoreverses = true
         pulse.damping = 0.5
+        
+        if (gradientLayer.animation(forKey: "flowAnimation") != nil) {
+            print("currently having the flow animation")
+            resetAnimation()
+            CATransaction.setCompletionBlock({
+                self.createRepeatingAnimation()
+            })
+        }
+        
         layer.add(pulse, forKey: "pulse")
+        
         CATransaction.commit()
         
     }

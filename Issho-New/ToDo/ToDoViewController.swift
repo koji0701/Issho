@@ -30,6 +30,17 @@ class ToDoViewController: UIViewController {
         }
     }
     
+    private var isWorking: Bool = false {
+        didSet {
+            if (isWorking == true) {
+                customProgressBar.createRepeatingAnimation()
+            }
+            else {
+                customProgressBar.resetAnimation()
+            }
+        }
+    }
+    
     
     
     var uniqueDates: [DateComponents] = []
@@ -66,25 +77,32 @@ class ToDoViewController: UIViewController {
         navigationController?.hidesBarsOnSwipe = true
         //updateIsWorking()
         
+        if (isWorking == true) {
+            customProgressBar.createRepeatingAnimation()
+        }
+        
     }
     
     @objc private func userUpdate(_ notification: Notification) {
         print("user updated notification recieved", notification.object)
         //print(notification.object as? [String: Any] ?? [:])
         var info = notification.object as? UserInfo
-        let likesCount = info?.likesCount as? Int ?? 0
+        print("info:", info)
+        let likesCount = info?.todaysLikes.count as? Int ?? 0
         let streak = info?.streak as? Int ?? 0
         let fProgress = info?.progress as? Float ?? 0.0
         let streakIsLate = info?.streakIsLate as? Bool ?? false
         
-        
-        
-        
-        likesLabel.text = String(likesCount) + "🎉"
-        streakLabel.text = String(streak) + "🔥"
-        if (streakIsLate == true) {
-            streakLabel.text! += "⏳"
+        DispatchQueue.main.async {
+            self.newDayUpdates()
+            
+            self.likesLabel.text = String(likesCount) + "🎉"
+            self.streakLabel.text = String(streak) + "🔥"
+            if (streakIsLate == true) {
+                self.streakLabel.text! += "⏳"
+            }
         }
+        
         
         /*
         if (progress > fProgress) { //if there was a firestore update pushing the progress to 0, then make sure too reupdate firestore + allow for a like
@@ -100,7 +118,6 @@ class ToDoViewController: UIViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(userUpdate(_:)),name: NSNotification.Name ("userInfoUpdated"), object: nil)
         
-        //newDayUpdates()
         
         tableView.dataSource = self
         tableView.delegate = self
@@ -319,7 +336,7 @@ extension ToDoViewController: UITableViewDataSource, UITableViewDelegate {
         cell.textView.font = Constants.Fonts.toDoEntryCellFont
 
         if (entries[totalIndexRow].isCurrentTask == true) {
-            cell.contentView.backgroundColor = Settings.progressBarColorForHasNotFinishedToday
+            cell.contentView.backgroundColor = Settings.progressBar.hasNotFinishedToday
 
         }
         else if (Settings.showCompletedEntries && entries[totalIndexRow].isChecked == true) {
@@ -330,27 +347,6 @@ extension ToDoViewController: UITableViewDataSource, UITableViewDelegate {
         }
         
         
-        // set the closure
-        /*
-        weak var tv = tableView
-        
-        cell.textViewCallBack = { [weak self] str in
-            guard let self = self, let tv = tv, let iP = tableView.indexPath(for: cell) else { return }
-            
-            // update our data with the edited string
-            let totalIndexRow = self.returnPositionForThisIndexPath(indexPath: iP)
-            if  totalIndexRow < self.entries.count - 1 {//safety func
-                self.entries[totalIndexRow].text = str//
-                // we don't need to do anything else here
-                print("saving the new text")
-            }
-            // this will force the table to recalculate row heights
-
-            tv.beginUpdates()
-            tv.endUpdates()//height recalculation
-            
-            
-        }*/
         return cell
 
     }
@@ -854,10 +850,10 @@ extension ToDoViewController {//all helper funcs for organization
         
         DispatchQueue.main.async {
             if (currentTasks.count > 0) {
-                self.customProgressBar.createRepeatingAnimation()
+                self.isWorking = true
             }
             else {
-                self.customProgressBar.resetAnimation()
+                self.isWorking = false
             }
         }
         
@@ -1089,7 +1085,7 @@ extension ToDoViewController {//all helper funcs for organization
         newEntry.isPlaceholder = isPlaceholder
     }
     
-    /*private func newDayUpdates() {
+    private func newDayUpdates() {
         
         
         let calendar = Calendar.current
@@ -1118,9 +1114,12 @@ extension ToDoViewController {//all helper funcs for organization
         catch {
             print("error in newDayUpdate todoviewcontroller")
         }
-        loadItems()
-        orderEntries()//new placeholder will be added back in here
-        updateProgress()
+        
+        loadItems(completion: {
+            self.orderEntries()//new placeholder will be added back in here
+            self.updateProgress()
+        })
+        
         
         /*
         let calendar = Calendar.current
@@ -1136,7 +1135,7 @@ extension ToDoViewController {//all helper funcs for organization
             
         }*/
         
-    }*/
+    }
     
     
     //for total indexpath

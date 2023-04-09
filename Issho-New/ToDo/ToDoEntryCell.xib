@@ -105,6 +105,7 @@
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="rTq-Fs-Fdd"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <connections>
                 <outlet property="addButton" destination="cEu-FX-gj0" id="kNK-LM-hoq"/>
                 <outlet property="checkboxButton" destination="AEn-yb-h53" id="1XO-i3-Ive"/>

@@ -88,7 +88,7 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
                 self.toDoEntryDelegate?.updateIsCurrentTask(in: self, isCurrentTask: isCurrentTask)
                 
                 if (isCurrentTask) {
-                    self.contentView.backgroundColor = Settings.progressBarColorForHasNotFinishedToday
+                    self.contentView.backgroundColor = Settings.progressBar.hasNotFinishedToday
                 }
                 else {
                     self.contentView.backgroundColor = .clear
@@ -154,7 +154,6 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
         
         addButton.tintColor = .darkGray
         
-        
         contentView.layer.cornerRadius = 18
         
     }
@@ -182,6 +181,9 @@ class ToDoEntryCell: UITableViewCell,UITextViewDelegate  {
             self.toDoEntryDelegate?.checkBoxPressed(in: self, deletionInContext: false, resignedOnBackspace: false)
             if (Settings.showCompletedEntries) {
                 contentView.backgroundColor = .systemGray6
+            }
+            else {
+                contentView.backgroundColor = .clear
             }
         }
         
