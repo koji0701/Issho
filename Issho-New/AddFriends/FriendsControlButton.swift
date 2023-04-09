@@ -76,7 +76,7 @@ class FriendsControlButton: UIButton {
             setImage(UIImage(systemName: "person.fill.badge.minus"), for: .normal)
         case .thatsYou:
             setTitle("Thats you!", for: .normal)
-            imageView?.image = UIImage()
+            setImage(UIImage(), for: .normal)
             backgroundColor = UIColor.tertiarySystemBackground
         case .accept:
             setTitle("Accept", for: .normal)

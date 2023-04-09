@@ -25,8 +25,8 @@ class UserProfileVC: UIViewController {
     @IBOutlet weak var streakLabel: UILabel!
     
     @IBOutlet weak var likesLabel: UILabel!
-    @IBOutlet weak var button: UIButton!
     
+    @IBOutlet weak var button: FriendsControlButton!
     var friendStatusChanged: Bool = false
     
     /** different states of the button: Add, Unfriend, Friends, Add Friends, Accept Requested **/
@@ -35,8 +35,8 @@ class UserProfileVC: UIViewController {
     
     
     
-    @IBOutlet weak var settingsButton: UIButton!
     
+    @IBOutlet weak var settingsButton: UIButton!
     
     
     @IBAction func settingsClicked(_ sender: Any) {
@@ -72,6 +72,15 @@ class UserProfileVC: UIViewController {
         friendsLabel.font = Constants.Fonts.userProfileAttributesFonts
         streakLabel.font = Constants.Fonts.userProfileAttributesFonts
         likesLabel.font = Constants.Fonts.userProfileAttributesFonts
+        
+        let symbolConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .bold, scale: .medium)
+        let normal = UIImage(systemName: "gearshape")?.withConfiguration(symbolConfig)
+        let pressed = UIImage(systemName: "gearshape.fill")?.withConfiguration(symbolConfig)
+        settingsButton.setImage(normal, for: .normal)
+        settingsButton.setImage(pressed, for: .selected)
+        settingsButton.tintColor = .label
+        settingsButton.imageView?.tintColor = .label
+        
     }
     
     @objc private func handleFriendsTap() {
@@ -98,6 +107,7 @@ class UserProfileVC: UIViewController {
             let streak = User.shared().userInfo["streak"] as? Int ?? 0
             let likes = User.shared().userInfo["todaysLikes"] as? [String] ?? [String]()
             let streakIsLate = User.shared().userInfo["streakIsLate"] as? Bool ?? false
+            let friendRequests = User.shared().userInfo["friendRequests"] as? [String] ?? []
             likesLabel.text = " \(likes.count)🎉"
             streakLabel.text = "• \(streak)🔥"
             if (streakIsLate == true) {
@@ -109,7 +119,9 @@ class UserProfileVC: UIViewController {
             profilePicImage.loadImage(urlString: User.shared().userInfo["image"] as! String)
             
             button.setTitle("Add Friends", for: .normal)
-            
+            if friendRequests.count > 0 {
+                button.addBadge(number: friendRequests.count)
+            }
             
             settingsButton.isHidden = false
             return
@@ -159,36 +171,30 @@ class UserProfileVC: UIViewController {
     
     
     @IBAction func buttonClicked(_ sender: Any) {
-        print("button clicked", button.currentTitle)
-        
+        button.updateState()
         friendStatusChanged = true
         if (button.currentTitle == "Add") {
-            button.setTitle("Requested", for: .normal)
             
             AddFriendsManager.addFriend(newFriend: user.uid)
             
         }
         
         else if (button.currentTitle == "Accept") {
-            button.setTitle("Friends", for: .normal)
             
             AddFriendsManager.acceptRequest(aceptee: user.uid)
             
         }
         
         else if (button.currentTitle == "Requested") {
-            button.setTitle("Add", for: .normal)
             
             AddFriendsManager.cancelFriendRequest(cancelledUser: user.uid)
         }
         
         else if (button.currentTitle == "Friends") {
-            button.setTitle("Unfriend", for: .normal)
             
         }
         
         else if (button.currentTitle == "Unfriend") {
-            button.setTitle("Add", for: .normal)
             AddFriendsManager.unfriend(notFriend: user.uid)
 
             

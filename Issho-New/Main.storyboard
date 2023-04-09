@@ -383,7 +383,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="SHi-cp-qFT">
-                                <rect key="frame" x="0.0" y="47" width="390" height="763"/>
+                                <rect key="frame" x="0.0" y="91" width="390" height="621"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </tableView>
                         </subviews>
@@ -632,27 +632,23 @@
                                             </stackView>
                                         </subviews>
                                     </stackView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xYV-Og-tvw" userLabel="Control Button">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xYV-Og-tvw" userLabel="Control Button" customClass="FriendsControlButton" customModule="Issho_New" customModuleProvider="target">
                                         <rect key="frame" x="25" y="225.66666666666669" width="100" height="46"/>
                                         <constraints>
                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="9kO-fp-E3M"/>
                                             <constraint firstAttribute="height" constant="46" id="OhI-OC-dbJ"/>
                                         </constraints>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="tinted" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="tinted" title="Button">
+                                            <color key="baseForegroundColor" systemColor="labelColor"/>
+                                            <color key="baseBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </buttonConfiguration>
                                         <connections>
-                                            <action selector="buttonClicked:" destination="RdK-Zf-Ors" eventType="touchUpInside" id="20A-gV-53Y"/>
+                                            <action selector="buttonClicked:" destination="RdK-Zf-Ors" eventType="touchUpInside" id="tdt-Ig-H05"/>
                                         </connections>
                                     </button>
                                 </subviews>
                             </stackView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Achievements placeholder" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mc4-qY-YE9">
-                                <rect key="frame" x="107" y="543" width="201" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="yBm-MX-dGY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -680,7 +676,7 @@
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="button" destination="xYV-Og-tvw" id="S69-h4-RwB"/>
+                        <outlet property="button" destination="xYV-Og-tvw" id="Fgi-RQ-Vlz"/>
                         <outlet property="friendsLabel" destination="IcC-LS-EMQ" id="Um8-6Z-5n6"/>
                         <outlet property="likesLabel" destination="4Ej-44-JEw" id="Dbp-0V-3lg"/>
                         <outlet property="profilePicImage" destination="crU-5I-wJV" id="tNg-m4-pw3"/>
@@ -701,12 +697,15 @@
     <inferredMetricsTieBreakers>
         <segue reference="Sa1-mP-SU3"/>
         <segue reference="sFr-pL-dSo"/>
-        <segue reference="3yO-SP-tLT"/>
+        <segue reference="Vpc-bA-ptI"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="pencil.circle.fill" catalog="system" width="128" height="123"/>
         <image name="settings" width="250.66667175292969" height="250.66667175292969"/>
         <image name="xmark.circle.fill" catalog="system" width="128" height="123"/>
+        <systemColor name="labelColor">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="quaternaryLabelColor">
             <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.17647058823529413" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
