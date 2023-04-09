@@ -102,7 +102,7 @@ class ToDoViewController: UIViewController {
                 self.streakLabel.text! += "⏳"
             }
         }
-        
+        updateIsWorking()
         
         /*
         if (progress > fProgress) { //if there was a firestore update pushing the progress to 0, then make sure too reupdate firestore + allow for a like
@@ -111,12 +111,31 @@ class ToDoViewController: UIViewController {
         
     }
     
+    private func setDisplayMode() {
+        if (Settings.displayMode == 1) {
+            
+            
+            tabBarController?.overrideUserInterfaceStyle = .unspecified
+            
+        }
+        if (Settings.displayMode == 2) {
+            tabBarController?.overrideUserInterfaceStyle = .light
+            
+        }
+        if (Settings.displayMode == 3) {
+            tabBarController?.overrideUserInterfaceStyle = .dark
+        }
+    }
+    
     override func viewDidLoad() {
         
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
         NotificationCenter.default.addObserver(self, selector: #selector(userUpdate(_:)),name: NSNotification.Name ("userInfoUpdated"), object: nil)
+        
+        
+        setDisplayMode()
         
         
         tableView.dataSource = self
@@ -836,25 +855,25 @@ extension ToDoViewController {//all helper funcs for organization
     
     private func updateIsWorking() {
         
-        guard let FSisWorking = User.shared().userInfo["isWorking"] as? Bool else {
-            return
-        }
+        
         let currentTasks = entries.filter { $0.isCurrentTask == true }
         //currenttasks count > 0 means currently working
         //isWorking == true means is working
         //logic: if both are true, or both are false, then this code block will not run because I need to make sure that the updateUserInfo only happens when its needed
+        
+        if (currentTasks.count > 0) {
+            self.isWorking = true
+        }
+        else {
+            self.isWorking = false
+        }
+    
+        guard let FSisWorking = User.shared().userInfo["isWorking"] as? Bool else {
+            return
+        }
         if (currentTasks.count > 0) != (FSisWorking == true) {
             print("updateIsCurrentTask: will update current task in the User")
             User.shared().updateUserInfo(newInfo: ["isWorking": !FSisWorking])
-        }
-        
-        DispatchQueue.main.async {
-            if (currentTasks.count > 0) {
-                self.isWorking = true
-            }
-            else {
-                self.isWorking = false
-            }
         }
         
     }
@@ -941,8 +960,22 @@ extension ToDoViewController {//all helper funcs for organization
     func orderEntries() {
         let calendar = Calendar.current
         
+        var indicesToDelete = [Int]()
+
+        for (i, entry) in entries.enumerated() {
+            if entry.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" && entry.isPlaceholder == false {
+                indicesToDelete.append(i)
+            }
+        }
+
+        for index in indicesToDelete.reversed() {
+            let entry = entries[index]
+            context.delete(entry)
+            entries.remove(at: index)
+        }
+
+        //entries.removeAll(where: {$0.text == "" && $0.isPlaceholder == false})
         
-        entries.removeAll(where: {$0.text == "" && $0.isPlaceholder == false})
         
         self.entries.sort {
             if (calendar.isDate($0.date!, equalTo: $1.date!, toGranularity: .day)) {//if same day
@@ -1051,12 +1084,12 @@ extension ToDoViewController {//all helper funcs for organization
             
             
         }
-        else if (placeholder[0].text != "") {
+        else if (placeholder[0].text != "" || placeholder[0].isCurrentTask == true) {
             placeholder[0].text = ""
-        }
-        else if (placeholder[0].isCurrentTask == true) {
             placeholder[0].isCurrentTask = false
+
         }
+        
         
         resetOrder()//i always run this
         updateIsWorking()

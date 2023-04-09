@@ -35,6 +35,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
               self.window?.makeKeyAndVisible()
               print("current user is signed in")
               
+              
           } else {
             // No User is signed in. Show user the login screen
               let welcomeStoryboard = UIStoryboard(name: "Welcome", bundle: Bundle.main)

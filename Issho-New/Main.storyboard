@@ -53,7 +53,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pzU-bh-ftZ" userLabel="DisplayButton">
-                                        <rect key="frame" x="262" y="32" width="116" height="31"/>
+                                        <rect key="frame" x="247" y="32" width="131" height="31"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="tinted" title="🌗Automatic"/>
@@ -91,7 +91,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RUW-qG-Rek" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2831.8840579710145" y="79.6875"/>
+            <point key="canvasLocation" x="2830.7692307692305" y="79.620853080568722"/>
         </scene>
         <!--Edit Profile-->
         <scene sceneID="CwR-5p-KwA">
@@ -701,7 +701,7 @@
     </inferredMetricsTieBreakers>
     <resources>
         <image name="pencil.circle.fill" catalog="system" width="128" height="123"/>
-        <image name="settings" width="250.66667175292969" height="250.66667175292969"/>
+        <image name="settings" width="25" height="25"/>
         <image name="xmark.circle.fill" catalog="system" width="128" height="123"/>
         <systemColor name="labelColor">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

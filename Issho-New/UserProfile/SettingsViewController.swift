@@ -33,12 +33,18 @@ class SettingsViewController: UIViewController {
     override func viewDidLoad() {
         
         setCompletedTasksButtonDisplay(mode: Settings.showCompletedEntries)
+        setDisplayMode(mode: Settings.displayMode)
         
-        /* TODO:
-            
-         - CREATE ANIMATION FUNC W/ EXTENSIONS TO UIBUTTON AND APPLY. TAKE IN PARAMTERS FOR MODE/COLORSPACES 
-         
-         */
+        
+        completedTasksButton.backgroundColor = UIColor.secondarySystemBackground
+        completedTasksButton.tintColor = UIColor.label
+        completedTasksButton.layer.cornerRadius = 15.0 // Rounded corners
+        completedTasksButton.titleLabel?.font = Constants.Fonts.friendsControlFont
+        
+        displayModeButton.backgroundColor = UIColor.secondarySystemBackground
+        displayModeButton.tintColor = UIColor.label
+        displayModeButton.layer.cornerRadius = 15.0 // Rounded corners
+        displayModeButton.titleLabel?.font = Constants.Fonts.friendsControlFont
         
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -74,7 +80,7 @@ class SettingsViewController: UIViewController {
     
     @IBAction func displayModeButtonClicked(_ sender: Any) {
         //toggle mode in constants + userdefaults
-        if (Settings.displayMode > 3) {
+        if (Settings.displayMode >= 3) {
             defaults.set(1, forKey: "displayMode")
             Settings.displayMode = 1
         }
@@ -82,7 +88,7 @@ class SettingsViewController: UIViewController {
             defaults.set(Settings.displayMode + 1, forKey: "displayMode")
             Settings.displayMode = Settings.displayMode + 1
         }
-        
+        setDisplayMode(mode: Settings.displayMode)
         
     }
     
@@ -97,6 +103,24 @@ class SettingsViewController: UIViewController {
         }
     }
     
+    private func setDisplayMode(mode: Int) {
+        if (mode == 1) {
+            displayModeButton.setTitle("🌗Automatic", for: .normal)
+            
+            
+            tabBarController?.overrideUserInterfaceStyle = .unspecified
+            
+        }
+        if (mode == 2) {
+            displayModeButton.setTitle("☀️Light", for: .normal)
+            tabBarController?.overrideUserInterfaceStyle = .light
+            
+        }
+        if (mode == 3) {
+            displayModeButton.setTitle("🌑Dark", for: .normal)
+            tabBarController?.overrideUserInterfaceStyle = .dark
+        }
+    }
     
     
     
