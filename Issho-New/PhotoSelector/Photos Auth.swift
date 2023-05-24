@@ -22,7 +22,7 @@ extension PhotoSelectorController {
     
     private func showAlertForAuth() {
         let alert = UIAlertController(title: "Allow access to your photos",
-                                          message: "This lets you share from your camera roll and enables other features for photos and videos. Go to your settings and tap \"Photos\".",
+                                          message: "This lets you select a profile pic from your camera roll. Go to your settings and tap \"Photos\".",
                                           preferredStyle: .alert)
             
             let notNowAction = UIAlertAction(title: "Not Now",

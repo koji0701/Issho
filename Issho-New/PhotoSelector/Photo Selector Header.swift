@@ -18,7 +18,6 @@ class PhotoSelectorHeader: UICollectionViewCell {
         iv.clipsToBounds = true
         iv.layer.masksToBounds = true
         iv.layer.cornerRadius = min(iv.frame.width, iv.frame.height) / 2
-
         return iv
     }()
     
@@ -26,8 +25,9 @@ class PhotoSelectorHeader: UICollectionViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        photoImageView.layer.cornerRadius = photoImageView.frame.height / 2
-        let diameter = min(bounds.width, bounds.height)
+        //photoImageView.layer.cornerRadius = photoImageView.frame.height / 2
+        let diameter = min(bounds.width / 1.5, bounds.height)
+        //let diameter = UIScreen.main.bounds.width / 2
         photoImageView.frame = CGRect(x: 0, y: 0, width: diameter, height: diameter)
         photoImageView.center = CGPoint(x: bounds.midX, y: bounds.midY)
         

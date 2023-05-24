@@ -22,7 +22,9 @@ class SettingsViewController: UIViewController {
     
     @IBOutlet weak var displayModeButton: UIButton!
     
+    @IBOutlet weak var profilePic: CustomImageView!
     
+    @IBOutlet weak var editProfile: UIButton!
     
     @IBAction func editProfileButtonClicked(_ sender: Any) {
         performSegue(withIdentifier: Constants.Segues.settingsToEditProfile, sender: nil)
@@ -35,7 +37,7 @@ class SettingsViewController: UIViewController {
         setCompletedTasksButtonDisplay(mode: Settings.showCompletedEntries)
         setDisplayMode(mode: Settings.displayMode)
         
-        
+        profilePic.loadImage(urlString: User.shared().uid)
         completedTasksButton.backgroundColor = UIColor.secondarySystemBackground
         completedTasksButton.tintColor = UIColor.label
         completedTasksButton.layer.cornerRadius = 15.0 // Rounded corners
@@ -46,6 +48,10 @@ class SettingsViewController: UIViewController {
         displayModeButton.layer.cornerRadius = 15.0 // Rounded corners
         displayModeButton.titleLabel?.font = Constants.Fonts.friendsControlFont
         
+        editProfile.layer.cornerRadius = 15
+        editProfile.titleLabel?.font = Constants.Fonts.friendsControlFont
+        
+        
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
@@ -55,6 +61,10 @@ class SettingsViewController: UIViewController {
         
         if let customTB = tabBarController as? CustomTabBarController {
             customTB.toggle(hide: true)
+        }
+        DispatchQueue.main.async {
+            self.profilePic.loadImage(urlString: User.shared().userInfo["image"] as? String ?? "default")
+
         }
         
 

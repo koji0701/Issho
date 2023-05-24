@@ -28,6 +28,7 @@ class PhotoSelectorController: UICollectionViewController {
     var topbarHeight: CGFloat {
         return (view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0.0) +
             (self.navigationController?.navigationBar.frame.height ?? 0.0)
+        
     }
     /*
     override func loadView() {
@@ -137,7 +138,7 @@ class PhotoSelectorController: UICollectionViewController {
     
     private func setupNavigationButtons() {
         navigationController?.navigationBar.tintColor = .systemBlue
-        //navigationController?.navigationBar.backgroundColor = .clea
+        navigationController?.navigationBar.backgroundColor = .clear
         //navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(handleCancel))
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Next",
@@ -226,7 +227,6 @@ class PhotoSelectorController: UICollectionViewController {
             editVC.setPic(image: selectedImage ?? nil)
         }
         
-        
     }
     
     
@@ -278,12 +278,14 @@ extension PhotoSelectorController: UICollectionViewDelegateFlowLayout {
                 let selectedAsset = self.assets[index]
                 let imageManager = PHImageManager.default()
                 let targetSize = CGSize(width: 600, height: 600)
+                //let targetSize = CGSize(width: UIScreen.main.bounds.width / 2, height: UIScreen.main.bounds.width / 2)
                 imageManager.requestImage(for: selectedAsset,
                                           targetSize: targetSize,
                                           contentMode: .default,
                                           options: nil) {
                                             (image, info) in
                     header.photoImageView.image = image
+                    
                 }
             }
         }
@@ -310,8 +312,12 @@ extension PhotoSelectorController: MosiacLayoutDelegate {
     
     func collectionView(_ collectionView: UICollectionView,
                         heightForHeader indexPath: IndexPath) -> CGFloat {
+        
+        /*
         guard let selectedImage = selectedImage else { return 0 }
-        return collectionView.frame.width/selectedImage.size.width * selectedImage.size.height
+        return collectionView.frame.width/selectedImage.size.width * selectedImage.size.height*/
+        
+        return UIScreen.main.bounds.height / 3
     }
     
     

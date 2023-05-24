@@ -25,7 +25,7 @@ class SMViewController: UIViewController {
         
         let userDownloader = UserDownloader()
         guard let friends = User.shared().userInfo["friends"] as? [String] else {return}
-        
+        posts = []
         userDownloader.downloadUsers(uidsToSearch: friends, completion: { userArray, error in
             
             if let error = error {
@@ -67,7 +67,7 @@ class SMViewController: UIViewController {
     
     private func updateLikeInFirestore(post: UserInfo) {
         
-       
+        
         let uid = User.shared().uid
         let postUID = post.uid
         
@@ -77,12 +77,14 @@ class SMViewController: UIViewController {
             current.append(User.shared().uid)
             return current
         }()
+        
+        print("likes before UserDownloader cache update", UserDownloader.cachedUsers[postUID]?.likes)
         UserDownloader.cachedUsers[postUID]?.likes.append(uid)
+        print("likes after UserDownloader cache update", UserDownloader.cachedUsers[postUID]?.likes)
+
         UserDownloader.cachedUsers[postUID]?.todaysLikes = newTodaysLikes
         Firestore.updateUserInfo(uid: postUID, fields: ["likes": FieldValue.arrayUnion([uid]), "todaysLikes": newTodaysLikes])
-        
     }
-    
     override class func awakeFromNib() {
         super.awakeFromNib()
         
@@ -137,28 +139,26 @@ extension SMViewController: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.SM.reuseIdentifier, for: indexPath) as! SMPostCell
         
         cell.postDelegate = self
-        DispatchQueue.main.async {
-            if (self.posts[indexPath.row].isWorking == true) {
-                cell.username.text = "⚡️" + self.posts[indexPath.row].username
-                
-                cell.customProgressBar.createRepeatingAnimation()
-                cell.likes.textColor = .darkGray
-                cell.streak.textColor = .darkGray
-                cell.username.textColor = .black
-            }
-            else {
-                cell.username.text = self.posts[indexPath.row].username
-                cell.customProgressBar.resetAnimation()
-
-            }
+        if (posts[indexPath.row].isWorking == true) {
+            cell.username.text = "⚡️" + posts[indexPath.row].username
+            
+            cell.customProgressBar.createRepeatingAnimation()
+            cell.likes.textColor = .darkGray
+            cell.streak.textColor = .darkGray
+            cell.username.textColor = .black
+        }
+        else {
+            cell.username.text = posts[indexPath.row].username
+            cell.customProgressBar.resetAnimation()
         }
         
         
+        let isLiked = posts[indexPath.row].likes.contains(where: {$0 == User.shared().uid})
         
         
-        cell.likesView.isHidden = posts[indexPath.row].isLiked
+        cell.likesView.isHidden = isLiked
 
-        if (posts[indexPath.row].isLiked == true) {
+        if (isLiked) {
             cell.likes.textColor = .gray
             cell.streak.textColor = .gray
             cell.username.textColor = .gray
@@ -168,9 +168,6 @@ extension SMViewController: UITableViewDataSource, UITableViewDelegate {
             cell.streak.textColor = .darkGray
             cell.username.textColor = .black
         }
-        
-        print(posts[indexPath.row])
-        print(posts[indexPath.row].isLiked)
         
         cell.profilePicture.loadImage(urlString: posts[indexPath.row].image)
         cell.streak.text = String(posts[indexPath.row].streak) + "🔥"
@@ -213,7 +210,6 @@ extension SMViewController: PostDelegate {
         var post = posts[indexPath.row]
         if (post.isLiked == false) {
             updateLikeInFirestore(post: post)
-            posts[indexPath.row].isLiked = true
             return true
         }
         else {

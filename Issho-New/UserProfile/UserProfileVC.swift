@@ -26,7 +26,7 @@ class UserProfileVC: UIViewController {
     
     @IBOutlet weak var likesLabel: UILabel!
     
-    @IBOutlet weak var button: FriendsControlButton!
+    @IBOutlet weak var controlButton: FriendsControlButton!
     var friendStatusChanged: Bool = false
     
     /** different states of the button: Add, Unfriend, Friends, Add Friends, Accept Requested **/
@@ -50,14 +50,23 @@ class UserProfileVC: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         DispatchQueue.main.async {
-            self.setUpUser()
+            self.setUpUser(completion: { showBadge in
+                if (showBadge == true) {
+                    let friendReqs = User.shared().userInfo["friendRequests"] as? [String] ?? []
+                    if (friendReqs.count > 0) {
+                        self.controlButton.addBadge(number: friendReqs.count)
+                    }
+                }
+            })
         }
-        button.isEnabled = true
+        controlButton.isEnabled = true
         navigationController?.setNavigationBarHidden(false, animated: false)
         tabBarController?.tabBar.isHidden = true
         if let customTB = tabBarController as? CustomTabBarController {
             customTB.toggle(hide: false)
         }
+        
+        
 
     }
     
@@ -81,6 +90,20 @@ class UserProfileVC: UIViewController {
         settingsButton.tintColor = .label
         settingsButton.imageView?.tintColor = .label
         
+        NotificationCenter.default.addObserver(self, selector: #selector(userUpdate(_:)),name: NSNotification.Name ("userInfoUpdated"), object: nil)
+        
+    }
+    
+    @objc private func userUpdate(_ notification: Notification) {
+        
+        if (user != nil) {
+            if (User.shared().uid != user.uid) {
+                return
+            }
+        }
+        user = notification.object as? UserInfo
+        
+        
     }
     
     @objc private func handleFriendsTap() {
@@ -100,35 +123,34 @@ class UserProfileVC: UIViewController {
         
     }
     
-    private func setUpUser() {
+    private func setUpUser(completion: @escaping (Bool) -> Void) {
         
         guard var user = user else {
+            controlButton.removeBadge()
+            controlButton.setState(state: .addFriends)
             let username = User.shared().userInfo["username"] as? String ?? "Username"
             let streak = User.shared().userInfo["streak"] as? Int ?? 0
             let likes = User.shared().userInfo["todaysLikes"] as? [String] ?? [String]()
             let streakIsLate = User.shared().userInfo["streakIsLate"] as? Bool ?? false
             let friendRequests = User.shared().userInfo["friendRequests"] as? [String] ?? []
             likesLabel.text = " \(likes.count)🎉"
-            streakLabel.text = "• \(streak)🔥"
+            streakLabel.text = "| \(streak)🔥"
             if (streakIsLate == true) {
                 streakLabel.text! += "⏳"
             }
             usernameLabel.text = username
             friendsLabel.text = String((User.shared().userInfo["friends"] as? [String])?.count ?? 0) + " friends "
             
-            profilePicImage.loadImage(urlString: User.shared().userInfo["image"] as! String)
-            
-            button.setTitle("Add Friends", for: .normal)
-            if friendRequests.count > 0 {
-                button.addBadge(number: friendRequests.count)
-            }
+            profilePicImage.loadImage(urlString: User.shared().userInfo["image"] as? String ?? "default")
             
             settingsButton.isHidden = false
+            
+            completion(true)
             return
             
         }
 
-        button.removeBadge()
+        controlButton.removeBadge()
         
         profilePicImage.loadImage(urlString: user.image)
         
@@ -143,69 +165,68 @@ class UserProfileVC: UIViewController {
         
         settingsButton.isHidden = true
         if (user.friends.contains(User.shared().uid)) {
-            button.setTitle("Friends", for: .normal)
-
+            controlButton.setState(state: .friends)
         }
         else if (user.friendRequests.contains(User.shared().uid)) {
-            button.setTitle("Requested", for: .normal)
+            controlButton.setState(state: .requested)
         }
-        else if ((User.shared().userInfo["friendRequests"] as! [String]).contains(user.uid)) {
-            button.setTitle("Accept", for: .normal)
+        else if ((User.shared().userInfo["friendRequests"] as? [String] ?? [String]()).contains(user.uid)) {
+            controlButton.setState(state: .accept)
         }
         else if (user.uid == User.shared().uid) {
-            button.setTitle("Add Friends", for: .normal)
-            
+            controlButton.setState(state: .addFriends)
+            completion(true)
             //also set up the badge if necessary
-            let friendReqs = User.shared().userInfo["friendRequests"] as! [String]
             
-            if (friendReqs.count > 0) {
-                button.addBadge(number: friendReqs.count)
-            }
+            
         }
         else {
-            print("making it add")
-            button.setTitle("Add", for: .normal)
+            controlButton.setState(state: .add)
         }
+        
+        completion(false)
+        
     }
     
-    
-    
-    @IBAction func buttonClicked(_ sender: Any) {
-        button.updateState()
+    @IBAction func controlButtonClicked(_ sender: Any) {
+        controlButton.updateState()
         friendStatusChanged = true
-        if (button.currentTitle == "Add") {
+        if (controlButton.currentTitle == "Add") {
             
             AddFriendsManager.addFriend(newFriend: user.uid)
             
         }
         
-        else if (button.currentTitle == "Accept") {
+        else if (controlButton.currentTitle == "Accept") {
             
             AddFriendsManager.acceptRequest(aceptee: user.uid)
             
         }
         
-        else if (button.currentTitle == "Requested") {
+        else if (controlButton.currentTitle == "Requested") {
             
             AddFriendsManager.cancelFriendRequest(cancelledUser: user.uid)
         }
         
-        else if (button.currentTitle == "Friends") {
+        else if (controlButton.currentTitle == "Friends") {
             
         }
         
-        else if (button.currentTitle == "Unfriend") {
+        else if (controlButton.currentTitle == "Unfriend") {
             AddFriendsManager.unfriend(notFriend: user.uid)
 
             
         }
         
-        else if (button.currentTitle == "Add Friends") {
+        else if (controlButton.currentTitle == "Add Friends") {
             print("add friends button clicked")
             performSegue(withIdentifier: Constants.Segues.profileToAddFriends, sender: nil)
             
         }
     }
+    
+    
+
     
     
     
