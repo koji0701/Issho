@@ -34,7 +34,8 @@ extension Firestore {
             "friendRequests": [String](),
             "image": image,
             "todaysLikes": [String](),
-            "streakIsLate": false
+            "streakIsLate": false,
+            "hasFinishedToday": true
             
         ])
         User.shared().initUserInfo()

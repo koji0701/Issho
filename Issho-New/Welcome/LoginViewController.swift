@@ -11,9 +11,15 @@ import FirebaseAuth
 
 class LoginViewController: UIViewController {
     
-    @IBOutlet weak var emailTextField: UITextField!
     
-    @IBOutlet weak var passwordTextField: UITextField!
+    @IBOutlet weak var emailTextField: FormTextField!
+    
+    
+    
+    @IBOutlet weak var passwordTextField: FormTextField!
+    
+    
+    
     
     @IBAction func loginButtonPressed(_ sender: Any) {
         print("login")
@@ -37,6 +43,9 @@ class LoginViewController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //gradient background 
+        /*
         let background = UIImage(named: "background")
         
         var imageView : UIImageView!
@@ -46,7 +55,7 @@ class LoginViewController: UIViewController {
         imageView.image = background
         imageView.center = view.center
         view.addSubview(imageView)
-        self.view.sendSubviewToBack(imageView)
+        self.view.sendSubviewToBack(imageView)*/
     }
         
 }

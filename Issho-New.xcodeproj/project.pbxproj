@@ -53,6 +53,7 @@
 		E58DED56292F26D900F1EF0C /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58DED55292F26D900F1EF0C /* User.swift */; };
 		E595D11229A375AD00A53594 /* UserProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E595D11129A375AD00A53594 /* UserProfileVC.swift */; };
 		E595D11529A40F1200A53594 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = E595D11429A40F1200A53594 /* FirebaseStorage */; };
+		E5A207E52AC3887E00C89B9B /* CreateProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A207E42AC3887E00C89B9B /* CreateProfileVC.swift */; };
 		E5A36BE829D77EF300C74BEE /* UserDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A36BE729D77EF300C74BEE /* UserDownloader.swift */; };
 		E5A36BEA29D7DD5300C74BEE /* AddFriendsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A36BE929D7DD5300C74BEE /* AddFriendsManager.swift */; };
 		E5A36BEC29DBF88000C74BEE /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5A36BEB29DBF88000C74BEE /* Settings.swift */; };
@@ -62,6 +63,7 @@
 		E5B6676629B12D690090AB89 /* Photos Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B6676529B12D690090AB89 /* Photos Auth.swift */; };
 		E5B6676829B147C90090AB89 /* EditProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B6676729B147C90090AB89 /* EditProfileVC.swift */; };
 		E5D1174929CAEE5E00F85BBE /* ProfileListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5D1174829CAEE5E00F85BBE /* ProfileListVC.swift */; };
+		E5D48BE22AC37E6200D166BA /* FormTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5D48BE12AC37E6200D166BA /* FormTextField.swift */; };
 		E5E2B2AA29E2A62E0032FE8B /* FriendsControlButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E2B2A929E2A62E0032FE8B /* FriendsControlButton.swift */; };
 /* End PBXBuildFile section */
 
@@ -128,6 +130,7 @@
 		E58DED51292F1AD000F1EF0C /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		E58DED55292F26D900F1EF0C /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		E595D11129A375AD00A53594 /* UserProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileVC.swift; sourceTree = "<group>"; };
+		E5A207E42AC3887E00C89B9B /* CreateProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProfileVC.swift; sourceTree = "<group>"; };
 		E5A36BE729D77EF300C74BEE /* UserDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDownloader.swift; sourceTree = "<group>"; };
 		E5A36BE929D7DD5300C74BEE /* AddFriendsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendsManager.swift; sourceTree = "<group>"; };
 		E5A36BEB29DBF88000C74BEE /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
@@ -136,6 +139,7 @@
 		E5B6676529B12D690090AB89 /* Photos Auth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Photos Auth.swift"; sourceTree = "<group>"; };
 		E5B6676729B147C90090AB89 /* EditProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileVC.swift; sourceTree = "<group>"; };
 		E5D1174829CAEE5E00F85BBE /* ProfileListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileListVC.swift; sourceTree = "<group>"; };
+		E5D48BE12AC37E6200D166BA /* FormTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormTextField.swift; sourceTree = "<group>"; };
 		E5E2B2A929E2A62E0032FE8B /* FriendsControlButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsControlButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -197,6 +201,7 @@
 				E5119FF629AEE52300A00930 /* Custom Tab Bar */,
 				E516286E29ADA76900454397 /* CustomNavigationController.swift */,
 				E55B7E5829C23BA5008D58D4 /* GradientHorizontalProgressBar.swift */,
+				E5D48BE12AC37E6200D166BA /* FormTextField.swift */,
 			);
 			path = "UI Improvements";
 			sourceTree = "<group>";
@@ -299,6 +304,7 @@
 				E58245C9296633BB0093E0D5 /* Welcome.storyboard */,
 				E539DD162963B3970034E1E5 /* SignupViewController.swift */,
 				E53AED912963B801000AF59D /* LoginViewController.swift */,
+				E5A207E42AC3887E00C89B9B /* CreateProfileVC.swift */,
 			);
 			path = Welcome;
 			sourceTree = "<group>";
@@ -520,8 +526,10 @@
 				E539DD172963B3970034E1E5 /* SignupViewController.swift in Sources */,
 				E5A8B1D7295E535C00D5E684 /* ToDoEntryToolbar.swift in Sources */,
 				E5D1174929CAEE5E00F85BBE /* ProfileListVC.swift in Sources */,
+				E5D48BE22AC37E6200D166BA /* FormTextField.swift in Sources */,
 				E53721A0296F7ECF00AD0BF7 /* SettingsViewController.swift in Sources */,
 				E5A36BEC29DBF88000C74BEE /* Settings.swift in Sources */,
+				E5A207E52AC3887E00C89B9B /* CreateProfileVC.swift in Sources */,
 				E58DED4C292F19B200F1EF0C /* SMPostCell.swift in Sources */,
 				E511A00229AEF70300A00930 /* Photo Selector Controller.swift in Sources */,
 				E52FBCAA292F18D30053208C /* SceneDelegate.swift in Sources */,

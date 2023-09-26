@@ -44,11 +44,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
               print("current user isn't signed in")
           }
         }
+        
+        
+        //this was the testing which made it automatically go to the signup screen
         /*
         let welcomeStoryboard = UIStoryboard(name: "Welcome", bundle: Bundle.main)
         self.window?.rootViewController = welcomeStoryboard.instantiateInitialViewController()!
-        self.window?.makeKeyAndVisible()*/
-        window?.makeKeyAndVisible()
+        self.window?.makeKeyAndVisible()
+        window?.makeKeyAndVisible()*/
         
     }
 
