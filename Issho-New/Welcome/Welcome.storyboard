@@ -6,6 +6,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -282,7 +283,7 @@
                         <outlet property="passwordTextField" destination="81o-SK-5vt" id="RjL-Ip-50k"/>
                         <outlet property="signupButton" destination="gdO-dz-gyL" id="gDP-oA-Ils"/>
                         <segue destination="fj9-X5-TaO" kind="show" identifier="SignupToLogin" id="glh-x3-OGx"/>
-                        <segue destination="uGV-Rc-FZj" kind="presentation" identifier="SignupToTabBar" modalPresentationStyle="fullScreen" id="Qsa-zr-NM6"/>
+                        <segue destination="e3y-F4-o97" kind="show" identifier="SignupToCreateProfile" id="QHc-3H-1oB"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5ib-Cx-oKA" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -399,6 +400,9 @@
                                 <color key="tintColor" red="0.15294116739999999" green="0.15294116739999999" blue="0.15294116739999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="gray" title="+"/>
+                                <connections>
+                                    <action selector="picButtonClicked:" destination="e3y-F4-o97" eventType="touchUpInside" id="aBu-vl-uMh"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IPz-ER-N8O" userLabel="ClearImageButton">
                                 <rect key="frame" x="132.66666666666666" y="175" width="30" height="30"/>
@@ -409,12 +413,26 @@
                                 <color key="tintColor" red="0.15294116739999999" green="0.15294116739999999" blue="0.15294116739999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" image="xmark.circle.fill" catalog="system"/>
+                                <connections>
+                                    <action selector="clearPicButtonClicked:" destination="e3y-F4-o97" eventType="touchUpInside" id="rrq-4d-vnM"/>
+                                </connections>
                             </button>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Username" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="dfg-wf-jbZ">
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Username" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="dfg-wf-jbZ" customClass="FormTextField" customModule="Issho_New" customModuleProvider="target">
                                 <rect key="frame" x="149.66666666666666" y="304" width="94" height="34"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bWL-ZB-y9E" userLabel="DoneButton">
+                                <rect key="frame" x="166.66666666666666" y="625" width="60" height="60"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="60" id="gee-YS-d9Y"/>
+                                    <constraint firstAttribute="height" constant="60" id="iRw-WE-TJe"/>
+                                </constraints>
+                                <state key="normal" image="Login button"/>
+                                <connections>
+                                    <action selector="doneButtonClicked:" destination="e3y-F4-o97" eventType="touchUpInside" id="qdd-Ru-GoS"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="g3e-Aq-5Pz"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -425,18 +443,62 @@
                             <constraint firstItem="vwR-tB-azH" firstAttribute="top" secondItem="IPz-ER-N8O" secondAttribute="top" constant="15" id="DBJ-3b-419"/>
                             <constraint firstItem="dfg-wf-jbZ" firstAttribute="centerX" secondItem="wB8-SQ-Gcc" secondAttribute="centerX" id="KNu-PX-AMq"/>
                             <constraint firstItem="vwR-tB-azH" firstAttribute="top" secondItem="g3e-Aq-5Pz" secondAttribute="top" constant="87" id="WpS-9Q-hk4"/>
+                            <constraint firstItem="bWL-ZB-y9E" firstAttribute="centerX" secondItem="wB8-SQ-Gcc" secondAttribute="centerX" id="gBW-Mx-LKd"/>
+                            <constraint firstItem="g3e-Aq-5Pz" firstAttribute="bottom" secondItem="bWL-ZB-y9E" secondAttribute="bottom" constant="133" id="zHZ-F9-XD8"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Create Profile" id="e4d-gd-AiO"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics"/>
+                    <connections>
+                        <outlet property="clearPicButton" destination="IPz-ER-N8O" id="XcW-x5-2sQ"/>
+                        <outlet property="picButton" destination="vwR-tB-azH" id="MeE-oo-Wwe"/>
+                        <outlet property="username" destination="dfg-wf-jbZ" id="Ra0-fO-2E9"/>
+                        <segue destination="m6e-OU-S0O" kind="show" identifier="createProfileToPhotoSelectorController" id="puT-I4-PoN"/>
+                        <segue destination="uGV-Rc-FZj" kind="presentation" identifier="CreateProfileToTabBar" id="GRZ-HP-NUD"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cnD-NS-mBy" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1485" y="-863"/>
         </scene>
+        <!--Photo Selector Controller-->
+        <scene sceneID="uMr-Sz-drt">
+            <objects>
+                <collectionViewController id="m6e-OU-S0O" customClass="PhotoSelectorController" customModule="Issho_New" customModuleProvider="target" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="hn5-Tc-PwT">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="qdu-Y9-y5b">
+                            <size key="itemSize" width="128" height="128"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="zdB-W5-CrE">
+                                <rect key="frame" x="0.0" y="0.0" width="127.99999999999997" height="128"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="LQU-y9-ZhZ">
+                                    <rect key="frame" x="0.0" y="0.0" width="127.99999999999997" height="128"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </collectionViewCellContentView>
+                            </collectionViewCell>
+                        </cells>
+                        <connections>
+                            <outlet property="dataSource" destination="m6e-OU-S0O" id="wMT-yi-Xm0"/>
+                            <outlet property="delegate" destination="m6e-OU-S0O" id="iKp-BW-r7s"/>
+                        </connections>
+                    </collectionView>
+                    <navigationItem key="navigationItem" id="VxP-ZN-eSG"/>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Jsi-fx-9Ti" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2769" y="-798"/>
+        </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="Qsa-zr-NM6"/>
+        <segue reference="GRZ-HP-NUD"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="Login button" width="60" height="60"/>

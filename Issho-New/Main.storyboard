@@ -71,7 +71,7 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pencil.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Pwd-9P-8Gf" userLabel="ProfilePic" customClass="CustomImageView" customModule="Issho_New" customModuleProvider="target">
-                                <rect key="frame" x="146" y="97" width="98" height="96.666666666666686"/>
+                                <rect key="frame" x="146" y="97" width="98" height="96.666666666666657"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="98" id="K4x-Xs-kTS"/>
                                     <constraint firstAttribute="width" constant="98" id="azo-pa-EJh"/>
@@ -131,7 +131,7 @@
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="gray" title="+"/>
                                 <connections>
-                                    <action selector="picButtonClicked:" destination="cqz-CR-Xti" eventType="touchUpInside" id="XQg-Vn-yFf"/>
+                                    <action selector="picButtonClicked:" destination="cqz-CR-Xti" eventType="touchUpInside" id="vqC-be-OEx"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pfo-Qe-gup" userLabel="ClearImageButton">
@@ -144,7 +144,7 @@
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" image="xmark.circle.fill" catalog="system"/>
                                 <connections>
-                                    <action selector="clearImageButtonClicked:" destination="cqz-CR-Xti" eventType="touchUpInside" id="n8G-pW-t1h"/>
+                                    <action selector="clearImageButtonClicked:" destination="cqz-CR-Xti" eventType="touchUpInside" id="L4o-Y1-SYR"/>
                                 </connections>
                             </button>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Username" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="2sL-hF-eTN">
@@ -167,8 +167,8 @@
                     <navigationItem key="navigationItem" title="Edit Profile" id="2bg-dw-gRF"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics"/>
                     <connections>
-                        <outlet property="picButton" destination="SdO-Fp-4pn" id="xOB-MS-1od"/>
-                        <outlet property="username" destination="2sL-hF-eTN" id="JzF-OH-cYk"/>
+                        <outlet property="picButton" destination="SdO-Fp-4pn" id="TVK-Y6-5mJ"/>
+                        <outlet property="username" destination="2sL-hF-eTN" id="VI8-HK-nWV"/>
                         <segue destination="BPX-D8-344" kind="show" identifier="editProfileToPhotoSelector" id="uUT-dU-6yE"/>
                     </connections>
                 </viewController>
@@ -403,7 +403,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="SHi-cp-qFT">
-                                <rect key="frame" x="0.0" y="91" width="390" height="621"/>
+                                <rect key="frame" x="0.0" y="47" width="390" height="763"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </tableView>
                         </subviews>
@@ -717,7 +717,7 @@
     <inferredMetricsTieBreakers>
         <segue reference="Sa1-mP-SU3"/>
         <segue reference="sFr-pL-dSo"/>
-        <segue reference="Vpc-bA-ptI"/>
+        <segue reference="3yO-SP-tLT"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="pencil.circle.fill" catalog="system" width="128" height="123"/>

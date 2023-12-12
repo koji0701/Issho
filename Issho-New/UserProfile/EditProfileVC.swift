@@ -112,6 +112,8 @@ class EditProfileVC: UIViewController {
         
     }
     
+    
+    
     private func uploadImage(newPic: UIImage, completion: @escaping (Error?) -> Void) {
         let data = newPic.jpegData(compressionQuality: 0.8)!
         let storageRef = Storage.storage().reference().child("profilePictures/\(User.shared().uid).jpg")

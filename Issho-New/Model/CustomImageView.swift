@@ -31,6 +31,7 @@ class CustomImageView: UIImageView {
             self.image = cachedImage
             return
         }
+        
         j += 1
         print("Cache Miss: \(j)")
         

@@ -29,6 +29,7 @@ class SignupViewController: UIViewController {
     @IBAction func signupButtonClicked(_ sender: Any) {
         
         print("signup button clicked")
+        /*
         if let email = emailTextField.text, let password = passwordTextField.text, let username = emailTextField.text {
             Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
                 if let e = error {
@@ -37,18 +38,35 @@ class SignupViewController: UIViewController {
                 
                 else {
                     guard let uid = authResult?.user.uid else {return}
-                    print("signed up")
                     Firestore.initializeUser(uid: uid, username: username, image: "")//MARK: NEEDS IMAGE
                     
-                    self.performSegue(withIdentifier: Constants.Segues.signupToTabBar, sender: self)
+                    self.performSegue(withIdentifier: Constants.Segues.signupToCreateProfile, sender: self)
                     
                 }
             }
+        }*/
+          
+        
+        //check if valid email + password
+        if let email = emailTextField.text, let password = passwordTextField.text {
+            
+            let sendInfo = ["email": email, "password": password]
+            self.performSegue(withIdentifier: Constants.Segues.signupToCreateProfile, sender: sendInfo)
+            
         }
         
         
         
+        
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let createProfileVC = segue.destination as? CreateProfileVC {
+            createProfileVC.authInfo = sender as? [String: String]
+            
+        }
+    }
+    
     
     @IBAction func loginSwitchButtonPressed(_ sender: Any) {
         performSegue(withIdentifier: Constants.Segues.signupToLogin, sender: self)

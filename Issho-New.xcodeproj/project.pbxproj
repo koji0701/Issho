@@ -302,9 +302,9 @@
 			isa = PBXGroup;
 			children = (
 				E58245C9296633BB0093E0D5 /* Welcome.storyboard */,
+				E5A207E42AC3887E00C89B9B /* CreateProfileVC.swift */,
 				E539DD162963B3970034E1E5 /* SignupViewController.swift */,
 				E53AED912963B801000AF59D /* LoginViewController.swift */,
-				E5A207E42AC3887E00C89B9B /* CreateProfileVC.swift */,
 			);
 			path = Welcome;
 			sourceTree = "<group>";
@@ -346,8 +346,8 @@
 		E595D11029A3759B00A53594 /* UserProfile */ = {
 			isa = PBXGroup;
 			children = (
-				E595D11129A375AD00A53594 /* UserProfileVC.swift */,
 				E5B6676729B147C90090AB89 /* EditProfileVC.swift */,
+				E595D11129A375AD00A53594 /* UserProfileVC.swift */,
 				E537219F296F7ECF00AD0BF7 /* SettingsViewController.swift */,
 				E5A36BEB29DBF88000C74BEE /* Settings.swift */,
 			);

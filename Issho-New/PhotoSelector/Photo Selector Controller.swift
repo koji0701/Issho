@@ -227,6 +227,11 @@ class PhotoSelectorController: UICollectionViewController {
             editVC.setPic(image: selectedImage ?? nil)
         }
         
+        if let createVC = navigationController?.viewControllers.last as? CreateProfileVC {
+            print("found the create vc")
+            createVC.setPic(image: selectedImage ?? nil)
+        }
+        
     }
     
     

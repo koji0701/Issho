@@ -28,7 +28,13 @@ class LoginViewController: UIViewController {
                 guard let strongSelf = self else { return }
                 
                 if let e = error {
-                    print(e.localizedDescription)
+                    // the login failed
+                    
+                    // show the email didn't work message
+                    
+                    
+                    
+                    
                 }
                 else {
                     strongSelf.performSegue(withIdentifier: Constants.Segues.loginToTabBar, sender: strongSelf)

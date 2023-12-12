@@ -270,9 +270,13 @@ struct Constants {
     }
     
     struct Segues {
+        
         static let signupToLogin = "SignupToLogin"
         static let loginToTabBar = "LoginToTabBar"
-        static let signupToTabBar = "SignupToTabBar"
+        static let signupToCreateProfile = "SignupToCreateProfile"
+        static let CreateProfileToPhotoSelectorController = "createProfileToPhotoSelectorController"
+        static let createProfileToTabBar = "CreateProfileToTabBar"
+        
         
         static let addFriendsToUserProfile = "AddFriendsToUserProfile"
         static let SMToUserProfile = "SMToUserProfile"
