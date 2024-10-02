@@ -23,8 +23,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         print("scene willconnect to is running")
         
         //MARK: TESTING
+        //this was the testing which made it automatically go to the signup screen, comment this out later
+        /*
+        let welcomeStoryboard = UIStoryboard(name: "Welcome", bundle: Bundle.main)
+        self.window?.rootViewController = welcomeStoryboard.instantiateInitialViewController()!
+        self.window?.makeKeyAndVisible()
+        window?.makeKeyAndVisible()
+        */
         
-        /*Auth.auth().addStateDidChangeListener { auth, user in
+        //note to self oct 2 2024, testing to see if it properly pushed to git
+        Auth.auth().addStateDidChangeListener { auth, user in
           if user != nil {
             // User is signed in. Show home screen
               
@@ -43,15 +51,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
               self.window?.makeKeyAndVisible()
               print("current user isn't signed in")
           }
-        }*/
+        }
         
         
-        //this was the testing which made it automatically go to the signup screen
         
-        let welcomeStoryboard = UIStoryboard(name: "Welcome", bundle: Bundle.main)
-        self.window?.rootViewController = welcomeStoryboard.instantiateInitialViewController()!
-        self.window?.makeKeyAndVisible()
-        window?.makeKeyAndVisible()
         
     }
 
